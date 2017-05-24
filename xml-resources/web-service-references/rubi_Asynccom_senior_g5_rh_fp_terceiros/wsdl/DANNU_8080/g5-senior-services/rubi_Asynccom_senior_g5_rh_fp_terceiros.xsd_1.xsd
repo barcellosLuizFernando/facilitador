@@ -1,0 +1,519 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is Metro/2.2.0-1 (tags/2.2.0u1-7139; 2012-06-02T10:55:19+0000) JAXWS-RI/2.2.6-2 JAXWS/2.2 svn-revision#unknown. --><xs:schema xmlns:tns="http://services.senior.com.br" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://services.senior.com.br">
+
+<xs:complexType name="terceirosAquisicaoProducaoIn">
+<xs:sequence>
+<xs:element name="cmpPrd" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="codCcu" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="codFil" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="codPro" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="datEmi" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="flowInstanceID" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="flowName" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="indAqu" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="natDes" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="nomCnp" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="numEmp" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="numIns" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="numLoc" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="numNot" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="rateios" type="tns:terceirosAquisicaoProducaoInRateios" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="recBru" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="seqPrd" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="serNot" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="tipOpe" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="valFin" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="valPre" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="valSEN" type="xs:double" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="terceirosAquisicaoProducaoInRateios">
+<xs:sequence>
+<xs:element name="codRat" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="perRat" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="tipOpe" type="xs:string" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="terceirosReceitaExportacaoServicosIn">
+<xs:sequence>
+<xs:element name="cmpPrd" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="codFil" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="flowInstanceID" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="flowName" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="numEmp" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="recBru" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="recSer" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="seqPrd" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="tipOpe" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="valImp" type="xs:double" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="terceirosRecebimentoClubeFutebolIn">
+<xs:sequence>
+<xs:element name="cmpPrd" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="cnpjRe" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="codFil" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="datRep" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="flowInstanceID" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="flowName" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="nomCnp" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="numEmp" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="recBru" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="seqPrd" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="tipOpe" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="tipRep" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="valRet" type="xs:double" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="terceirosRecebimentoClubeFutebol2In">
+<xs:sequence>
+<xs:element name="cmpPrd" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="cnpjRe" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="codFil" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="datRep" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="flowInstanceID" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="flowName" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="nomCnp" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="numEmp" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="recBru" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="seqPrd" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="tipOpe" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="tipRep" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="valRet" type="xs:double" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="terceirosReceitaAtividadesConcomitantesIn">
+<xs:sequence>
+<xs:element name="cmpPrd" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="codFil" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="flowInstanceID" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="flowName" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="numEmp" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="recBru" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="recSer" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="seqPrd" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="tipOpe" type="xs:string" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="terceirosRepasseClubeFutebolIn">
+<xs:sequence>
+<xs:element name="cmpPrd" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="cnpjDe" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="codCcu" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="codFil" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="datRep" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="flowInstanceID" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="flowName" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="natDes" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="nomCnp" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="numEmp" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="numLoc" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="rateios" type="tns:terceirosRepasseClubeFutebolInRateios" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="recBru" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="seqPrd" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="tipOpe" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="tipRep" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="valRet" type="xs:double" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="terceirosRepasseClubeFutebolInRateios">
+<xs:sequence>
+<xs:element name="codRat" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="perRat" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="tipOpe" type="xs:string" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="terceirosComercializacaoProducaoIn">
+<xs:sequence>
+<xs:element name="cmpPrd" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="codCcu" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="codFil" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="flowInstanceID" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="flowName" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="indCom" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="natDes" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="nomCnp" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="numEmp" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="numIns" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="numLoc" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="rateios" type="tns:terceirosComercializacaoProducaoInRateios" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="recBru" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="seqPrd" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="tipIns" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="tipOpe" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="tipPrd" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="valRet" type="xs:double" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="terceirosComercializacaoProducaoInRateios">
+<xs:sequence>
+<xs:element name="codRat" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="perRat" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="tipOpe" type="xs:string" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="terceirosPagtosFisicaIn">
+<xs:sequence>
+<xs:element name="assIrf" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="basIns" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="basIrf" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="cmpPte" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="cnpjOp" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="codCCU" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="codCid" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="codFil" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="codIse" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="codLim" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="codNtg" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="codOpe" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="codRed" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="codRet" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="codSer" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="conIns" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="ctaFin" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="datPag" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="datRec" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="dedIns" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="depIrf" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="flowInstanceID" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="flowName" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="gridPensaoJudicial" type="tns:terceirosPagtosFisicaInGridPensaoJudicial" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="gridPlanodeSaude" type="tns:terceirosPagtosFisicaInGridPlanodeSaude" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="gridRateios" type="tns:terceirosPagtosFisicaInGridRateios" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="gruCon" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="insTrp" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="irfRet" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="natDes" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="nomOpe" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="nroRpa" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="numCad" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="numEmp" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="numLoc" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="outDes" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="outIns" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="penJud" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="perGrp" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="perIss" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="proIRR" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="proIns" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="renBru" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="seqPte" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="srvTer" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="tipOpe" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="valIse" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="valIss" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="vlrPla" type="xs:double" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="terceirosPagtosFisicaInGridPensaoJudicial">
+<xs:sequence>
+<xs:element name="codDep" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="cpfDep" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="datNas" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="nomDep" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="seqPla" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="tipOpe" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="vlrPag" type="xs:double" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="terceirosPagtosFisicaInGridPlanodeSaude">
+<xs:sequence>
+<xs:element name="codDep" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="cpfDep" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="datNas" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="nomDep" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="seqPen" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="tipDep" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="tipOpe" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="vlrPag" type="xs:double" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="terceirosPagtosFisicaInGridRateios">
+<xs:sequence>
+<xs:element name="codRat" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="perRat" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="tipOpe" type="xs:string" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="terceirosReceitaDesoneracaoFolhaIn">
+<xs:sequence>
+<xs:element name="cmpPrd" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="codFil" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="flowInstanceID" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="flowName" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="numEmp" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="recBru" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="recSer" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="seqPrd" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="tipOpe" type="xs:string" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="terceirosServicosTomadosIn">
+<xs:sequence>
+<xs:element name="atiIss" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="bas15a" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="bas20a" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="bas25a" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="basCof" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="basCsl" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="basCsr" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="basIrf" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="basIss" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="basPis" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="basRet" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="cmpPoe" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="codCcu" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="codEdc" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="codFil" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="codNtg" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="codOem" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="codPro" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="codRed" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="codRet" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="codSnf" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="codTns" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="ctaFin" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="datEmi" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="datPag" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="flowInstanceID" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="flowName" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="forTri" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="gruCon" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="insPro" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="irfRet" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="natDes" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="nroDoc" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="numCNO" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="numEmp" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="numLoc" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="outDes" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="perCof" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="perCsl" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="perCsr" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="perIrf" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="perIss" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="perPis" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="rateios" type="tns:terceirosServicosTomadosInRateios" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="renBru" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="retCof" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="retCsl" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="retCsr" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="retGrp" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="retPis" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="seqPoe" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="serFis" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="serObr" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="servicosContidosNF" type="tns:terceirosServicosTomadosInServicosContidosNF" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="tipOpe" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="tipPro" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="tipRen" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="valCof" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="valCsl" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="valCsr" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="valDed" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="valIss" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="valMat" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="valNRe" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="valPis" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="valREm" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="valRet" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="valSer" type="xs:double" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="terceirosServicosTomadosInRateios">
+<xs:sequence>
+<xs:element name="perRateio" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="rateio" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="tipOpe" type="xs:string" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="terceirosServicosTomadosInServicosContidosNF">
+<xs:sequence>
+<xs:element name="baseRetecao" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="numeroItem" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="tipOpe" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="tipoServicoTomador" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="valorBruto" type="xs:double" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="terceirosEspetaculoDesportivoIn">
+<xs:sequence>
+<xs:element name="catEve" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="cgcMan" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="cgcVis" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="codCid" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="codEst" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="codFil" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="codPai" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="datRea" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="despesas" type="tns:terceirosEspetaculoDesportivoInDespesas" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="detalhamentoMaoDeObra" type="tns:terceirosEspetaculoDesportivoInDetalhamentoMaoDeObra" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="flowInstanceID" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="flowName" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="horRea" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="ingressos" type="tns:terceirosEspetaculoDesportivoInIngressos" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="nomCom" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="nomMan" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="nomVis" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="numBol" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="numEmp" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="outrasReceitas" type="tns:terceirosEspetaculoDesportivoInOutrasReceitas" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="praDes" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="qtdNPa" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="qtdPag" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="receitaIngressos" type="tns:terceirosEspetaculoDesportivoInReceitaIngressos" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="tipCom" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="tipOpe" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="valCon" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="vlrClu" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="vlrRet" type="xs:double" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="terceirosEspetaculoDesportivoInDespesas">
+<xs:sequence>
+<xs:element name="sequencia" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="tipOpe" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="tipoDespesa" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="valorDespesa" type="xs:double" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="terceirosEspetaculoDesportivoInDetalhamentoMaoDeObra">
+<xs:sequence>
+<xs:element name="CPFTrab" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="nome" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="sequencia" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="tipOpe" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="valorDesconto" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="valorRemuneracao" type="xs:double" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="terceirosEspetaculoDesportivoInIngressos">
+<xs:sequence>
+<xs:element name="CNPJRespIngressos" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="nomedoResponsavel" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="numeroInscricao" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="numerodeIngressos" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="sequencia" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="tipOpe" type="xs:string" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="terceirosEspetaculoDesportivoInOutrasReceitas">
+<xs:sequence>
+<xs:element name="sequencia" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="tipOpe" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="tipoReceita" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="valorReceita" type="xs:double" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="terceirosEspetaculoDesportivoInReceitaIngressos">
+<xs:sequence>
+<xs:element name="ingressosDevolvidos" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="ingressosVenda" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="ingressosVendidos" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="precoIndividual" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="sequencia" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="tipOpe" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="tipodeIngresso" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="tipodePreco" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="valorArrecadado" type="xs:double" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="terceirosRepasseClubeFutebol2In">
+<xs:sequence>
+<xs:element name="cmpPrd" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="cnpjDe" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="codCcu" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="codFil" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="datRep" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="flowInstanceID" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="flowName" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="natDes" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="nomCnp" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="numEmp" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="numLoc" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="rateios" type="tns:terceirosRepasseClubeFutebol2InRateios" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="recBru" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="seqPrd" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="tipOpe" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="tipRep" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="valRet" type="xs:double" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="terceirosRepasseClubeFutebol2InRateios">
+<xs:sequence>
+<xs:element name="codRat" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="perRat" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="tipOpe" type="xs:string" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="terceirosServicoPrestadoIn">
+<xs:sequence>
+<xs:element name="bas15a" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="bas20a" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="bas25a" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="cmpRcb" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="cnpjSu" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="codFil" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="codRat" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="datPag" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="datRcb" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="flowInstanceID" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="flowName" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="insPro" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="notFis" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="numCNO" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="numEmp" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="numPro" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="ret11p" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="retSub" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="seqRcb" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="serFis" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="serObr" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="serPre" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="servicosContidosNF" type="tns:terceirosServicoPrestadoInServicosContidosNF" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="tipOpe" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="tipPro" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="valBru" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="valDed" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="valMat" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="valNRe" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="valRcb" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="valSer" type="xs:double" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="terceirosServicoPrestadoInServicosContidosNF">
+<xs:sequence>
+<xs:element name="basRet" type="xs:double" nillable="true" minOccurs="0"/>
+<xs:element name="numIte" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="tipOpe" type="xs:string" nillable="true" minOccurs="0"/>
+<xs:element name="tipSrv" type="xs:int" nillable="true" minOccurs="0"/>
+<xs:element name="valBru" type="xs:double" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>

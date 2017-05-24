@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="http://192.168.1.93:8080/" uri="xml-resources/web-service-references/WsClient/wsdl/192.168.1.93_8080/index"/>
+    <system systemId="http://192.168.1.93:4848/" uri="xml-resources/web-service-references/WsClient/wsdl/192.168.1.93_4848/index"/>
+    <system systemId="http://192.168.1.93:4848" uri="xml-resources/web-service-references/192.168.1/wsdl/192.168.1.93_4848/index"/>
+    <system systemId="http://DANNU:8080/g5-senior-services/rubi_Asynccom_senior_g5_rh_fp_terceiros?wsdl" uri="wsdl/DANNU_8080/g5-senior-services/rubi_Asynccom_senior_g5_rh_fp_terceiros.wsdl"/>
+    <system systemId="file:/C:/Users/luiz.barcellos/AppData/Roaming/NetBeans/8.1/config/WebServices/rubi_Asynccom_senior_g5_rh_fp_terceiros/catalog/DANNU_8080/g5-senior-services/rubi_Asynccom_senior_g5_rh_fp_terceiros.wsdl" uri="wsdl/rubi_Asynccom_senior_g5_rh_fp_terceiros.wsdl"/>
+    <system systemId="http://DANNU:8080/g5-senior-services/rubi_Asynccom_senior_g5_rh_fp_terceiros?xsd=1" uri="wsdl/DANNU_8080/g5-senior-services/rubi_Asynccom_senior_g5_rh_fp_terceiros.xsd_1.xsd"/>
+</catalog>
