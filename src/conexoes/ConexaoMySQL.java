@@ -18,7 +18,7 @@ import javax.swing.JOptionPane;
 
 public class ConexaoMySQL {
 
-    private Connection conexao;
+    public Connection conexao;
     private Statement st;
     private PreparedStatement pst;
     public ResultSet rs;
@@ -81,7 +81,7 @@ public class ConexaoMySQL {
         return resposta;
     }
 
-    public Connection getConnection() {
+    /*public Connection getConnection() {
 
         boolean resposta = true;
 
@@ -117,7 +117,7 @@ public class ConexaoMySQL {
         }
 
         return conexao;
-    }
+    }*/
 
     public void desconecta() {
 
@@ -156,15 +156,18 @@ public class ConexaoMySQL {
 
             System.out.println("Preparando para executar Query: " + sql);
             st.executeUpdate(sql);
+            
+            resultadoUpd = 0;
 
         } catch (SQLException sqlEx) {
             resultadoUpd = 1;
             if (except) {
                 resposta = false;
-                JOptionPane.showMessageDialog(null, "Não foi possível executar o comando sql" + sql + ".Erro " + sqlEx + " upd " + resultadoUpd);
+                JOptionPane.showMessageDialog(null, "Não foi possível executar o comando sql" + sql + ".Erro " + sqlEx);
             }
         }
 
+        System.out.println("Upd " + resultadoUpd);
         return resposta;
     }
 

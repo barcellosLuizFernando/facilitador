@@ -69,11 +69,13 @@ public class Login extends javax.swing.JFrame {
         });
 
         jPanel4.setBackground(new java.awt.Color(0, 51, 51));
+        jPanel4.setOpaque(false);
 
         jPanel1.setBackground(new java.awt.Color(0, 51, 51));
+        jPanel1.setOpaque(false);
 
+        jLabel1.setBackground(new java.awt.Color(0, 0, 0));
         jLabel1.setFont(new java.awt.Font("Trebuchet MS", 0, 48)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Facilitador");
         jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -100,13 +102,14 @@ public class Login extends javax.swing.JFrame {
         );
 
         jPanel2.setBackground(new java.awt.Color(0, 51, 51));
+        jPanel2.setOpaque(false);
 
+        jLabel2.setBackground(new java.awt.Color(0, 0, 0));
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Usuário");
 
+        jLabel3.setBackground(new java.awt.Color(0, 0, 0));
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Senha");
 
         jTxtUsuario.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -153,6 +156,7 @@ public class Login extends javax.swing.JFrame {
         );
 
         jPanel3.setBackground(new java.awt.Color(0, 51, 51));
+        jPanel3.setOpaque(false);
 
         jBtnCancelar.setText("Cancelar");
         jBtnCancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -173,10 +177,10 @@ public class Login extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(114, Short.MAX_VALUE)
+                .addContainerGap(109, Short.MAX_VALUE)
                 .addComponent(jBtnAcessar, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jBtnCancelar)
+                .addComponent(jBtnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(121, 121, 121))
         );
         jPanel3Layout.setVerticalGroup(

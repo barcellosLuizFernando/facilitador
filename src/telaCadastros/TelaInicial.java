@@ -24,14 +24,13 @@ public final class TelaInicial extends javax.swing.JFrame {
     private ImportaCte cte = new ImportaCte();
 
     /**
-     * Inicial a Tela Inicial do Facilitador. Executa na inicialização a
-     * thread <code>buscaCteAutorizado</code>, para atualizar o banco de dados
-     * local.
+     * Inicial a Tela Inicial do Facilitador. Executa na inicialização a thread
+     * <code>buscaCteAutorizado</code>, para atualizar o banco de dados local.
      */
     public TelaInicial() {
         initComponents();
         setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-        cte.buscaCteAutorizado(0, false);
+        cte.buscaCteAutorizado(0, false, this);
         //jDPTelaPrincipal.setBackground(Color.DARK_GRAY);
     }
 
@@ -47,14 +46,18 @@ public final class TelaInicial extends javax.swing.JFrame {
         jDPTelaPrincipal = new javax.swing.JDesktopPane();
         jPanel3 = new javax.swing.JPanel();
         jTxtUsuario = new javax.swing.JLabel();
+        jTxtUsuario1 = new javax.swing.JLabel();
+        jTxtStatus = new javax.swing.JTextField();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem6 = new javax.swing.JMenuItem();
+        jMenuItem10 = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuItem9 = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
         jMenuItem7 = new javax.swing.JMenuItem();
         jMenuItem8 = new javax.swing.JMenuItem();
@@ -66,6 +69,8 @@ public final class TelaInicial extends javax.swing.JFrame {
         setTitle("Facilitador");
 
         jDPTelaPrincipal.setBackground(new java.awt.Color(0, 102, 102));
+        jDPTelaPrincipal.setAutoscrolls(true);
+        jDPTelaPrincipal.setOpaque(false);
 
         javax.swing.GroupLayout jDPTelaPrincipalLayout = new javax.swing.GroupLayout(jDPTelaPrincipal);
         jDPTelaPrincipal.setLayout(jDPTelaPrincipalLayout);
@@ -75,10 +80,16 @@ public final class TelaInicial extends javax.swing.JFrame {
         );
         jDPTelaPrincipalLayout.setVerticalGroup(
             jDPTelaPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 258, Short.MAX_VALUE)
+            .addGap(0, 254, Short.MAX_VALUE)
         );
 
         jTxtUsuario.setText("Login");
+
+        jTxtUsuario1.setText("Status");
+        jTxtUsuario1.setEnabled(false);
+
+        jTxtStatus.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        jTxtStatus.setEnabled(false);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -87,13 +98,20 @@ public final class TelaInicial extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jTxtUsuario)
-                .addContainerGap(419, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 193, Short.MAX_VALUE)
+                .addComponent(jTxtUsuario1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTxtStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jTxtUsuario)
-                .addGap(0, 11, Short.MAX_VALUE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTxtUsuario)
+                    .addComponent(jTxtUsuario1)
+                    .addComponent(jTxtStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 9, Short.MAX_VALUE))
         );
 
         jMenu1.setBackground(new java.awt.Color(0, 51, 51));
@@ -106,6 +124,14 @@ public final class TelaInicial extends javax.swing.JFrame {
             }
         });
         jMenu1.add(jMenuItem6);
+
+        jMenuItem10.setText("Fechamento");
+        jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem10ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem10);
         jMenu1.add(jSeparator1);
 
         jMenuItem3.setText("Sair");
@@ -119,9 +145,15 @@ public final class TelaInicial extends javax.swing.JFrame {
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Manutenção");
+        jMenu2.setName("kasdhei"); // NOI18N
 
-        jMenuItem4.setText("Transportador");
+        jMenuItem4.setText("Recibos Avulsos");
         jMenuItem4.setEnabled(false);
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem4);
 
         jMenuItem5.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F7, 0));
@@ -132,6 +164,15 @@ public final class TelaInicial extends javax.swing.JFrame {
             }
         });
         jMenu2.add(jMenuItem5);
+
+        jMenuItem9.setText("Vincular Conhecimentos");
+        jMenuItem9.setEnabled(false);
+        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem9ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem9);
 
         jMenuBar1.add(jMenu2);
 
@@ -215,7 +256,7 @@ public final class TelaInicial extends javax.swing.JFrame {
         int numero = Integer.parseInt(JOptionPane.showInputDialog(null, "Informe um Conhecimento para importar: ", "Importação manual", JOptionPane.QUESTION_MESSAGE));
 
         if (numero > 0) {
-            x.buscaCteAutorizado(numero, true);
+            x.buscaCteAutorizado(numero, true, this);
             JOptionPane.showMessageDialog(this, "Conhecimentos integrados: " + x.getCteImportado());
         } else {
             JOptionPane.showMessageDialog(this, "Informe um número para continuar.", "Importação manual", JOptionPane.WARNING_MESSAGE);
@@ -266,40 +307,25 @@ public final class TelaInicial extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jMenuItem8ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-    //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-     */
- try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TelaInicial.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TelaInicial.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TelaInicial.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TelaInicial.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
 
-        /* Create and display the form */
- java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new TelaInicial().setVisible(true);
-            }
-        });
-    }
+    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem9ActionPerformed
+
+    private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
+        try {
+            Fechamento x = new Fechamento();
+            x.setVisible(true);
+            jDPTelaPrincipal.add(x);
+            x.setSelected(true);
+            //x.setPosicao();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Ops! Não foi possível abrir a tela de Consulta. " + e);
+        }
+    }//GEN-LAST:event_jMenuItem10ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane jDPTelaPrincipal;
@@ -309,6 +335,7 @@ public final class TelaInicial extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
@@ -316,9 +343,12 @@ public final class TelaInicial extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
+    private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JTextField jTxtStatus;
     private javax.swing.JLabel jTxtUsuario;
+    private javax.swing.JLabel jTxtUsuario1;
     // End of variables declaration//GEN-END:variables
 
     public void recebendo(String usuariolog, int id) {
@@ -328,6 +358,31 @@ public final class TelaInicial extends javax.swing.JFrame {
 
     public int getUsuariosys() {
         return usuariosys;
+    }
+
+    /**
+     * Define a mensagem de Status da tela inicial. Recebe um parâmetro do método
+     * <code>{@link ImportaCte}</code> e exibe a mensagem para o usuário.
+     * 1 = Sincronizando
+     * 2 = Sincronizado
+     * 99 = Não Sincronizado
+     * @param x Número inteiro que manipula o método.
+     */
+    public void setStatus(int x) {
+        
+        System.out.println("Definindo mensagem de status para o usuário");
+
+        switch (x) {
+            case 1:
+                jTxtStatus.setText("Sincronizando...");
+                break;
+            case 2: 
+                jTxtStatus.setText("Sincronizado com Sucesso");
+                break;
+            default:
+                jTxtStatus.setText("Falha na Sincronização");
+        }
+
     }
 
 }

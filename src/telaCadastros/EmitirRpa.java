@@ -1759,7 +1759,11 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
             receita += Double.parseDouble(jTable1.getValueAt(x, 2).toString().replace(".", "").replace(",", "."));
             peso = Double.parseDouble(jTable1.getValueAt(x, 4).toString().replace(".", "").replace(",", "."));
             tarifa = Double.parseDouble(jTable1.getValueAt(x, 5).toString().replace(".", "").replace(",", "."));
-            pedagio = Double.parseDouble(jTable1.getValueAt(x, 6).toString().replace(".", "").replace(",", "."));
+            if (cd.getConsidera_pedagio()) {
+                pedagio = Double.parseDouble(jTable1.getValueAt(x, 6).toString().replace(".", "").replace(",", "."));
+            } else {
+                pedagio = 0.00;
+            }
             bruto_pagar += (peso * tarifa) + pedagio;
             quantidade++;
         }

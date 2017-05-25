@@ -5,7 +5,6 @@
  */
 package ferramentas;
 
-
 import cadastros.ConfigDefault;
 import conexoes.ConexaoMySQL;
 import javax.swing.JOptionPane;
@@ -45,17 +44,16 @@ public class CalculadoraRPA {
     private Double acum_irrf;
     private Double acum_terceiros;
 
-    
     /**
-     * Este Método recebe os valores acumulados pagos a pessoa durante a 
-     * 'COMPETÊNCIA', acrescenta o valor que está sendo calculado 'AGORA'
-     * e atribui o resultado às variáveis da classe. Deve ser utilizado o metódo
-     * 'GET' para recuperar os valores após o cálculo.
-     * Implementa os métodos <code>{@link #defineVariaveisIRRF(java.lang.Double)}</code> 
-     * para encontrar a alíquota e dedução correta do Imposto de Renda, e <code>
-     * {@link #defineParametros(java.lang.String, java.lang.Double)}</code>
-     * para encontrar o valor máximo de desconto do INSS.
-     * 
+     * Este Método recebe os valores acumulados pagos a pessoa durante a
+     * 'COMPETÊNCIA', acrescenta o valor que está sendo calculado 'AGORA' e
+     * atribui o resultado às variáveis da classe. Deve ser utilizado o metódo
+     * 'GET' para recuperar os valores após o cálculo. Implementa os métodos
+     * <code>{@link #defineVariaveisIRRF(java.lang.Double)}</code> para
+     * encontrar a alíquota e dedução correta do Imposto de Renda, e <code>
+     * {@link #defineParametros(java.lang.String, java.lang.Double)}</code> para
+     * encontrar o valor máximo de desconto do INSS.
+     *
      * @param valor_bruto Valor atual do RPA
      * @param acum_valor_bruto Valor bruto calculado dentro da competência
      * @param acum_inss Valor de INSS descontado dentro da competência
@@ -120,10 +118,10 @@ public class CalculadoraRPA {
      * Método que define as bases de cálculo para a pessoa, buscando os valores
      * no arquivo 'DEFAULT.PROPERTIES'. Define também qual o teto máximo para o
      * desconto de INSS próprio.
+     *
      * @param categoria Informar se é Cooperado ou Terceiro
      * @param base_calculo Informar o valor bruto do RPA 'ATUAL'
      */
-    
     private void defineParametros(String categoria, Double base_calculo) {
 
         cd.carregaProp();
@@ -131,7 +129,7 @@ public class CalculadoraRPA {
 
         String sql;
 
-        String inss_tab_local = cd.getInss_tab_local();
+        boolean inss_tab_local = cd.getInss_tab_local();
 
         //BUSCA VARIÁVEIS DO ARQUIVO PROPERTIES
         if ("Cooperado".equals(categoria)) {
@@ -155,33 +153,30 @@ public class CalculadoraRPA {
 
         //BUSCA VARIÁVEIS DO BANCO MYSQL
         System.out.println("Buscando informações do INSS. Tabela local: " + inss_tab_local);
-        switch (inss_tab_local) {
-            case "S":
-                if (cn.conecta()) {
-                    try {
-                        sql = "SELECT * FROM tab_inss "
-                                + "WHERE valor = (SELECT MAX(valor) "
-                                + "FROM tab_inss WHERE data < current_date());";
-                        cn.executeConsulta(sql);
-                        while (cn.rs.next()) {
-                            inss_teto = cn.rs.getDouble("valor") * inss_aliq;
-                        }
-                        System.out.println("Teto do INSS: " + inss_teto);
-
-                    } catch (Exception e) {
-                        JOptionPane.showMessageDialog(null, "Não foi possível consultar as variáveis no Banco de Dados MySQL.");
-                    } finally {
-                        cn.desconecta();
+        if (inss_tab_local) {
+            if (cn.conecta()) {
+                try {
+                    sql = "SELECT * FROM tab_inss "
+                            + "WHERE valor = (SELECT MAX(valor) "
+                            + "FROM tab_inss WHERE data < current_date());";
+                    cn.executeConsulta(sql);
+                    while (cn.rs.next()) {
+                        inss_teto = cn.rs.getDouble("valor") * inss_aliq;
                     }
+                    System.out.println("Teto do INSS: " + inss_teto);
 
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Não foi possível consultar as variáveis no Banco de Dados MySQL.");
+                } finally {
+                    cn.desconecta();
                 }
-                break;
-            default:
-                JOptionPane.showMessageDialog(null, "Solicitar implementação do cálculo de variáveis por outros métodos.");
+
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Solicitar implementação do cálculo de variáveis por outros métodos.");
         }
     }
 
-    
     /**
      * Busca a faixa de desconto do Imposto de Renda na Fonte. O valor informado
      * como parâmetro dever ser o Valor Bruto, descontado de INSS próprio. Não
@@ -193,38 +188,35 @@ public class CalculadoraRPA {
 
         String sql;
 
-        String irrf_tab_local = cd.getIrrf_tab_local();
+        boolean irrf_tab_local = cd.getIrrf_tab_local();
 
-        switch (irrf_tab_local) {
-            case "S":
-                if (cn.conecta()) {
-                    try {
-                        sql = "SELECT * FROM tab_irrf "
-                                + "WHERE valor = (SELECT valor from tab_irrf "
-                                + "WHERE valor >= '" + base_calculo + "' "
-                                + "AND data <= current_date() "
-                                + "ORDER BY valor,data LIMIT 1)";
+        if (irrf_tab_local) {
+            if (cn.conecta()) {
+                try {
+                    sql = "SELECT * FROM tab_irrf "
+                            + "WHERE valor = (SELECT valor from tab_irrf "
+                            + "WHERE valor >= '" + base_calculo + "' "
+                            + "AND data <= current_date() "
+                            + "ORDER BY valor,data LIMIT 1)";
 
-                        cn.executeConsulta(sql);
+                    cn.executeConsulta(sql);
 
-                        System.out.println("Definindo alíquotas");
-                        while (cn.rs.next()) {
-                            irrf_aliq = cn.rs.getDouble("taxa") / 100.00;
-                            irrf_deducao = cn.rs.getDouble("desconto");
-                        }
-                        System.out.println("Base de Cálculo para o I.R.: " + base_calculo);
-                        System.out.println("Alíquota do IRRF: " + irrf_aliq);
-
-                    } catch (Exception e) {
-                        JOptionPane.showMessageDialog(null, "Não foi possível definir as variáveis do Imposto de Renda.");
-                    } finally {
-                        cn.desconecta();
+                    System.out.println("Definindo alíquotas");
+                    while (cn.rs.next()) {
+                        irrf_aliq = cn.rs.getDouble("taxa") / 100.00;
+                        irrf_deducao = cn.rs.getDouble("desconto");
                     }
+                    System.out.println("Base de Cálculo para o I.R.: " + base_calculo);
+                    System.out.println("Alíquota do IRRF: " + irrf_aliq);
+
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Não foi possível definir as variáveis do Imposto de Renda.");
+                } finally {
+                    cn.desconecta();
                 }
-                break;
-            default:
-                JOptionPane.showMessageDialog(null, "Consulta à folha de pagamentos não foi configurada.");
-                break;
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Consulta à folha de pagamentos não foi configurada.");
 
         }
     }

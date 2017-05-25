@@ -25,13 +25,13 @@ public class Configuracoes extends javax.swing.JInternalFrame {
     private Double inss_aliq_terceiro;
     private Double inss_bc_cooperado;
     private Double inss_bc_terceiro;
-    private String inss_tab_local;
-    private String irrf_tab_local;
+    private boolean inss_tab_local;
+    private boolean irrf_tab_local;
     private Double irrf_bc_cooperado;
     private Double irrf_bc_terceiro;
-    private String lanca_fin;
-    private String lanca_folha;
-    private String margem_variavel;
+    private boolean lanca_fin;
+    private boolean lanca_folha;
+    private boolean margem_variavel;
     private Double margem_cooperado;
     private Double margem_terceiro;
     private Double coop_terceiros_aliq;
@@ -42,7 +42,7 @@ public class Configuracoes extends javax.swing.JInternalFrame {
     private String cta_inss;
     private String cta_irrf;
     private String ult_integ_fin;
-    private String considera_pedagio;
+    private boolean considera_pedagio;
     
     DateFormat df = new SimpleDateFormat("dd' de 'MMMM' de 'yyyy', às 'HH:mm:ss");
 
@@ -263,7 +263,7 @@ public class Configuracoes extends javax.swing.JInternalFrame {
                         .addComponent(jSpInssTerc_Coop, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel12)))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -350,7 +350,7 @@ public class Configuracoes extends javax.swing.JInternalFrame {
                         .addComponent(jSpINSSTerc_Terc, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel20)))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -448,22 +448,19 @@ public class Configuracoes extends javax.swing.JInternalFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+            .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGap(104, 104, 104))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(100, 100, 100))))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -490,13 +487,23 @@ public class Configuracoes extends javax.swing.JInternalFrame {
 
         jLabel21.setText("Custo Cooperado");
 
+        jTxtCtaCoop.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
         jLabel22.setText("Custo terceiros");
+
+        jTxtCtaTerc.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
         jLabel23.setText("INSS/Terceiros");
 
+        jTxtCtaINSS.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
         jLabel24.setText("IRRF");
 
+        jTxtCtaIRRF.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
         jLabel27.setText("Outras despesas");
+
+        jTxtCtaOutras.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
@@ -514,11 +521,10 @@ public class Configuracoes extends javax.swing.JInternalFrame {
                         .addComponent(jTxtCtaCoop, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
                         .addGap(10, 10, 10)
-                        .addComponent(jTxtCtaINSS, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel9Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(jTxtCtaIRRF, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 124, Short.MAX_VALUE)
+                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTxtCtaINSS, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTxtCtaIRRF, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 136, Short.MAX_VALUE)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel9Layout.createSequentialGroup()
                         .addComponent(jLabel22)
@@ -556,6 +562,7 @@ public class Configuracoes extends javax.swing.JInternalFrame {
 
         jLabel28.setText("Último RPA integrado");
 
+        jTxtUltRpaInteg.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jTxtUltRpaInteg.setEnabled(false);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -566,23 +573,25 @@ public class Configuracoes extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jCbInteg_Financ)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel28)
                         .addGap(18, 18, 18)
-                        .addComponent(jTxtUltRpaInteg, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                        .addComponent(jTxtUltRpaInteg, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(28, 28, 28))))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCbInteg_Financ)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel28)
-                        .addComponent(jTxtUltRpaInteg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jCbInteg_Financ))
+                        .addComponent(jTxtUltRpaInteg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(192, Short.MAX_VALUE))
@@ -609,7 +618,7 @@ public class Configuracoes extends javax.swing.JInternalFrame {
                     .addComponent(jCbInteg_Folha)
                     .addComponent(jCbTabINSS)
                     .addComponent(jCbTabIRRF))
-                .addContainerGap(310, Short.MAX_VALUE))
+                .addContainerGap(350, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -646,7 +655,7 @@ public class Configuracoes extends javax.swing.JInternalFrame {
                     .addComponent(jLabel26))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTxtUser, javax.swing.GroupLayout.DEFAULT_SIZE, 335, Short.MAX_VALUE)
+                    .addComponent(jTxtUser, javax.swing.GroupLayout.DEFAULT_SIZE, 375, Short.MAX_VALUE)
                     .addComponent(jTxtSinc))
                 .addContainerGap())
         );
@@ -705,8 +714,8 @@ public class Configuracoes extends javax.swing.JInternalFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jTabbedPane1)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -830,48 +839,24 @@ public class Configuracoes extends javax.swing.JInternalFrame {
         jTxtCtaIRRF.setText(cd.getCta_irrf());
         jTxtCtaOutras.setText(cd.getCta_outras_despesas());
         jTxtUltRpaInteg.setText(cd.getUlt_integ_fin());
-
+        
         //INTEGRAR COM O FINANCEIRO
-        if ("S".equals(cd.getLanca_fin())) {
-            jCbInteg_Financ.setSelected(true);
-        } else {
-            jCbInteg_Financ.setSelected(false);
-        }
-
+        jCbInteg_Financ.setSelected(cd.getLanca_fin());
+        
         //INTEGRAR COM A FOLHA DE PAGAMENTOS
-        if ("S".equals(cd.getLanca_folha())) {
-            jCbInteg_Folha.setSelected(true);
-        } else {
-            jCbInteg_Folha.setSelected(false);
-        }
+        jCbInteg_Folha.setSelected(cd.getLanca_folha());
 
         //CALCULAR COM MARGEM VARIÁVEL
-        if ("S".equals(cd.getMargem_variavel())) {
-            jCbMargemVar.setSelected(true);
-        } else {
-            jCbMargemVar.setSelected(false);
-        }
+        jCbMargemVar.setSelected(cd.getMargem_variavel());
 
         //UTILIZAR TABELA INSS FOLHA
-        if ("S".equals(cd.getInss_tab_local())) {
-            jCbTabINSS.setSelected(true);
-        } else {
-            jCbTabINSS.setSelected(false);
-        }
-
+        jCbTabINSS.setSelected(cd.getInss_tab_local());
+        
         //UTILIZAR TABELA IRRF FOLHA
-        if ("S".equals(cd.getIrrf_tab_local())) {
-            jCbTabIRRF.setSelected(true);
-        } else {
-            jCbTabIRRF.setSelected(false);
-        }
+        jCbTabIRRF.setSelected(cd.getIrrf_tab_local());
         
         //CONSIDERAR PEDÁGIO NO CÁLCULO
-        if ("S".equals(cd.getConsidera_pedagio())) {
-            jCbPedagio.setSelected(true);
-        } else {
-            jCbPedagio.setSelected(false);
-        }
+        jCbPedagio.setSelected(cd.getConsidera_pedagio());
 
     }
 
@@ -894,43 +879,13 @@ public class Configuracoes extends javax.swing.JInternalFrame {
         cta_inss = jTxtCtaINSS.getText();
         cta_irrf = jTxtCtaIRRF.getText();
         ult_integ_fin = jTxtUltRpaInteg.getText();
-
-        if (jCbTabINSS.isSelected()) {
-            inss_tab_local = "S";
-        } else {
-            inss_tab_local = "N";
-        }
-
-        if (jCbTabIRRF.isSelected()) {
-            irrf_tab_local = "S";
-        } else {
-            irrf_tab_local = "N";
-        }
-
-        if (jCbInteg_Financ.isSelected()) {
-            lanca_fin = "S";
-        } else {
-            lanca_fin = "N";
-        }
-
-        if (jCbInteg_Folha.isSelected()) {
-            lanca_folha = "S";
-        } else {
-            lanca_folha = "N";
-        }
-
-        if (jCbMargemVar.isSelected()) {
-            margem_variavel = "S";
-        } else {
-            margem_variavel = "N";
-        }
+        considera_pedagio = jCbPedagio.isSelected();
+        inss_tab_local = jCbTabINSS.isSelected();
+        irrf_tab_local = jCbTabIRRF.isSelected();
+        lanca_fin = jCbInteg_Financ.isSelected();
+        lanca_folha = jCbInteg_Folha.isSelected();
+        margem_variavel = jCbMargemVar.isSelected();
         
-        if (jCbPedagio.isSelected()) {
-            considera_pedagio = "S";
-        } else {
-            considera_pedagio = "N";
-        }
-
         cd.setCoop_terceiros_aliq(coop_terceiros_aliq / 100.00);
         cd.setCta_cooperado(cta_cooperado);
         cd.setCta_inss(cta_inss);
@@ -953,6 +908,7 @@ public class Configuracoes extends javax.swing.JInternalFrame {
         cd.setMargem_terceiro(margem_terceiro / 100.00);
         cd.setMargem_variavel(margem_variavel);
         cd.setTerc_terceiros_aliq(terc_terceiros_aliq / 100.00);
+        cd.setConsidera_pedagio(considera_pedagio);
 
         if (cd.salvaProp()) {
             JOptionPane.showMessageDialog(this, "Parâmetros atualizados.");
