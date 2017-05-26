@@ -24,8 +24,9 @@ public class Conhecimentos {
     private final DateFormat dateIn = new SimpleDateFormat("dd/MM/yyyy");
     private final DecimalFormat df = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(new Locale("pt", "BR")));
 
-    String idEmpresa, idEmitente, numero, serie, data, status, placa, valor, pedagio, chave,
-            tipo, operacao, natureza, idTransportador, nomeTransportador, origem, destino, peso;
+    private String idEmpresa, idEmitente, numero, serie, data, status, placa, 
+            valor, pedagio, chave, tipo, operacao, natureza, idTransportador, 
+            nomeTransportador, origem, destino, peso;
 
     private String sql;
 
