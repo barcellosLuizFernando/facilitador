@@ -14,8 +14,8 @@ import conexoes.ConexaoFB;
 import conexoes.ConexaoMySQL;
 import ferramentas.CalculadoraRPA;
 import ferramentas.ImprimeRelatorio;
+import ferramentas.JNumberFormatField99;
 import ferramentas.ResumoRPA;
-import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -30,7 +30,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Luiz Fernando Dill Barcellos
  */
-public class EmitirRpa extends javax.swing.JInternalFrame {
+public class RpaAnterior extends javax.swing.JInternalFrame {
 
     private int var_consulta;
 
@@ -56,7 +56,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
     /**
      * Creates new form emitirRpa
      */
-    public EmitirRpa() {
+    public RpaAnterior() {
         initComponents();
         montaTabela();
     }
@@ -86,7 +86,6 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
         jTxtSequencia = new javax.swing.JTextField();
         jBtnPesquisar = new javax.swing.JButton();
         jLblStatus = new javax.swing.JLabel();
-        jCheckBox1 = new javax.swing.JCheckBox();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -105,8 +104,8 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
         jTxtFaturamento = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        jTxtIRRF = new javax.swing.JTextField();
-        jTxtInss = new javax.swing.JTextField();
+        jTxtIRRF = new JNumberFormatField99(new DecimalFormat("#,##0.00"));
+        jTxtInss = new JNumberFormatField99(new DecimalFormat("#,##0.00"));
         jLabel12 = new javax.swing.JLabel();
         jSpEmissao = new javax.swing.JSpinner();
         jPanel6 = new javax.swing.JPanel();
@@ -114,10 +113,10 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jTxtLiquido = new javax.swing.JTextField();
-        jTxtTerceiros = new javax.swing.JTextField();
-        jSpVlrPagar = new javax.swing.JSpinner();
+        jTxtTerceiros = new JNumberFormatField99(new DecimalFormat("#,##0.00"));
         jLabel16 = new javax.swing.JLabel();
         jSpPgto = new javax.swing.JSpinner();
+        jSpVlrPagar = new JNumberFormatField99(new DecimalFormat("#,##0.00"));
         jBtnAddCte = new javax.swing.JButton();
         jBtnRemoveCte = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
@@ -242,7 +241,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
         );
 
         setClosable(true);
-        setTitle("Manutenção de RPA");
+        setTitle("Inclusão Manual de RPA");
 
         jPanel1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
@@ -272,9 +271,6 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
             }
         });
 
-        jCheckBox1.setSelected(true);
-        jCheckBox1.setText("Nro.Automatico");
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -289,8 +285,6 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLblStatus)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jCheckBox1)
-                .addGap(18, 18, 18)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTxtCompetencia, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -312,8 +306,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                     .addComponent(jLabel5)
                     .addComponent(jTxtSequencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jBtnPesquisar)
-                    .addComponent(jLblStatus)
-                    .addComponent(jCheckBox1))
+                    .addComponent(jLblStatus))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -405,14 +398,23 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
         jTxtIRRF.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jTxtIRRF.setText("0,00");
         jTxtIRRF.setEnabled(false);
+        jTxtIRRF.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTxtIRRFFocusLost(evt);
+            }
+        });
 
-        jTxtInss.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jTxtInss.setText("0,00");
         jTxtInss.setEnabled(false);
+        jTxtInss.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTxtInssFocusLost(evt);
+            }
+        });
 
         jLabel12.setText("Emissão");
 
-        jSpEmissao.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(), null, new java.util.Date(), java.util.Calendar.DAY_OF_MONTH));
+        jSpEmissao.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(1495677228485L), null, null, java.util.Calendar.DAY_OF_MONTH));
         jSpEmissao.setEditor(new javax.swing.JSpinner.DateEditor(jSpEmissao, "dd/MM/yyyy"));
         jSpEmissao.setEnabled(false);
 
@@ -470,17 +472,25 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
         jTxtTerceiros.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jTxtTerceiros.setText("0,00");
         jTxtTerceiros.setEnabled(false);
-
-        jSpVlrPagar.setModel(new javax.swing.SpinnerNumberModel(0.0d, 0.0d, null, 0.0d));
-        jSpVlrPagar.setDoubleBuffered(true);
-        jSpVlrPagar.setEditor(new javax.swing.JSpinner.NumberEditor(jSpVlrPagar, "#,##0.00"));
-        jSpVlrPagar.setEnabled(false);
+        jTxtTerceiros.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTxtTerceirosFocusLost(evt);
+            }
+        });
 
         jLabel16.setText("Pagamento");
 
-        jSpPgto.setModel(new javax.swing.SpinnerDateModel());
+        jSpPgto.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(1495677215434L), null, null, java.util.Calendar.DAY_OF_MONTH));
         jSpPgto.setEditor(new javax.swing.JSpinner.DateEditor(jSpPgto, "dd/MM/yyyy"));
         jSpPgto.setEnabled(false);
+
+        jSpVlrPagar.setText("0,00");
+        jSpVlrPagar.setEnabled(false);
+        jSpVlrPagar.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jSpVlrPagarFocusLost(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -489,21 +499,16 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel13)
-                            .addComponent(jLabel15)
-                            .addComponent(jLabel14))
-                        .addGap(12, 12, 12)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTxtTerceiros)
-                            .addComponent(jTxtLiquido)
-                            .addComponent(jSpVlrPagar, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(jLabel16)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jSpPgto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabel13)
+                    .addComponent(jLabel15)
+                    .addComponent(jLabel14)
+                    .addComponent(jLabel16))
+                .addGap(12, 12, 12)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jSpPgto, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+                    .addComponent(jTxtTerceiros, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+                    .addComponent(jTxtLiquido)
+                    .addComponent(jSpVlrPagar))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
@@ -649,21 +654,23 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel2)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel3))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jTxtIdEst, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jTxtIdTransportador, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTxtIdEst, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTxtNomeEst)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jBtnPesqEst))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addGap(19, 19, 19)
-                                .addComponent(jTxtIdTransportador, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTxtNomeTransportador)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jBtnPesqTransp)))
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(jTxtNomeEst)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jBtnPesqEst))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                        .addComponent(jTxtNomeTransportador)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jBtnPesqTransp)))))
                         .addContainerGap())
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -679,7 +686,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(0, 9, Short.MAX_VALUE))))
+                        .addGap(0, 20, Short.MAX_VALUE))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1006,8 +1013,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
     private void jBtnGravarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnGravarActionPerformed
         if (!"".equals(jTxtNomeEst.getText()) && !"".equals(jTxtNomeTransportador.getText())) {
 
-            calculaRPA();
-
+            //calculaRPA();
             int conhecimentos = jTable1.getRowCount();
             String id = jTxtId.getText();
             String competencia = jTxtCompetencia.getText();
@@ -1017,7 +1023,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
             String emissao = dateOut.format(jSpEmissao.getValue());
             String pagamento = dateOut.format(jSpPgto.getValue());
             String faturamento = jTxtFaturamento.getText();
-            String bruto = jSpVlrPagar.getValue().toString();
+            String bruto = jSpVlrPagar.getText().replace(".", "").replace(",", ".");
             String inss = jTxtInss.getText();
             String irrf = jTxtIRRF.getText();
             String terceiros = jTxtTerceiros.getText();
@@ -1042,11 +1048,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
 
                     if (Double.parseDouble(jTxtLiquido.getText().replace(".", "").replace(",", ".")) > 1.00) {
 
-                        if (jCheckBox1.isSelected()) {
-                            numero = rpa.getNumeroRecibo(estabelecimento);
-                        } else {
-                            numero = Integer.parseInt(JOptionPane.showInputDialog(null, "Informe o número do RPA.", "Lançamento Manual", JOptionPane.QUESTION_MESSAGE));
-                        }
+                        numero = Integer.parseInt(JOptionPane.showInputDialog(null, "Informe o número do RPA.", "Lançamento Manual", JOptionPane.QUESTION_MESSAGE));
 
                         if (numero > 0) {
 
@@ -1066,14 +1068,14 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                                             + "transportador,emissao,pagamento,cod_folha,faturamento,"
                                             + "vlr_bruto,inss,terceiros,irrf,liquido,categoria,"
                                             + "usu_inc,data_inc,competencia,numero,inss_bc,"
-                                            + "inss_aliq,irrf_bc,irrf_aliq,tipo_rpa) VALUES ('"
+                                            + "inss_aliq,irrf_bc,irrf_aliq,tipo_rpa,integ_folha,codigo_fin) VALUES ('"
                                             + estabelecimento + "','" + sequencia + "','"
                                             + transportador + "','" + emissao + "','" + pagamento + "',"
                                             + cod_folha + ",'" + faturamento.replace(".", "").replace(",", ".") + "','" + bruto + "','"
                                             + inss.replace(".", "").replace(",", ".") + "','" + terceiros.replace(".", "").replace(",", ".") + "','" + irrf.replace(".", "").replace(",", ".") + "','"
                                             + liquido.replace(".", "").replace(",", ".") + "','" + categoria + "'," + usuario + ","
                                             + " current_date(), '" + competencia + "','" + numero + "','"
-                                            + inss_bc + "','" + inss_aliq + "','" + irrf_bc + "','" + irrf_aliq + "','" + tipo_rpa + "');";
+                                            + inss_bc + "','" + inss_aliq + "','" + irrf_bc + "','" + irrf_aliq + "','" + tipo_rpa + "','X','0');";
 
                                     if (cn.executeAtualizacao(sql)) {
                                         sql = "INSERT INTO rpa_detalhe (codigo,chave,numero,data,valor,peso,tarifa,pedagio) "
@@ -1085,7 +1087,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                                             jTxtCompetencia.setText(competencia);
                                             jTxtSequencia.setText(sequencia + "");
 
-                                            if ("S".equals(cd.getLanca_fin())) {
+                                            if (cd.getLanca_fin()) {
                                                 int financeiro = JOptionPane.showConfirmDialog(null, "Deseja integrar com o financeiro agora?", "Integração automática", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                                                 switch (financeiro) {
                                                     case 0:
@@ -1150,11 +1152,10 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
             //IMPRIME RPA
             if (cn.getResultadoUpd() < 1 && !"".equals(id)) {
 
-                sql = "SELECT * FROM rel_rpa WHERE codigo = '" + id + "' "
+                /*sql = "SELECT * FROM rel_rpa WHERE codigo = '" + id + "' "
                         + "union all "
                         + "SELECT * FROM rel_rpa WHERE codigo = '" + id + "' ;";
-                print.imprimir(sql, "rpa.jasper", "Recibo de Pagamento de Autônomo");
-
+                print.imprimir(sql, "rpa.jasper", "Recibo de Pagamento de Autônomo");*/
                 desabilitarEdicao();
 
             }
@@ -1179,6 +1180,22 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_jTxtIdFocusLost
 
+    private void jSpVlrPagarFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jSpVlrPagarFocusLost
+        calculaRPA();
+    }//GEN-LAST:event_jSpVlrPagarFocusLost
+
+    private void jTxtInssFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTxtInssFocusLost
+        calculaLiquido();
+    }//GEN-LAST:event_jTxtInssFocusLost
+
+    private void jTxtTerceirosFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTxtTerceirosFocusLost
+        calculaLiquido();
+    }//GEN-LAST:event_jTxtTerceirosFocusLost
+
+    private void jTxtIRRFFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTxtIRRFFocusLost
+        calculaLiquido();
+    }//GEN-LAST:event_jTxtIRRFFocusLost
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBtnAddCte;
@@ -1192,7 +1209,6 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
     private javax.swing.JButton jBtnPesqTransp;
     private javax.swing.JButton jBtnPesquisar;
     private javax.swing.JButton jBtnRemoveCte;
-    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1229,7 +1245,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSpinner jSpEmissao;
     private javax.swing.JSpinner jSpPgto;
-    private javax.swing.JSpinner jSpVlrPagar;
+    private javax.swing.JTextField jSpVlrPagar;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTblConsulta_Multi;
     private javax.swing.JTextField jTxtAcum;
@@ -1260,6 +1276,9 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
         jTxtId.setEnabled(false);
         jTxtIdEst.setEnabled(true);
         jTxtIdTransportador.setEnabled(true);
+        jTxtInss.setEnabled(true);
+        jTxtTerceiros.setEnabled(true);
+        jTxtIRRF.setEnabled(true);
 
         jSpVlrPagar.setEnabled(true);
         jSpEmissao.setEnabled(true);
@@ -1284,6 +1303,9 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
         jTxtId.setEnabled(true);
         jTxtIdEst.setEnabled(false);
         jTxtIdTransportador.setEnabled(false);
+        jTxtInss.setEnabled(false);
+        jTxtTerceiros.setEnabled(false);
+        jTxtIRRF.setEnabled(false);
 
         jSpVlrPagar.setEnabled(false);
         jSpEmissao.setEnabled(false);
@@ -1323,7 +1345,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
         jTxtCodFolha.setText("0");
         jTxtQtdCte.setText("");
 
-        jSpVlrPagar.setValue(0.00);
+        jSpVlrPagar.setText("0,00");
     }
 
     private void montaLista() {
@@ -1518,7 +1540,6 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                         + condicao
                         + " AND chave NOT IN (SELECT chave FROM tmp_cte_rpa) "
                         + " AND chave NOT IN (SELECT chave FROM rpa_detalhe WHERE codigo != '" + jTxtId.getText() + "') "
-                        + " AND status_envio = 'AU' "
                         + " ORDER BY numero, emissao";
 
                 if (cn.conecta()) {
@@ -1587,7 +1608,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                     jTxtCompetencia.setText(integ.getCompetencia());
                     jTxtSequencia.setText(integ.getSequencia());
                     jTxtCodFolha.setText(integ.getCod_folha());
-                    jSpVlrPagar.setValue(integ.getValor_bruto());
+                    jSpVlrPagar.setText(integ.getValor_bruto().toString());
                     jTxtInss.setText(df.format(integ.getInss()));
                     jTxtIRRF.setText(df.format(integ.getIrrf()));
                     jTxtTerceiros.setText(df.format(integ.getTerceiros()));
@@ -1689,7 +1710,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                                 chaveCte = jTblConsulta_Multi.getValueAt(linha, 3).toString();
                                 peso = Double.parseDouble(jTblConsulta_Multi.getValueAt(linha, 4).toString().replace(".", "").replace(",", "."));
                                 pedagio = Double.parseDouble(jTblConsulta_Multi.getValueAt(linha, 5).toString().replace(".", "").replace(",", "."));
-                                if (cd.getMargem_variavel()) {
+                                if (false) {
                                     tarifa = Double.parseDouble(JOptionPane.showInputDialog(null, "Informe o valor da tarifa para o CTE " + numeroCte + ": ", "Valor da Tarifa", JOptionPane.QUESTION_MESSAGE).replace(".", "").replace(",", "."));
                                 } else {
                                     tarifa = 0.00;
@@ -1769,22 +1790,24 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
             bruto_pagar += (peso * tarifa) + pedagio;
             quantidade++;
         }
-        jTxtFaturamento.setText(df.format(receita));
 
-        if (cd.getMargem_variavel()) {
-        } else {
-            bruto_pagar = receita * (1.00 - transp.getMargem());
+        try {
+            jTxtFaturamento.setText(df.format(receita));
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e);
         }
 
-        jSpVlrPagar.setValue(bruto_pagar);
+        bruto_pagar = receita * (1.00 - transp.getMargem());
+
+        jSpVlrPagar.setText(df.format(bruto_pagar));
         System.out.println("Soma dos Conhecimentos: " + receita);
-        System.out.println("Valor bruto da RPA: " + bruto_pagar);
+        System.out.println("Valor bruto da RPA: " + df.format(bruto_pagar));
         System.out.println("Soma do Pedágio: " + pedagio);
 
         jTxtQtdCte.setText(quantidade + "");
 
         calculaRPA();
-
     }
 
     private void calculaRPA() {
@@ -1806,7 +1829,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Não foi possível converter as datas. " + e);
             }
-            Double vlrBrutoPagar = Double.parseDouble(jSpVlrPagar.getValue().toString());
+            Double vlrBrutoPagar = Double.parseDouble(jSpVlrPagar.getText().replace(".", "").replace(",", "."));
             System.out.println("Valor bruto definido:" + vlrBrutoPagar);
 
             Double inss;
@@ -1832,8 +1855,14 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
             jTxtIRRF.setText(df.format(irrf));
             jTxtTerceiros.setText(df.format(terceiros));
             jTxtLiquido.setText(df.format(liquido));
+
         } else {
             JOptionPane.showMessageDialog(this, "Defina um estabelecimento e um transportador para continuar", "Calculadora RPA", JOptionPane.ERROR_MESSAGE);
+            if ("".equals(jTxtNomeEst.getText())) {
+                jTxtIdEst.requestFocus();
+            } else {
+                jTxtIdTransportador.requestFocus();
+            }
         }
     }
 
@@ -1893,5 +1922,18 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
         jTxtAcumIrrf.setText(res.getIrrf());
         jTxtAcumTerc.setText(res.getTerceiros());
         jTxtAcumQtdeFrete.setText(res.getFretes());
+    }
+
+    private void calculaLiquido() {
+        Double vlrBrutoPagar = Double.parseDouble(jSpVlrPagar.getText().replace(".", "").replace(",", "."));
+        System.out.println("Valor bruto definido:" + vlrBrutoPagar);
+
+        Double inss = Double.parseDouble(jTxtInss.getText().replace(".", "").replace(",", "."));
+        Double terceiros = Double.parseDouble(jTxtTerceiros.getText().replace(".", "").replace(",", "."));
+        Double irrf = Double.parseDouble(jTxtIRRF.getText().replace(".", "").replace(",", "."));
+        Double liquido = vlrBrutoPagar - inss - irrf - terceiros;
+
+        jTxtLiquido.setText(df.format(liquido));
+
     }
 }

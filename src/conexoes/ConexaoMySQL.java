@@ -167,7 +167,7 @@ public class ConexaoMySQL {
             }
         }
 
-        System.out.println("Upd " + resultadoUpd);
+        //System.out.println("Upd " + resultadoUpd);
         return resposta;
     }
 

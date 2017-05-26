@@ -6,10 +6,13 @@
 package telaCadastros;
 
 import com.lowagie.text.Cell;
+import ferramentas.ConfereTipo;
 import ferramentas.ImportaCte;
 import ferramentas.RpaIntegrador;
 import java.awt.Color;
+import java.awt.Dimension;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -30,7 +33,7 @@ public final class TelaInicial extends javax.swing.JFrame {
     public TelaInicial() {
         initComponents();
         setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-        cte.buscaCteAutorizado(0, false, this);
+        cte.buscaCteAutorizado(0, false, this, false);
         //jDPTelaPrincipal.setBackground(Color.DARK_GRAY);
     }
 
@@ -55,8 +58,10 @@ public final class TelaInicial extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-        jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem11 = new javax.swing.JMenuItem();
         jMenuItem9 = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
         jMenuItem7 = new javax.swing.JMenuItem();
@@ -64,6 +69,7 @@ public final class TelaInicial extends javax.swing.JFrame {
         jMenu5 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem12 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Facilitador");
@@ -147,15 +153,6 @@ public final class TelaInicial extends javax.swing.JFrame {
         jMenu2.setText("Manutenção");
         jMenu2.setName("kasdhei"); // NOI18N
 
-        jMenuItem4.setText("Recibos Avulsos");
-        jMenuItem4.setEnabled(false);
-        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem4ActionPerformed(evt);
-            }
-        });
-        jMenu2.add(jMenuItem4);
-
         jMenuItem5.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F7, 0));
         jMenuItem5.setText("Emitir Recibo");
         jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
@@ -164,9 +161,26 @@ public final class TelaInicial extends javax.swing.JFrame {
             }
         });
         jMenu2.add(jMenuItem5);
+        jMenu2.add(jSeparator2);
+
+        jMenuItem4.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F8, 0));
+        jMenuItem4.setText("Recibos Avulsos");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem4);
+
+        jMenuItem11.setText("Alterar Conhecimentos");
+        jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem11ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem11);
 
         jMenuItem9.setText("Vincular Conhecimentos");
-        jMenuItem9.setEnabled(false);
         jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem9ActionPerformed(evt);
@@ -199,6 +213,7 @@ public final class TelaInicial extends javax.swing.JFrame {
         jMenu5.setText("Utilitários");
 
         jMenuItem1.setText("Sincronizar Conhecimentos");
+        jMenuItem1.setToolTipText("Atualiza a base local. Informe \"0\" para buscar todos os conhecimentos.");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem1ActionPerformed(evt);
@@ -213,6 +228,14 @@ public final class TelaInicial extends javax.swing.JFrame {
             }
         });
         jMenu5.add(jMenuItem2);
+
+        jMenuItem12.setText("Resumo da Integração");
+        jMenuItem12.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem12ActionPerformed(evt);
+            }
+        });
+        jMenu5.add(jMenuItem12);
 
         jMenuBar1.add(jMenu5);
 
@@ -241,25 +264,32 @@ public final class TelaInicial extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
-
-        EmitirRpa x = new EmitirRpa();
-        x.setVisible(true);
-        jDPTelaPrincipal.add(x);
-        //x.setSelected(true);
-        //x.setPosicao();
+        abreTelaInterna(new EmitirRpa());
 
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        ferramentas.ImportaCte x = new ImportaCte();
+        ConfereTipo conf = new ConfereTipo();
 
-        int numero = Integer.parseInt(JOptionPane.showInputDialog(null, "Informe um Conhecimento para importar: ", "Importação manual", JOptionPane.QUESTION_MESSAGE));
+        String resposta = JOptionPane.showInputDialog(null, "Informe um Conhecimento para importar: ", "Importação manual", JOptionPane.QUESTION_MESSAGE);
 
-        if (numero > 0) {
-            x.buscaCteAutorizado(numero, true, this);
-            JOptionPane.showMessageDialog(this, "Conhecimentos integrados: " + x.getCteImportado());
-        } else {
-            JOptionPane.showMessageDialog(this, "Informe um número para continuar.", "Importação manual", JOptionPane.WARNING_MESSAGE);
+        inicio:
+        if (resposta != null) {
+
+            while (conf.tipoInteger(resposta) == false) {
+                resposta = JOptionPane.showInputDialog(null, "Informe um Conhecimento para importar: ", "Importação manual", JOptionPane.QUESTION_MESSAGE);
+                if (resposta == null) {
+                    break inicio;
+                }
+            }
+
+            int numero = Integer.parseInt(resposta);
+            ferramentas.ImportaCte x = new ImportaCte();
+            x.buscaCteAutorizado(numero, false, this, true);
+        }
+        
+        if (resposta == null) {
+            JOptionPane.showMessageDialog(this, "Nenhum conhecimento foi importado.", "Importação manual", JOptionPane.WARNING_MESSAGE);
         }
 
     }//GEN-LAST:event_jMenuItem1ActionPerformed
@@ -273,42 +303,58 @@ public final class TelaInicial extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
-        try {
+        abreTelaInterna(new Configuracoes());
+
+        /*try {
             Configuracoes x = new Configuracoes();
             x.setVisible(true);
             jDPTelaPrincipal.add(x);
-            //x.setPosicao();
+            setPosicao(x);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Ops! Não foi possível abrir a tela de Consulta. " + e);
-        }
+        }*/
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
-        try {
+        abreTelaInterna(new RelRpa());
+
+        /*try {
             RelRpa x = new RelRpa();
             x.setVisible(true);
             jDPTelaPrincipal.add(x);
             x.setSelected(true);
-            //x.setPosicao();
+            setPosicao(x);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Ops! Não foi possível abrir a tela de Consulta. " + e);
-        }
+        }*/
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
-        try {
+        abreTelaInterna(new RelRpaRecibo());
+
+        /*try {
             RelRpaRecibo x = new RelRpaRecibo();
             x.setVisible(true);
             jDPTelaPrincipal.add(x);
             x.setSelected(true);
-            //x.setPosicao();
+            setPosicao(x);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Ops! Não foi possível abrir a tela de Consulta. " + e);
-        }
+        }*/
     }//GEN-LAST:event_jMenuItem8ActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        // TODO add your handling code here:
+        abreTelaInterna(new RpaAnterior());
+
+        /*try {
+            RpaAnterior x = new RpaAnterior();
+            x.setVisible(true);
+            jDPTelaPrincipal.add(x);
+            x.setSelected(true);
+            setPosicao(x);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Ops! Não foi possível abrir a tela de Consulta. " + e);
+        }*/
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
@@ -316,16 +362,36 @@ public final class TelaInicial extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem9ActionPerformed
 
     private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
-        try {
+        abreTelaInterna(new Fechamento());
+
+        /* try {
             Fechamento x = new Fechamento();
             x.setVisible(true);
             jDPTelaPrincipal.add(x);
             x.setSelected(true);
-            //x.setPosicao();
+            setPosicao(x);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Ops! Não foi possível abrir a tela de Consulta. " + e);
-        }
+        }*/
     }//GEN-LAST:event_jMenuItem10ActionPerformed
+
+    private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
+        abreTelaInterna(new AlteraConhecimentos());
+
+        /*try {
+            AlteraConhecimentos x = new AlteraConhecimentos();
+            x.setVisible(true);
+            jDPTelaPrincipal.add(x);
+            x.setSelected(true);
+            setPosicao(x);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Ops! Não foi possível abrir a tela de Consulta. " + e);
+        }*/
+    }//GEN-LAST:event_jMenuItem11ActionPerformed
+
+    private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem12ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane jDPTelaPrincipal;
@@ -336,6 +402,8 @@ public final class TelaInicial extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem10;
+    private javax.swing.JMenuItem jMenuItem11;
+    private javax.swing.JMenuItem jMenuItem12;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
@@ -346,6 +414,7 @@ public final class TelaInicial extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JTextField jTxtStatus;
     private javax.swing.JLabel jTxtUsuario;
     private javax.swing.JLabel jTxtUsuario1;
@@ -361,22 +430,21 @@ public final class TelaInicial extends javax.swing.JFrame {
     }
 
     /**
-     * Define a mensagem de Status da tela inicial. Recebe um parâmetro do método
-     * <code>{@link ImportaCte}</code> e exibe a mensagem para o usuário.
-     * 1 = Sincronizando
-     * 2 = Sincronizado
-     * 99 = Não Sincronizado
+     * Define a mensagem de Status da tela inicial. Recebe um parâmetro do
+     * método <code>{@link ImportaCte}</code> e exibe a mensagem para o usuário.
+     * 1 = Sincronizando 2 = Sincronizado 99 = Não Sincronizado
+     *
      * @param x Número inteiro que manipula o método.
      */
     public void setStatus(int x) {
-        
+
         System.out.println("Definindo mensagem de status para o usuário");
 
         switch (x) {
             case 1:
                 jTxtStatus.setText("Sincronizando...");
                 break;
-            case 2: 
+            case 2:
                 jTxtStatus.setText("Sincronizado com Sucesso");
                 break;
             default:
@@ -385,4 +453,19 @@ public final class TelaInicial extends javax.swing.JFrame {
 
     }
 
+    private void setPosicao(JInternalFrame x) {
+        Dimension d = x.getDesktopPane().getSize();
+        x.setLocation((d.width - x.getSize().width) / 2, (d.height - x.getSize().height) / 2);
+    }
+
+    private void abreTelaInterna(JInternalFrame tela) {
+        try {
+            tela.setVisible(true);
+            jDPTelaPrincipal.add(tela);
+            tela.setSelected(true);
+            setPosicao(tela);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Ops! Não foi possível abrir a tela '" + tela + "'. Erro: " + e);
+        }
+    }
 }
