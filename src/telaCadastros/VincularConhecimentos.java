@@ -234,7 +234,7 @@ public class VincularConhecimentos extends javax.swing.JInternalFrame {
                     montaTabela(jTblDisponiveis);
 
                 } else {
-                    JOptionPane.showMessageDialog(this, "Não foi possível processar os \nConhecimentos de Frete selecionados.");
+                    //JOptionPane.showMessageDialog(this, "Não foi possível processar os \nConhecimentos de Frete selecionados.");
                 }
             } else {
                 if (vin.desvinculaCTe(jTblCancelados.getValueAt(linha_ca, 3).toString(),

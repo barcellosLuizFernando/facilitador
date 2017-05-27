@@ -173,6 +173,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
             }
         });
 
+        jTblConsulta_Multi.setAutoCreateRowSorter(true);
         jTblConsulta_Multi.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jTblConsulta_Multi.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1377,7 +1378,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
 
                 sql = "SELECT a.codigo,a.estabelecimento,a.numero,b.nome,a.vlr_bruto,a.emissao "
                         + "FROM rpa a LEFT JOIN cad_pessoas b on (b.codigo = a.transportador) "
-                        + "WHERE a.codigo IS NOT NULL "
+                        + "WHERE (a.integ_folha != 'X' or a.integ_folha IS NULL) "
                         + condicao
                         + "ORDER BY b.nome, a.numero";
 

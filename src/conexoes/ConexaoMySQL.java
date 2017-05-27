@@ -163,7 +163,8 @@ public class ConexaoMySQL {
             resultadoUpd = 1;
             if (except) {
                 resposta = false;
-                JOptionPane.showMessageDialog(null, "Não foi possível executar o comando sql\n" + sql + ".\nErro " + sqlEx);
+                //JOptionPane.showMessageDialog(null, "Não foi possível executar o comando sql\n" + sql + ".\nErro " + sqlEx);
+                JOptionPane.showMessageDialog(null, "Não foi possível executar o comando.\nErro: " + sqlEx.getMessage());
             }
         }
 

@@ -59,7 +59,20 @@ public class ImportaCte {
 
                 System.out.println("Iniciando procedimento para sincronização de CTEs.");
                 cd.carregaProp();
-                sinc = cd.getUltima_sincronizacao();
+
+                if (cn.conecta()) {
+                    try {
+                        cn.executeConsulta("SELECT data FROM fechamento;");
+                        while (cn.rs.next()) {
+                            sinc = cn.rs.getTimestamp("data");
+                        }
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(null, e);
+                    } finally {
+                        cn.desconecta();
+                    }
+                }
+
                 System.out.println("Última sincronização em " + sinc);
 
                 if (numeroCte == 0) {
@@ -207,7 +220,7 @@ public class ImportaCte {
                     + "left join cad_municipios d on (d.codigo = a.mun_ini_prestacao) "
                     + "left join cad_municipios dd on (dd.codigo = a.mun_fim_prestacao) "
                     + "left join FRO_CT_DETALHE e on (e.empresa = a.empresa and e.numero = a.numero and e.serie = a.serie and e.nome_componente = 'VALOR PEDAGIO' )"
-                    + "where a.status_envio = 'CA' and a.hora_emissao >= '01.01.2017') "
+                    + "where a.status_envio = 'CA' and a.hora_emissao >= '" + sinc + "') "
                     + "select z.empresa,z.emitente,z.emissao,z.numero,z.serie,z.chave_cte,"
                     + "z.operacao,z.natureza,z.tp_cte,z.status_envio,z.valor,"
                     + "z.placa,y.codigo as cod_transportador,y.nome as transportador,"
@@ -340,8 +353,12 @@ public class ImportaCte {
 
     public static void main(String[] args) {
         ImportaCte cte = new ImportaCte();
-        //cte.buscaCteAutorizado(0, false, new TelaInicial(), true);
-        System.out.println("CTe cancelado, atualizado: " + cte.buscaCteCancelado());
+        TelaInicial ti = new TelaInicial();
+        
+        cte.buscaCteAutorizado(0, false, ti, false);
+        ti.dispose();
+        
+        //System.out.println("CTe cancelado, atualizado: " + cte.buscaCteCancelado());
         //System.out.println("Conhecimentos Atualizados: " + cte.atualizaCadCte());
     }
 }

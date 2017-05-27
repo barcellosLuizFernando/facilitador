@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="conhecimentosRpa_detalhe" language="groovy" pageWidth="555" pageHeight="842" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="bcc8054b-0f04-4c95-963a-d9bec7fabad4">
-	<property name="ireport.zoom" value="5.559917313492256"/>
-	<property name="ireport.x" value="1940"/>
+	<property name="ireport.zoom" value="4.59497298635724"/>
+	<property name="ireport.x" value="1457"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="codigo" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -124,6 +124,13 @@ where a.codigo = $P{codigo}]]>
 				</textElement>
 				<text><![CDATA[Tarifa]]></text>
 			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="410" y="0" width="45" height="13" forecolor="#000000" uuid="a343bb0c-ed62-48a2-93f8-fc9aee7b0ee1"/>
+				<textElement textAlignment="Center">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Status]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
@@ -165,7 +172,7 @@ where a.codigo = $P{codigo}]]>
 				<textFieldExpression><![CDATA[$F{mun_origem}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Transparent" x="297" y="1" width="164" height="13" forecolor="#000000" uuid="99406d95-2295-4e3c-80cf-2031ff0f89e9"/>
+				<reportElement mode="Transparent" x="297" y="1" width="113" height="13" forecolor="#000000" uuid="99406d95-2295-4e3c-80cf-2031ff0f89e9"/>
 				<textElement>
 					<font fontName="Calibri"/>
 				</textElement>
@@ -177,6 +184,13 @@ where a.codigo = $P{codigo}]]>
 					<font fontName="Calibri"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{tarifa}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00&apos; Ton&apos;;-#,##0.00&apos; Ton&apos;" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="410" y="1" width="45" height="13" forecolor="#000000" uuid="06875877-4fbe-4246-a57a-e76a3afe83b7"/>
+				<textElement textAlignment="Center">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{status_envio}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

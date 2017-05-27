@@ -593,7 +593,7 @@
             <Component class="javax.swing.JSpinner" name="jSpEmissao">
               <Properties>
                 <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-                  <SpinnerModel initial="1495677228485" stepSize="5" type="date"/>
+                  <SpinnerModel initial="1490980080000" maximum="1491015540000" stepSize="5" type="date"/>
                 </Property>
                 <Property name="editor" type="javax.swing.JComponent" editor="org.netbeans.modules.form.editors.SpinnerEditorEditor">
                   <SpinnerEditor format="dd/MM/yyyy" type="1"/>

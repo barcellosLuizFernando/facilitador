@@ -414,7 +414,7 @@ public class RpaAnterior extends javax.swing.JInternalFrame {
 
         jLabel12.setText("Emissão");
 
-        jSpEmissao.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(1495677228485L), null, null, java.util.Calendar.DAY_OF_MONTH));
+        jSpEmissao.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(1490980080000L), null, new java.util.Date(1491015540000L), java.util.Calendar.DAY_OF_MONTH));
         jSpEmissao.setEditor(new javax.swing.JSpinner.DateEditor(jSpEmissao, "dd/MM/yyyy"));
         jSpEmissao.setEnabled(false);
 
@@ -1399,7 +1399,7 @@ public class RpaAnterior extends javax.swing.JInternalFrame {
 
                 sql = "SELECT a.codigo,a.estabelecimento,a.numero,b.nome,a.vlr_bruto,a.emissao "
                         + "FROM rpa a LEFT JOIN cad_pessoas b on (b.codigo = a.transportador) "
-                        + "WHERE a.codigo IS NOT NULL "
+                        + "WHERE a.integ_folha = 'X' "
                         + condicao
                         + "ORDER BY b.nome, a.numero";
 

@@ -71,6 +71,7 @@ public final class TelaInicial extends javax.swing.JFrame {
         jMenu5 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem13 = new javax.swing.JMenuItem();
         jMenuItem12 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -223,13 +224,21 @@ public final class TelaInicial extends javax.swing.JFrame {
         });
         jMenu5.add(jMenuItem1);
 
-        jMenuItem2.setText("Integração Financeira em Lote");
+        jMenuItem2.setText("Integração Financeira");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem2ActionPerformed(evt);
             }
         });
         jMenu5.add(jMenuItem2);
+
+        jMenuItem13.setText("Integração Folha de Pagamentos");
+        jMenuItem13.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem13ActionPerformed(evt);
+            }
+        });
+        jMenu5.add(jMenuItem13);
 
         jMenuItem12.setText("Resumo da Integração");
         jMenuItem12.addActionListener(new java.awt.event.ActionListener() {
@@ -398,6 +407,10 @@ public final class TelaInicial extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem12ActionPerformed
 
+    private void jMenuItem13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem13ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem13ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane jDPTelaPrincipal;
     private javax.swing.JMenu jMenu1;
@@ -409,6 +422,7 @@ public final class TelaInicial extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem11;
     private javax.swing.JMenuItem jMenuItem12;
+    private javax.swing.JMenuItem jMenuItem13;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
