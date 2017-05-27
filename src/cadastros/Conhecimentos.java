@@ -26,7 +26,7 @@ public class Conhecimentos {
 
     private String idEmpresa, idEmitente, numero, serie, data, status, placa, 
             valor, pedagio, chave, tipo, operacao, natureza, idTransportador, 
-            nomeTransportador, origem, destino, peso;
+            nomeTransportador, origem, destino, peso, cod_rpa, tarifa, nro_rpa;
 
     private String sql;
 
@@ -40,7 +40,10 @@ public class Conhecimentos {
 //        } else {
 //            condicao = " ";
 //        }
-        sql = "SELECT * FROM conhecimentos WHERE chave = '" + chave + "';";
+        sql = "SELECT * FROM conhecimentos a "
+                + "LEFT JOIN rpa_detalhe b ON (b.chave = a.chave) "
+                + "LEFT JOIN rpa c ON (c.codigo = b.codigo) "
+                + "WHERE a.chave = '" + chave + "' ;";
 
         if (cn.conecta()) {
             try {
@@ -65,6 +68,9 @@ public class Conhecimentos {
                     this.chave = cn.rs.getString("chave");
                     peso = df.format(cn.rs.getDouble("peso"));
                     pedagio = df.format(cn.rs.getDouble("pedagio"));
+                    nro_rpa = cn.rs.getString("c.numero");
+                    tarifa = cn.rs.getString("tarifa");
+                    cod_rpa = cn.rs.getString("codigo");
 
                 }
 
@@ -154,14 +160,28 @@ public class Conhecimentos {
         return peso;
     }
 
+    public String getCod_rpa() {
+        return cod_rpa;
+    }
+
+    public String getTarifa() {
+        return tarifa;
+    }
+
+    public String getNro_rpa() {
+        return nro_rpa;
+    }
+    
     public static void main(String[] args) {
         Conhecimentos cte = new Conhecimentos();
 
-        if (cte.buscaConhecimento("CTe41170115278561000124570000000319701261571120")) {
+        if (cte.buscaConhecimento("CTe42170415278561000205570000000065871635582514")) {
 
             System.out.println("Transportador do conhecimento é: " + cte.getNomeTransportador());
             System.out.println("Data de Emissão é: " + cte.getData());
             System.out.println("Valor do conhecimento é: " + cte.getValor());
+            System.out.println("Valor da tarifa é: " + cte.getTarifa());
+            
         } else {
             JOptionPane.showMessageDialog(null, "Não foram encontrados conhecimentos com esta chave.");
         }

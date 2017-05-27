@@ -586,13 +586,14 @@ public class AlteraConhecimentos extends javax.swing.JInternalFrame {
             String nomeTransportador = jTxtNomeTransportador.getText();
             String chave = jTxtChave.getText();
 
-            String sql = "UPDATE conhecimentos "
-                    + "SET cod_transportador = '" + idTransportador + "', "
-                    + "nome_transportador = '" + nomeTransportador + "' "
-                    + "WHERE chave = '" + chave + "' ;";
+            String sql;
 
             if (cn.conecta()) {
                 try {
+                    sql = "UPDATE conhecimentos "
+                            + "SET cod_transportador = '" + idTransportador + "', "
+                            + "nome_transportador = '" + nomeTransportador + "' "
+                            + "WHERE chave = '" + chave + "' ;";
                     if (cn.executeAtualizacao(sql)) {
                         JOptionPane.showMessageDialog(this, "Transportador atualizado com sucesso!", "Atualização de Conhecimentos", JOptionPane.INFORMATION_MESSAGE);
                         desabilitaEdicao();

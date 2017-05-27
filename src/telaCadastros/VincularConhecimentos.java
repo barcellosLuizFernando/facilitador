@@ -7,9 +7,11 @@ package telaCadastros;
 
 import cadastros.Transportador;
 import conexoes.ConexaoMySQL;
+import ferramentas.CteVinculacao;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -23,6 +25,9 @@ public class VincularConhecimentos extends javax.swing.JInternalFrame {
     private conexoes.ConexaoMySQL cn = new ConexaoMySQL();
     private DateFormat dateIn = new SimpleDateFormat("dd/MM/yyyy");
     private DateFormat dateOut = new SimpleDateFormat("yyyy/MM/dd");
+    private JFrame framePai;
+
+    private static VincularConhecimentos instancia;
 
     /**
      * Creates new form VincularConhecimentos
@@ -78,6 +83,11 @@ public class VincularConhecimentos extends javax.swing.JInternalFrame {
                 jTblCanceladosMouseClicked(evt);
             }
         });
+        jTblCancelados.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTblCanceladosKeyReleased(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTblCancelados);
 
         jScrollPane2.setBorder(javax.swing.BorderFactory.createTitledBorder("Conhecimentos de Frete Disponíveis"));
@@ -123,8 +133,18 @@ public class VincularConhecimentos extends javax.swing.JInternalFrame {
         );
 
         jButton1.setText("Gravar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Desvincular");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Cancelar");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -190,34 +210,62 @@ public class VincularConhecimentos extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTblCanceladosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTblCanceladosMouseClicked
-        int linha = jTblCancelados.getSelectedRow();
-
-        String idTransportador = jTblCancelados.getValueAt(linha, 4).toString();
-        String data = null;
-
-
-        try {
-            data = dateOut.format(dateIn.parse(jTblCancelados.getValueAt(linha, 2).toString()));
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Não foi possível converter a data selecionada.");
-        }
-
-        Transportador transp = new Transportador();
-
-        transp.buscaPessoa(Integer.parseInt(idTransportador));
-
-        jTxtIdTransportador.setText(idTransportador);
-        jTxtNomeTransportador.setText(transp.getNome());
-
-        if (!"".equals(jTxtNomeTransportador.getText())) {
-            montaLista(idTransportador, true, false, jTblDisponiveis, data);
-        }
-
+        atualizaDados();
     }//GEN-LAST:event_jTblCanceladosMouseClicked
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         this.dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+
+        if (jTblCancelados.getSelectedRowCount() == 1
+                && jTblDisponiveis.getSelectedRowCount() == 1) {
+
+            CteVinculacao vin = new CteVinculacao();
+            int linha_ca = jTblCancelados.getSelectedRow();
+            int linha_au = jTblDisponiveis.getSelectedRow();
+
+            if ("Desvincular".equals(jButton2.getText())) {
+                if (vin.vinculaCTe(jTblCancelados.getValueAt(linha_ca, 3).toString(),
+                        jTblDisponiveis.getValueAt(linha_au, 3).toString(), framePai)) {
+                    JOptionPane.showMessageDialog(this, "Conhecimentos de Frete vinculados com sucesso!");
+                    montaLista(null, false, false, jTblCancelados, null);
+                    montaTabela(jTblDisponiveis);
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Não foi possível processar os \nConhecimentos de Frete selecionados.");
+                }
+            } else {
+                if (vin.desvinculaCTe(jTblCancelados.getValueAt(linha_ca, 3).toString(),
+                        jTblDisponiveis.getValueAt(linha_au, 3).toString())) {
+                    JOptionPane.showMessageDialog(this, "Conhecimentos de Frete desvinculados com sucesso!");
+                    jButton2.setText("Desvincular");
+                    montaLista(null, false, false, jTblCancelados, null);
+                    montaTabela(jTblDisponiveis);
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Você deve selecionar um conhecimento \nem cada tabela para continuar.");
+        }
+
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        if ("Desvincular".equals(jButton2.getText())) {
+            jButton2.setText("Vincular");
+            montaTabela(jTblDisponiveis);
+            montaLista(null, false, true, jTblCancelados, null);
+        } else {
+            jButton2.setText("Desvincular");
+            montaTabela(jTblDisponiveis);
+            montaLista(null, false, false, jTblCancelados, null);
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jTblCanceladosKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTblCanceladosKeyReleased
+        atualizaDados();
+    }//GEN-LAST:event_jTblCanceladosKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -265,29 +313,39 @@ public class VincularConhecimentos extends javax.swing.JInternalFrame {
         x.getTableHeader().getColumnModel().getColumn(4).setMinWidth(0);
     }
 
-    private void montaLista(String idTransp, boolean autorizado, boolean vinculado, JTable x, String emissao) {
+    public void montaLista(String idTransp, boolean autorizado, boolean vinculado, JTable x, String emissao) {
         montaTabela(x);
         DefaultTableModel lista = (DefaultTableModel) x.getModel();
 
         String condicao;
 
         if (autorizado) {
-            condicao = "WHERE a.status_envio = 'AU' "
-                    + "AND a.chave NOT IN (SELECT chave FROM rpa_detalhe) ";
+            condicao = "WHERE a.status_envio = 'AU' ";
         } else {
             condicao = "WHERE a.status_envio = 'CA' "
                     + "AND a.chave IN (SELECT chave FROM rpa_detalhe) ";
         }
 
+        if (vinculado) {
+            condicao += "AND (a.chave IN (SELECT ca_chave FROM rpa_vinculacao) "
+                    + "OR a.chave IN (SELECT au_chave FROM rpa_vinculacao)) "
+                    + "AND a.chave IN (SELECT chave FROM rpa_detalhe) ";
+        } else {
+            condicao += "AND a.chave NOT IN (SELECT ca_chave FROM rpa_vinculacao) ";
+        }
+
         if (idTransp != null) {
             condicao += "AND a.cod_transportador = '" + idTransp + "' ";
         }
-        
-        if(emissao != null) {
+
+        if (emissao != null
+                && vinculado == false) {
             condicao += "AND a.emissao >= '" + emissao + "' ";
         }
 
         String sql = "SELECT * FROM conhecimentos a "
+                // + "LEFT JOIN rpa_vinculacao b on (b.ca_chave = a.chave) "
+                // + "LEFT JOIN rpa_vinculacao c on (c.au_chave = a.chave) "
                 + condicao
                 + "ORDER BY numero, serie;";
 
@@ -310,6 +368,49 @@ public class VincularConhecimentos extends javax.swing.JInternalFrame {
             }
         }
 
+    }
+
+    public static synchronized VincularConhecimentos getInstance() {
+        if (instancia == null) {
+            instancia = new VincularConhecimentos();
+        }
+        return instancia;
+    }
+
+    public JFrame getFramePai() {
+        return framePai;
+    }
+
+    public void setFramePai(JFrame framePai) {
+        this.framePai = framePai;
+    }
+
+    private void atualizaDados() {
+        int linha = jTblCancelados.getSelectedRow();
+
+        String idTransportador = jTblCancelados.getValueAt(linha, 4).toString();
+        String data = null;
+
+        try {
+            data = dateOut.format(dateIn.parse(jTblCancelados.getValueAt(linha, 2).toString()));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Não foi possível converter a data selecionada.");
+        }
+
+        Transportador transp = new Transportador();
+
+        transp.buscaPessoa(Integer.parseInt(idTransportador));
+
+        jTxtIdTransportador.setText(idTransportador);
+        jTxtNomeTransportador.setText(transp.getNome());
+
+        if (!"".equals(jTxtNomeTransportador.getText())
+                && "Desvincular".equals(jButton2.getText())) {
+            montaLista(idTransportador, true, false, jTblDisponiveis, data);
+        } else if (!"".equals(jTxtNomeTransportador.getText())
+                && "Vincular".equals(jButton2.getText())) {
+            montaLista(idTransportador, true, true, jTblDisponiveis, data);
+        }
     }
 
 }

@@ -9,6 +9,7 @@ import com.lowagie.text.Cell;
 import ferramentas.ConfereTipo;
 import ferramentas.ImportaCte;
 import ferramentas.RpaIntegrador;
+import ferramentas.VerificaFrame;
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.JFrame;
@@ -22,6 +23,7 @@ import javax.swing.JOptionPane;
 public final class TelaInicial extends javax.swing.JFrame {
 
     public static int usuariosys;
+    private static VincularConhecimentos vincularConhecimentos;
 
     private RpaIntegrador rpa = new RpaIntegrador();
     private ImportaCte cte = new ImportaCte();
@@ -287,7 +289,7 @@ public final class TelaInicial extends javax.swing.JFrame {
             ferramentas.ImportaCte x = new ImportaCte();
             x.buscaCteAutorizado(numero, false, this, true);
         }
-        
+
         if (resposta == null) {
             JOptionPane.showMessageDialog(this, "Nenhum conhecimento foi importado.", "Importação manual", JOptionPane.WARNING_MESSAGE);
         }
@@ -358,7 +360,9 @@ public final class TelaInicial extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
-        abreTelaInterna(new VincularConhecimentos());
+        vincularConhecimentos = new VincularConhecimentos();
+        abreTelaInterna(vincularConhecimentos);
+        vincularConhecimentos.setFramePai(this);
 
     }//GEN-LAST:event_jMenuItem9ActionPerformed
 
@@ -460,13 +464,19 @@ public final class TelaInicial extends javax.swing.JFrame {
     }
 
     private void abreTelaInterna(JInternalFrame tela) {
+
         try {
-            tela.setVisible(true);
-            jDPTelaPrincipal.add(tela);
-            tela.setSelected(true);
-            setPosicao(tela);
+            //PREPARAÇÃO PARA RECEBER INSTRUÇÕES PARA NAO ABRIR VÁRIAS JANELAS
+            if (false) {
+                tela.setSelected(true);
+            } else {
+                tela.setVisible(true);
+                jDPTelaPrincipal.add(tela);
+                tela.setSelected(true);
+                setPosicao(tela);
+            }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Ops! Não foi possível abrir a tela '" + tela + "'. Erro: " + e);
+            JOptionPane.showMessageDialog(null, "Ops! Não foi possível abrir a tela '" + tela + "'. \nErro: " + e);
         }
     }
 }

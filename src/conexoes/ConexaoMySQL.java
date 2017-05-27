@@ -69,13 +69,13 @@ public class ConexaoMySQL {
         } catch (ClassNotFoundException | NullPointerException ex) {
             resposta = false;
             JOptionPane.showMessageDialog(null, "Não foi possível carregar o "
-                    + "driver do banco de dados." + ex);
+                    + "driver do banco de dados.\n" + ex);
         } catch (SQLException sqlEx) {
             resposta = false;
-            JOptionPane.showMessageDialog(null, "Erro na conexão com o banco de dados. " + sqlEx);
+            JOptionPane.showMessageDialog(null, "Erro na conexão com o banco de dados. \n" + sqlEx);
         } catch (IOException ex) {
             resposta = false;
-            JOptionPane.showMessageDialog(null, "Não possível carregar o arquivo de configurações. " + ex);
+            JOptionPane.showMessageDialog(null, "Não possível carregar o arquivo de configurações. \n" + ex);
         }
 
         return resposta;
@@ -141,7 +141,7 @@ public class ConexaoMySQL {
 
             System.out.println("MySQL - Conexão não encerrada.");
 
-            JOptionPane.showMessageDialog(null, "Não foi possível desconectar o banco " + sqlEx);
+            JOptionPane.showMessageDialog(null, "Não foi possível desconectar o banco. \n" + sqlEx);
 
         }
 
@@ -154,7 +154,7 @@ public class ConexaoMySQL {
         try {
             st = conexao.createStatement();
 
-            System.out.println("Preparando para executar Query: " + sql);
+            System.out.println("Preparando para executar Query: \n" + sql);
             st.executeUpdate(sql);
             
             resultadoUpd = 0;
@@ -163,11 +163,11 @@ public class ConexaoMySQL {
             resultadoUpd = 1;
             if (except) {
                 resposta = false;
-                JOptionPane.showMessageDialog(null, "Não foi possível executar o comando sql" + sql + ".Erro " + sqlEx);
+                JOptionPane.showMessageDialog(null, "Não foi possível executar o comando sql\n" + sql + ".\nErro " + sqlEx);
             }
         }
 
-        //System.out.println("Upd " + resultadoUpd);
+        System.out.println("Upd " + resultadoUpd + "\nStatus do Except: " + except);
         return resposta;
     }
 
@@ -185,7 +185,7 @@ public class ConexaoMySQL {
         } catch (SQLException sqlEx) {
             resposta = false;
             System.out.println("MySQL - Consulta não realizada no banco de dados MySQL");
-            JOptionPane.showMessageDialog(null, "Não foi possível executar o comando sql" + sql + "Erro " + sqlEx);
+            JOptionPane.showMessageDialog(null, "Não foi possível executar o comando sql" + sql + "\nErro " + sqlEx);
         }
 
         System.out.println("Resposta da consulta: " + resposta);
