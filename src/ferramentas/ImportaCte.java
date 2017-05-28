@@ -9,6 +9,8 @@ import cadastros.ConfigDefault;
 import conexoes.ConexaoFB;
 import conexoes.ConexaoMySQL;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -23,9 +25,11 @@ public class ImportaCte {
     private JFrame parent;
     telaCadastros.TelaInicial ti;
 
-    conexoes.ConexaoFB cnfb = new ConexaoFB();
-    conexoes.ConexaoMySQL cn = new ConexaoMySQL();
-    cadastros.ConfigDefault cd = new ConfigDefault();
+    private final conexoes.ConexaoFB cnfb = new ConexaoFB();
+    private final conexoes.ConexaoMySQL cn = new ConexaoMySQL();
+    private final cadastros.ConfigDefault cd = new ConfigDefault();
+    private final DataFechamento fechamento = new DataFechamento();
+    private final DateFormat dateIn = new SimpleDateFormat("dd.MM.yyyy");
 
     Timestamp sinc = null;
     int cteImportado;
@@ -76,9 +80,9 @@ public class ImportaCte {
                 System.out.println("Última sincronização em " + sinc);
 
                 if (numeroCte == 0) {
-                    condicao = " where a.hora_emissao > '" + sinc + "' and a.status_envio = 'AU' ";
+                    condicao = " where a.hora_emissao > '" + dateIn.format(fechamento.getData("us")) + "' and a.status_envio = 'AU' ";
                 } else {
-                    condicao = " where a.numero =  '" + numeroCte + "' and a.hora_emissao > '01.01.2017' ";
+                    condicao = " where a.numero =  '" + numeroCte + "' and a.hora_emissao > '" + dateIn.format(fechamento.getData("us")) + "' ";
                 }
 
                 String sql = "with conhecimentos as(select a.empresa,a.emitente,a.hora_emissao as emissao,"
@@ -220,7 +224,7 @@ public class ImportaCte {
                     + "left join cad_municipios d on (d.codigo = a.mun_ini_prestacao) "
                     + "left join cad_municipios dd on (dd.codigo = a.mun_fim_prestacao) "
                     + "left join FRO_CT_DETALHE e on (e.empresa = a.empresa and e.numero = a.numero and e.serie = a.serie and e.nome_componente = 'VALOR PEDAGIO' )"
-                    + "where a.status_envio = 'CA' and a.hora_emissao >= '" + sinc + "') "
+                    + "where a.status_envio = 'CA' and a.hora_emissao >= '" + dateIn.format(fechamento.getData("us")) + "') "
                     + "select z.empresa,z.emitente,z.emissao,z.numero,z.serie,z.chave_cte,"
                     + "z.operacao,z.natureza,z.tp_cte,z.status_envio,z.valor,"
                     + "z.placa,y.codigo as cod_transportador,y.nome as transportador,"
@@ -354,10 +358,10 @@ public class ImportaCte {
     public static void main(String[] args) {
         ImportaCte cte = new ImportaCte();
         TelaInicial ti = new TelaInicial();
-        
+
         cte.buscaCteAutorizado(0, false, ti, false);
         ti.dispose();
-        
+
         //System.out.println("CTe cancelado, atualizado: " + cte.buscaCteCancelado());
         //System.out.println("Conhecimentos Atualizados: " + cte.atualizaCadCte());
     }

@@ -145,8 +145,8 @@ public class ConexaoFB {
         try {
             st = this.conexao.createStatement();
 
-            rs = st.executeQuery(sql);
             System.out.println("Query consulta Firebird: " + sql);
+            rs = st.executeQuery(sql);
         } catch (SQLException sqlEx) {
 
             throw new RuntimeException(sqlEx);

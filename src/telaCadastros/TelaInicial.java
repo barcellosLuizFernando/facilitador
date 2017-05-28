@@ -35,7 +35,7 @@ public final class TelaInicial extends javax.swing.JFrame {
     public TelaInicial() {
         initComponents();
         setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-        //cte.buscaCteAutorizado(0, false, this, false);
+        cte.buscaCteAutorizado(0, false, this, false);
         //jDPTelaPrincipal.setBackground(Color.DARK_GRAY);
     }
 
@@ -404,7 +404,7 @@ public final class TelaInicial extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem11ActionPerformed
 
     private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
-        // TODO add your handling code here:
+        abreTelaInterna(new UtilResumo());
     }//GEN-LAST:event_jMenuItem12ActionPerformed
 
     private void jMenuItem13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem13ActionPerformed

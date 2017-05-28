@@ -649,11 +649,11 @@ public class RpaIntegrador {
     public static void main(String[] args) {
         RpaIntegrador x = new RpaIntegrador();
 
-        x.integraFolha();
+        //x.integraFolha();
         //System.out.println(x.escreveXML(null));
         //x.integraFinanceiro("18");
         //System.out.println("Resultado final: " + x.buscaRpa("500"));
-        //x.integraFinanceiroMult();
+        x.integraFinanceiroMult();
         //System.out.println("Valor Bruto: " + x.valor_bruto);
         //System.out.println("Emissao em: " + x.dt_emissao);
         //x.sincronizaPessoa();
