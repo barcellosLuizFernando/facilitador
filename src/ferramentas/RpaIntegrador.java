@@ -52,8 +52,8 @@ public class RpaIntegrador {
     private final conexoes.ConexaoMySQL cn = new ConexaoMySQL();
     private final conexoes.ConexaoFB cnfb = new ConexaoFB();
     private final conexoes.ConexaoORCL cnSen = new ConexaoORCL();
-    private final ferramentas.FbGenerators gen = new FbGenerators();
-    private final cadastros.ConfigDefault cd = new ConfigDefault();
+    ferramentas.FbGenerators gen = new FbGenerators();
+    private cadastros.ConfigDefault cd = new ConfigDefault();
     private cadastros.Transportador transp = new Transportador();
 
     private DecimalFormat df = new DecimalFormat("0.00");
@@ -113,6 +113,7 @@ public class RpaIntegrador {
     private Integer codRet = 588;
     private Double perGrp;
     private Integer codSer = 1;
+    private Double valIse;
 
     public boolean buscaRpa(String nroRpa) {
         boolean resposta = false;
@@ -147,6 +148,7 @@ public class RpaIntegrador {
                     categoria = cn.rs.getString("categoria");
                     codigo = cn.rs.getInt("codigo_fin");
                     this.nroRpa = cn.rs.getInt("codigo");
+                    valIse = valor_bruto * 0.90;
 
                     if (this.nroRpa > 0) {
                         resposta = true;
@@ -223,16 +225,19 @@ public class RpaIntegrador {
     public boolean integraFinanceiro(String rpa) {
         boolean resposta = false;
 
-        cd.carregaProp();
-
         String sql;
         String query;
-        codigo = gen.getCodigo("fin_contas_pagar");
-        System.out.println("Código capturado: " + codigo);
-        id_transacao = gen.getTransacao();
-        System.out.println("Transação capturada: " + id_transacao);
+
+        cd.carregaProp();
 
         if (buscaRpa(rpa)) {
+
+            codigo = gen.getCodigo("fin_contas_pagar");
+            System.out.println("Código capturado: " + codigo);
+
+            id_transacao = gen.getTransacao();
+            System.out.println("Transação capturada: " + id_transacao);
+
             if (cnfb.conecta()) {
                 try {
 
@@ -348,7 +353,7 @@ public class RpaIntegrador {
     }
 
     public boolean sincronizaPessoa() {
-        boolean resposta = false;
+        boolean resposta = true;
 
         ArrayList codigos = new ArrayList();
 
@@ -368,7 +373,7 @@ public class RpaIntegrador {
 
             for (int x = 0; x < codigos.size(); x++) {
                 System.out.println("Código capturado: " + codigos.get(x) + ". Número da linha: " + x);
-                sincronizaPessoa(Integer.parseInt(codigos.get(x).toString()));
+                resposta = sincronizaPessoa(Integer.parseInt(codigos.get(x).toString()));
             }
         }
 
@@ -376,7 +381,7 @@ public class RpaIntegrador {
     }
 
     public boolean sincronizaPessoa(int codigo) {
-        boolean resposta = false;
+        boolean resposta = true;
 
         transp.buscaPessoa(codigo);
 
@@ -415,7 +420,7 @@ public class RpaIntegrador {
                         }
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Transportador não está cadastrado na Folha de Pagamentos.");
+                    JOptionPane.showMessageDialog(null, "Transportador " + transp.getNome() + " não está cadastrado na Folha de Pagamentos.");
                     resposta = false;
                 }
 
@@ -448,6 +453,7 @@ public class RpaIntegrador {
         terc.setNroRpa(objectFactory.createTerceirosPagtosFisicaInNroRpa(Integer.parseInt(doc)));
         terc.setPerGrp(objectFactory.createTerceirosPagtosFisicaInPerGrp(perGrp));
         terc.setCodSer(objectFactory.createTerceirosPagtosFisicaInCodSer(codSer));
+        terc.setValIse(objectFactory.createTerceirosPagtosFisicaInValIse(valIse));
         terc.setInsTrp(objectFactory.createTerceirosPagtosFisicaInInsTrp(terceiros));
         terc.setIrfRet(objectFactory.createTerceirosPagtosFisicaInIrfRet(irrf));
         terc.setConIns(objectFactory.createTerceirosPagtosFisicaInConIns(inss));
@@ -529,7 +535,7 @@ public class RpaIntegrador {
                             switch (elementoFilho.getTagName()) {
                                 case "result":
                                     System.out.println("Resposta do Servidor: " + elementoFilho.getTextContent());
-
+                                    resposta = true;
                                     break;
                                 default:
                                     JOptionPane.showMessageDialog(null, "Não foi possível integrar o RPA " + nroRpa + ". Motivo: " + elementoFilho.getTextContent());
@@ -552,30 +558,55 @@ public class RpaIntegrador {
     public boolean integraFolha() {
         boolean resposta = false;
 
-        ArrayList codigos = new ArrayList();
+        if (sincronizaPessoa()) {
 
-        if (cn.conecta()) {
-            try {
-                cn.executeConsulta("SELECT * FROM rpa WHERE integ_folha IS NULL;");
-                while (cn.rs.next()) {
-                    codigos.add(cn.rs.getString("codigo"));
+            System.out.println("Iniciando integração!!!");
+
+            ArrayList codigos = new ArrayList();
+
+            if (cn.conecta()) {
+                try {
+                    cn.executeConsulta("SELECT * FROM rpa WHERE integ_folha IS NULL;");
+                    while (cn.rs.next()) {
+                        codigos.add(cn.rs.getString("codigo"));
+                    }
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Não foi possível recuperar os códigos dos RPAS.");
+                } finally {
+                    cn.desconecta();
                 }
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Não foi possível recuperar os códigos dos RPAS.");
-            } finally {
-                cn.desconecta();
+
+                System.out.println("Códigos selecionados para sincronização: " + codigos);
+
+                for (int x = 0; x < codigos.size(); x++) {
+                    System.out.println("Código capturado: " + codigos.get(x) + ". Número da linha: " + x);
+                    resposta = integraFolha(codigos.get(x).toString());
+                }
+
             }
-
-            System.out.println("Códigos selecionados para sincronização: " + codigos);
-
-            for (int x = 0; x < codigos.size(); x++) {
-                System.out.println("Código capturado: " + codigos.get(x) + ". Número da linha: " + x);
-                integraFolha(codigos.get(x).toString());
-            }
-
         }
 
         return resposta;
+    }
+
+    public void fechaFolha(boolean x, String competencia) {
+        String sql;
+
+        if (x) {
+            sql = "UPDATE rpa SET integ_folha = 'S' WHERE competencia = '" + competencia + "';";
+        } else {
+            sql = "UPDATE rpa SET integ_folha = null WHERE competencia = '" + competencia + "';";
+        }
+
+        if (cn.conecta()) {
+            try {
+                cn.executeAtualizacao(sql);
+
+            } catch (Exception e) {
+            } finally {
+                cn.desconecta();
+            }
+        }
     }
 
     public int getCodigo() {
@@ -649,14 +680,15 @@ public class RpaIntegrador {
     public static void main(String[] args) {
         RpaIntegrador x = new RpaIntegrador();
 
+        x.fechaFolha(true, "05/2017");
         //x.integraFolha();
         //System.out.println(x.escreveXML(null));
-        //x.integraFinanceiro("18");
+        //x.integraFinanceiro("678");
         //System.out.println("Resultado final: " + x.buscaRpa("500"));
-        x.integraFinanceiroMult();
+        //x.integraFinanceiroMult();
         //System.out.println("Valor Bruto: " + x.valor_bruto);
         //System.out.println("Emissao em: " + x.dt_emissao);
-        //x.sincronizaPessoa();
+        //System.out.println("Resposta sincroniza Pessoa: " + x.sincronizaPessoa());
     }
 
 }

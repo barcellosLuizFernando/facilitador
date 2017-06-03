@@ -408,7 +408,17 @@ public final class TelaInicial extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem12ActionPerformed
 
     private void jMenuItem13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem13ActionPerformed
-        // TODO add your handling code here:
+        int x = JOptionPane.showConfirmDialog(null, "Deseja integrar todos os conhecimentos com a Folha de Pagamentos?", "Integração - Folha de Pagamentos", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+        switch (x) {
+            case 0:
+                RpaIntegrador integ = new RpaIntegrador();
+                if (integ.integraFolha()) {
+                    JOptionPane.showMessageDialog(null, "Integração realizada com Sucesso.", "Integração - Folha de Pagamentos", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Erro na integração.", "Integração - Folha de Pagamentos", JOptionPane.ERROR_MESSAGE);
+                }
+        }
     }//GEN-LAST:event_jMenuItem13ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -187,9 +187,9 @@ public class ImportaCte {
                 }
 
                 //cn.setResultadoUpd(0);
-                if (cn.getResultadoUpd() < 1 && numeroCte == 0) {
-                    //cd.setUltima_sincronizacao(sinc);
-                    //cd.salvaProp();
+                if (numeroCte == 0) {
+                    cd.setUltima_sincronizacao(sinc);
+                    cd.salvaProp();
                 } else {
                     System.out.println("Arquivo properties não foi atualizado.");
                 }

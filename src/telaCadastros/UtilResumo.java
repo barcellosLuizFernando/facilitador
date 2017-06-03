@@ -7,6 +7,7 @@ package telaCadastros;
 
 import conexoes.ConexaoFB;
 import conexoes.ConexaoMySQL;
+import conexoes.ConexaoORCL;
 import ferramentas.DataFechamento;
 import ferramentas.JNumberFormatField99;
 import ferramentas.ManipulaData;
@@ -25,6 +26,7 @@ public class UtilResumo extends javax.swing.JInternalFrame {
 
     private final conexoes.ConexaoMySQL cn = new ConexaoMySQL();
     private final conexoes.ConexaoFB cnfb = new ConexaoFB();
+    private final conexoes.ConexaoORCL cnor = new ConexaoORCL();
     private final DateFormat dateOut = new SimpleDateFormat("yyyy/MM/dd");
     private final DateFormat dateIn = new SimpleDateFormat("dd/MM/yyyy");
     private final DateFormat dateFb = new SimpleDateFormat("dd.MM.yyyy HH:mm");
@@ -94,13 +96,13 @@ public class UtilResumo extends javax.swing.JInternalFrame {
             jLabel20 = new javax.swing.JLabel();
             jLabel21 = new javax.swing.JLabel();
             jLabel22 = new javax.swing.JLabel();
-            jTextField16 = new JNumberFormatField99(new DecimalFormat("#,##0.00"));
-            jTextField17 = new JNumberFormatField99(new DecimalFormat("#,##0.00"));
-            jTextField18 = new JNumberFormatField99(new DecimalFormat("#,##0.00"));
-            jTextField19 = new JNumberFormatField99(new DecimalFormat("#,##0.00"));
-            jTextField20 = new JNumberFormatField99(new DecimalFormat("#,##0.00"));
-            jTextField21 = new javax.swing.JTextField();
-            jTextField22 = new javax.swing.JTextField();
+            jTxtFolhaLiquido = new JNumberFormatField99(new DecimalFormat("#,##0.00"));
+            jTxtFolhaIRRF = new JNumberFormatField99(new DecimalFormat("#,##0.00"));
+            jTxtFolhaTerceiros = new JNumberFormatField99(new DecimalFormat("#,##0.00"));
+            jTxtFolhaINSS = new JNumberFormatField99(new DecimalFormat("#,##0.00"));
+            jTxtFolhaBruto = new JNumberFormatField99(new DecimalFormat("#,##0.00"));
+            jTxtFolhaQuantidade = new javax.swing.JTextField();
+            jTxtFolhaStatus = new javax.swing.JTextField();
 
             setClosable(true);
             setTitle("Resumo da integração");
@@ -371,19 +373,19 @@ public class UtilResumo extends javax.swing.JInternalFrame {
 
         jLabel22.setText("Status");
 
-        jTextField16.setEnabled(false);
+        jTxtFolhaLiquido.setEnabled(false);
 
-        jTextField17.setEnabled(false);
+        jTxtFolhaIRRF.setEnabled(false);
 
-        jTextField18.setEnabled(false);
+        jTxtFolhaTerceiros.setEnabled(false);
 
-        jTextField19.setEnabled(false);
+        jTxtFolhaINSS.setEnabled(false);
 
-        jTextField20.setEnabled(false);
+        jTxtFolhaBruto.setEnabled(false);
 
-        jTextField21.setEnabled(false);
+        jTxtFolhaQuantidade.setEnabled(false);
 
-        jTextField22.setEnabled(false);
+        jTxtFolhaStatus.setEnabled(false);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -392,33 +394,33 @@ public class UtilResumo extends javax.swing.JInternalFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addComponent(jLabel22)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jTextField22, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jTxtFolhaStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel16)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jTextField21, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jTxtFolhaQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel17)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jTextField20, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jTxtFolhaBruto, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel18)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jTextField19, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jTxtFolhaINSS, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel19)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jTextField18, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jTxtFolhaTerceiros, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel20)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jTextField17, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jTxtFolhaIRRF, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel21)
                         .addGap(18, 18, 18)
-                        .addComponent(jTextField16, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jTxtFolhaLiquido, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
@@ -427,31 +429,31 @@ public class UtilResumo extends javax.swing.JInternalFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel16)
-                    .addComponent(jTextField21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTxtFolhaQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel17)
-                    .addComponent(jTextField20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTxtFolhaBruto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel18)
-                    .addComponent(jTextField19, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTxtFolhaINSS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel19)
-                    .addComponent(jTextField18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTxtFolhaTerceiros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel20)
-                    .addComponent(jTextField17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTxtFolhaIRRF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel21)
-                    .addComponent(jTextField16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTxtFolhaLiquido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel22)
-                    .addComponent(jTextField22, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jTxtFolhaStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -459,7 +461,7 @@ public class UtilResumo extends javax.swing.JInternalFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
@@ -468,7 +470,7 @@ public class UtilResumo extends javax.swing.JInternalFrame {
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(10, 10, 10))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -527,13 +529,6 @@ public class UtilResumo extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JTextField jTextField16;
-    private javax.swing.JTextField jTextField17;
-    private javax.swing.JTextField jTextField18;
-    private javax.swing.JTextField jTextField19;
-    private javax.swing.JTextField jTextField20;
-    private javax.swing.JTextField jTextField21;
-    private javax.swing.JTextField jTextField22;
     private javax.swing.JTextField jTxtCompetencia;
     private javax.swing.JTextField jTxtFinanceiroBruto;
     private javax.swing.JTextField jTxtFinanceiroINSS;
@@ -542,6 +537,13 @@ public class UtilResumo extends javax.swing.JInternalFrame {
     private javax.swing.JTextField jTxtFinanceiroQuantidade;
     private javax.swing.JTextField jTxtFinanceiroStatus;
     private javax.swing.JTextField jTxtFinanceiroTerceiros;
+    private javax.swing.JTextField jTxtFolhaBruto;
+    private javax.swing.JTextField jTxtFolhaINSS;
+    private javax.swing.JTextField jTxtFolhaIRRF;
+    private javax.swing.JTextField jTxtFolhaLiquido;
+    private javax.swing.JTextField jTxtFolhaQuantidade;
+    private javax.swing.JTextField jTxtFolhaStatus;
+    private javax.swing.JTextField jTxtFolhaTerceiros;
     private javax.swing.JTextField jTxtLocalBruto;
     private javax.swing.JTextField jTxtLocalINSS;
     private javax.swing.JTextField jTxtLocalIRRF;
@@ -555,8 +557,11 @@ public class UtilResumo extends javax.swing.JInternalFrame {
 
         boolean resposta;
 
+        Double liquido1 = 0.00;
+        Double liquido2 = 0.00;
+
         //VERIFICA QUE SE EXISTE ALGUMA PESQUISA SELECIONADA
-        if (jCheckBox1.isSelected() | jCheckBox2.isSelected() | jCheckBox2.isSelected()) {
+        if (jCheckBox1.isSelected() | jCheckBox2.isSelected() | jCheckBox3.isSelected()) {
             String sql;
             ManipulaData dm = new ManipulaData();
 
@@ -605,6 +610,9 @@ public class UtilResumo extends javax.swing.JInternalFrame {
                 }
             }
 
+            System.out.println("Definindo valor líquido2.");
+            liquido2 = Double.parseDouble(jTxtLocalLiquido.getText().replace(".", "").replace(",", "."));
+
             //PESQUISA O STATUS DOS CONHECIMENTOS NO FINANCEIRO
             if (jCheckBox2.isSelected()) {
                 sql = "with contagem as ( "
@@ -616,8 +624,8 @@ public class UtilResumo extends javax.swing.JInternalFrame {
                         + "LEFT JOIN fin_contas_pagar_detalhe b on (b.empresa = a.empresa and b.codigo = a.codigo and (b.planoconta = 2786 or b.planoconta = 2789 or b.planoconta = 479)) "
                         + "LEFT JOIN fin_contas_pagar_detalhe c on (c.empresa = a.empresa and c.codigo = a.codigo and c.planoconta = 258) "
                         + "LEFT JOIN fin_contas_pagar_detalhe d on (d.empresa = a.empresa and d.codigo = a.codigo and d.planoconta = 240) "
-                        + "WHERE a.tipodoc = 25 and extract(month from a.dt_emissao) = " + (competencia.getMonth()+1)+ " "
-                        + "AND extract(year from a.dt_emissao) = " + (competencia.getYear()+1900) + " ) "
+                        + "WHERE a.tipodoc = 25 and extract(month from a.dt_emissao) = " + (competencia.getMonth() + 1) + " "
+                        + "AND extract(year from a.dt_emissao) = " + (competencia.getYear() + 1900) + " ) "
                         + "SELECT quantidade,bruto,inss,irrf, "
                         + "bruto - case when inss is null then 0.00 else inss end - case when irrf is null then 0.00 else irrf end as liquido "
                         + "FROM contagem ;";
@@ -631,6 +639,7 @@ public class UtilResumo extends javax.swing.JInternalFrame {
                             jTxtFinanceiroINSS.setText(df.format(cnfb.rs.getDouble("inss")));
                             jTxtFinanceiroIRRF.setText(df.format(cnfb.rs.getDouble("irrf")));
                             jTxtFinanceiroLiquido.setText(df.format(cnfb.rs.getDouble("liquido")));
+                            liquido1 = cnfb.rs.getDouble("liquido");
                             //jTxtFinanceiroTerceiros.setText(df.format(cnfb.rs.getDouble("terceiros")));
                         }
                     } catch (Exception e) {
@@ -640,10 +649,49 @@ public class UtilResumo extends javax.swing.JInternalFrame {
                     }
                 }
 
+                if ((liquido1 - liquido2) > -1.00 && (liquido1 - liquido2) < 1.00) {
+                    jTxtFinanceiroStatus.setText("Concluído");
+                } else {
+                    jTxtFinanceiroStatus.setText("Aberto");
+                }
             }
 
             //PESQUISA O STATUS DOS CONHECIMENTOS NA FOLHA DE PAGAMENTOS.
             if (jCheckBox3.isSelected()) {
+                sql = "Select count(a.seqpte) as quantidade, "
+                        + "sum(a.renbru) as bruto, "
+                        + "sum(a.conins) as inss, "
+                        + "sum(a.instrp) as terceiros, "
+                        + "sum(a.IRFRET) as IRRF, "
+                        + "sum(a.valliq) as liquido "
+                        + "from r032tpg a "
+                        + "where a.CMPPTE = '01/" + jTxtCompetencia.getText() + "' "
+                        + "and a.numemp = 7";
+
+                if (cnor.conecta()) {
+                    try {
+                        cnor.executeConsulta(sql);
+                        while (cnor.rs.next()) {
+                            jTxtFolhaQuantidade.setText(cnor.rs.getString("quantidade"));
+                            jTxtFolhaBruto.setText(df.format(cnor.rs.getDouble("bruto")));
+                            jTxtFolhaINSS.setText(df.format(cnor.rs.getDouble("inss")));
+                            jTxtFolhaIRRF.setText(df.format(cnor.rs.getDouble("irrf")));
+                            jTxtFolhaLiquido.setText(df.format(cnor.rs.getDouble("liquido")));
+                            jTxtFolhaTerceiros.setText(df.format(cnor.rs.getDouble("terceiros")));
+                            liquido1 = cnor.rs.getDouble("liquido");
+                        }
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(null, "Não foi possível verificar o resumo da Folha de Pagamentos.\n" + e, "Resumo", JOptionPane.ERROR_MESSAGE);
+                    } finally {
+                        cnor.desconecta();
+                    }
+                }
+                
+                if ((liquido1 - liquido2) > -1.00 && (liquido1 - liquido2) < 1.00) {
+                    jTxtFolhaStatus.setText("Concluído");
+                } else {
+                    jTxtFolhaStatus.setText("Aberto");
+                }
 
             }
         } else {
