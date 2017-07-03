@@ -27,16 +27,18 @@ public class VincularConhecimentos extends javax.swing.JInternalFrame {
     private DateFormat dateOut = new SimpleDateFormat("yyyy/MM/dd");
     private JFrame framePai;
 
-    private static VincularConhecimentos instancia;
+    //private static VincularConhecimentos instancia;
+    private int usu_inc;
 
     /**
      * Creates new form VincularConhecimentos
      */
-    public VincularConhecimentos() {
+    public VincularConhecimentos(int user) {
         initComponents();
         montaTabela(jTblCancelados);
         montaLista(null, false, false, jTblCancelados, null);
         montaTabela(jTblDisponiveis);
+        this.usu_inc = user;
 
     }
 
@@ -369,13 +371,17 @@ public class VincularConhecimentos extends javax.swing.JInternalFrame {
         }
 
     }
+    
+    /*public int getUsu_inc(){
+        return usu_inc;
+    }
 
     public static synchronized VincularConhecimentos getInstance() {
         if (instancia == null) {
-            instancia = new VincularConhecimentos();
+            instancia = new VincularConhecimentos(this.);
         }
         return instancia;
-    }
+    }*/
 
     public JFrame getFramePai() {
         return framePai;
@@ -397,7 +403,7 @@ public class VincularConhecimentos extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(this, "Não foi possível converter a data selecionada.");
         }
 
-        Transportador transp = new Transportador();
+        Transportador transp = new Transportador(usu_inc);
 
         transp.buscaPessoa(Integer.parseInt(idTransportador));
 

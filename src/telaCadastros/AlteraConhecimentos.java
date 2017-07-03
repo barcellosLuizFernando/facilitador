@@ -23,17 +23,21 @@ import javax.swing.table.DefaultTableModel;
 public class AlteraConhecimentos extends javax.swing.JInternalFrame {
 
     private Conhecimentos cte = new Conhecimentos();
-    private conexoes.ConexaoFB cnfb = new ConexaoFB();
+    private conexoes.ConexaoFB cnfb;
     private conexoes.ConexaoMySQL cn = new ConexaoMySQL();
     private int var_consulta;
-    private Transportador transp = new Transportador();
+    private Transportador transp;
     private DateFormat dateIn = new SimpleDateFormat("dd/MM/yyyy");
+    private final int usu_inc;
 
     /**
      * Creates new form AlteraConhecimentos
      */
-    public AlteraConhecimentos() {
+    public AlteraConhecimentos(int user) {
         initComponents();
+        this.usu_inc = user;
+        cnfb = new ConexaoFB(usu_inc);
+        transp = new Transportador(usu_inc);
     }
 
     /**

@@ -282,6 +282,7 @@ public class Login extends javax.swing.JFrame {
                         jTxtUsuario.grabFocus();
                     } else if (pwd.equals(pwdbd)) {
                         if (enviausuario == null) {
+                            System.out.println("Abrindo tela.");
                             enviausuario = new TelaInicial();
                             enviausuario.setVisible(true);
                             enviausuario.recebendo(user, id);
@@ -298,8 +299,6 @@ public class Login extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(null, "Usuário incorreto!!!");
                         jTxtUsuario.grabFocus();
                     }
-                    
-                    ConexaoFB.userlog = id;
                     
                     break;
                 case 0:

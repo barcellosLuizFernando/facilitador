@@ -21,11 +21,17 @@ import telaCadastros.TelaInicial;
  * @author ferna
  */
 public class ImportaCte {
+    
+    public ImportaCte(int user){
+        this.usu_inc = user;
+        cnfb = new ConexaoFB(usu_inc);
+    }
 
     private JFrame parent;
     telaCadastros.TelaInicial ti;
+    private int usu_inc;
 
-    private final conexoes.ConexaoFB cnfb = new ConexaoFB();
+    private final conexoes.ConexaoFB cnfb;
     private final conexoes.ConexaoMySQL cn = new ConexaoMySQL();
     private final cadastros.ConfigDefault cd = new ConfigDefault();
     private final DataFechamento fechamento = new DataFechamento();
@@ -356,7 +362,7 @@ public class ImportaCte {
     }
 
     public static void main(String[] args) {
-        ImportaCte cte = new ImportaCte();
+        ImportaCte cte = new ImportaCte(131);
         TelaInicial ti = new TelaInicial();
 
         cte.buscaCteAutorizado(0, false, ti, false);

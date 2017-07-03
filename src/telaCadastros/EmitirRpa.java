@@ -32,34 +32,40 @@ import javax.swing.table.DefaultTableModel;
  */
 public class EmitirRpa extends javax.swing.JInternalFrame {
 
+    
     private int var_consulta;
+    //private TelaInicial ti = new TelaInicial();
+    private int usu_inc;
 
-    conexoes.ConexaoMySQL cn = new ConexaoMySQL();
-    conexoes.ConexaoFB cnfb = new ConexaoFB();
-    cadastros.Estabelecimento estab = new Estabelecimento();
-    cadastros.Transportador transp = new Transportador();
-    cadastros.ConfigDefault cd = new ConfigDefault();
-    ferramentas.ResumoRPA res = new ResumoRPA();
-    ferramentas.RpaCodigos rpa = new RpaCodigos();
-    ferramentas.RpaIntegrador integ = new RpaIntegrador();
-    ferramentas.CalculadoraRPA cRpa = new CalculadoraRPA();
-    ferramentas.ImprimeRelatorio print = new ImprimeRelatorio();
+    private conexoes.ConexaoMySQL cn = new ConexaoMySQL();
+    private conexoes.ConexaoFB cnfb;
+    private cadastros.Estabelecimento estab = new Estabelecimento();
+    private cadastros.Transportador transp;
+    private cadastros.ConfigDefault cd = new ConfigDefault();
+    private ferramentas.ResumoRPA res = new ResumoRPA();
+    private ferramentas.RpaCodigos rpa = new RpaCodigos();
+    private ferramentas.RpaIntegrador integ;
+    private ferramentas.CalculadoraRPA cRpa = new CalculadoraRPA();
+    private ferramentas.ImprimeRelatorio print = new ImprimeRelatorio();
 
-    DateFormat dateOut = new SimpleDateFormat("yyyy/MM/dd");
-    DateFormat dateIn = new SimpleDateFormat("dd/MM/yyyy");
-    DateFormat competencia = new SimpleDateFormat("MM/yyyy");
+    private DateFormat dateOut = new SimpleDateFormat("yyyy/MM/dd");
+    private DateFormat dateIn = new SimpleDateFormat("dd/MM/yyyy");
+    private DateFormat competencia = new SimpleDateFormat("MM/yyyy");
 
-    DecimalFormat df = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(new Locale("pt", "BR")));
-
-    TelaInicial ti = new TelaInicial();
+    private DecimalFormat df = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(new Locale("pt", "BR")));
 
     /**
      * Creates new form emitirRpa
      */
-    public EmitirRpa() {
+    public EmitirRpa(int user) {
         initComponents();
         montaTabela();
+        this.usu_inc = user;
+        cnfb = new ConexaoFB(usu_inc);
+        transp = new Transportador(usu_inc);
+        integ = new RpaIntegrador(usu_inc);
     }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -133,6 +139,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
         jTxtCategoria = new javax.swing.JTextField();
         jTxtAcumTerc = new javax.swing.JTextField();
         jTxtAcumInss = new javax.swing.JTextField();
+        jLblMargem = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jBtnGravar = new javax.swing.JButton();
         jBtnEditar = new javax.swing.JButton();
@@ -490,21 +497,17 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel13)
-                            .addComponent(jLabel15)
-                            .addComponent(jLabel14))
-                        .addGap(12, 12, 12)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTxtTerceiros)
-                            .addComponent(jTxtLiquido)
-                            .addComponent(jSpVlrPagar, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(jLabel16)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jSpPgto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabel13)
+                    .addComponent(jLabel15)
+                    .addComponent(jLabel14)
+                    .addComponent(jLabel16))
+                .addGap(12, 12, 12)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jSpPgto, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jTxtTerceiros)
+                        .addComponent(jTxtLiquido)
+                        .addComponent(jSpVlrPagar, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
@@ -580,6 +583,9 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
         jTxtAcumInss.setText("0,00");
         jTxtAcumInss.setEnabled(false);
 
+        jLblMargem.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLblMargem.setBorder(javax.swing.BorderFactory.createTitledBorder("Margem"));
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
@@ -595,7 +601,9 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                     .addComponent(jTxtAcumQtdeFrete, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTxtAcumIrrf, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTxtAcum, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLblMargem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(10, 10, 10)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel19)
                     .addComponent(jLabel20)
@@ -611,7 +619,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel7Layout.createSequentialGroup()
                         .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel19)
@@ -635,8 +643,11 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel18)
-                            .addComponent(jTxtAcumQtdeFrete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jTxtAcumQtdeFrete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(jLblMargem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -832,7 +843,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
 
             if (cn.conecta()) {
                 try {
-                    cn.executeAtualizacao("DELETE FROM tmp_cte_rpa WHERE usu_inc = '" + ti.getUsuariosys() + "';");
+                    cn.executeAtualizacao("DELETE FROM tmp_cte_rpa WHERE usu_inc = '" + usu_inc + "';");
 
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(this, "Não foi possível limpar a tabela temporária.");
@@ -1026,7 +1037,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
             String cod_folha = jTxtCodFolha.getText();
             String categoria = jTxtCategoria.getText();
             int numero;
-            int usuario = ConexaoFB.userlog;
+            int usuario = usu_inc;
             System.out.println("Usuário logado: " + usuario);
             System.out.println("Variáveis carregadas para gravar.");
             Double inss_bc = cRpa.getInss_bc();
@@ -1079,7 +1090,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                                     if (cn.executeAtualizacao(sql)) {
                                         sql = "INSERT INTO rpa_detalhe (codigo,chave,numero,data,valor,peso,tarifa,pedagio) "
                                                 + "SELECT '" + id + "' as codigo,chave,numero,data,valor,peso,tarifa,pedagio "
-                                                + "FROM tmp_cte_rpa WHERE usu_inc = '" + ti.getUsuariosys() + "';";
+                                                + "FROM tmp_cte_rpa WHERE usu_inc = '" + usu_inc + "';";
                                         if (cn.executeAtualizacao(sql)) {
 
                                             jTxtId.setText(id);
@@ -1126,7 +1137,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
 
                     sql = "INSERT INTO rpa_detalhe (codigo,chave,numero,data,valor,peso,tarifa,pedagio) "
                             + "SELECT '" + id + "' as codigo,chave,numero,data,valor,peso,tarifa,pedagio "
-                            + "FROM tmp_cte_rpa WHERE usu_inc = '" + ti.getUsuariosys() + "';";
+                            + "FROM tmp_cte_rpa WHERE usu_inc = '" + usu_inc + "';";
                     cn.executeAtualizacao(sql);
 
                     sql = "UPDATE rpa SET pagamento = '" + pagamento + "',"
@@ -1216,6 +1227,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLblMargem;
     private javax.swing.JLabel jLblStatus;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -1568,9 +1580,9 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                     System.out.println("\n\nExecutando preenchimento de RPA.\n");
                     if (cn.conecta()) {
                         try {
-                            cn.executeAtualizacao("DELETE FROM tmp_cte_rpa WHERE usu_inc = '" + ti.getUsuariosys() + "';");
+                            cn.executeAtualizacao("DELETE FROM tmp_cte_rpa WHERE usu_inc = '" + usu_inc + "';");
                             cn.executeAtualizacao("INSERT INTO tmp_cte_rpa (chave,numero,data,valor,peso,tarifa,pedagio,usu_inc) "
-                                    + "SELECT chave,numero,data,valor,peso,tarifa,pedagio,'" + ti.getUsuariosys() + "' "
+                                    + "SELECT chave,numero,data,valor,peso,tarifa,pedagio,'" + usu_inc + "' "
                                     + "FROM rpa_detalhe "
                                     + "WHERE codigo = '" + jTxtId.getText() + "';");
                         } catch (Exception e) {
@@ -1600,7 +1612,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
 
                     buscaAcumulados();
 
-                    sql = "SELECT * FROM tmp_cte_rpa WHERE usu_inc = '" + ti.getUsuariosys() + "';";
+                    sql = "SELECT * FROM tmp_cte_rpa WHERE usu_inc = '" + usu_inc + "';";
 
                     if (cn.conecta()) {
                         try {
@@ -1639,6 +1651,9 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                         }
                     }
                 }
+
+                calculaMargem();
+
                 break;
             case 2:
                 jTxtIdEst.setText(jTblConsulta_Multi.getValueAt(linha, 0).toString());
@@ -1697,7 +1712,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                                 }
 
                                 sql = "INSERT INTO tmp_cte_rpa (chave,numero,data,valor,peso,tarifa,pedagio,usu_inc) "
-                                        + "VALUES ('" + chaveCte + "','" + numeroCte + "','" + dataCte + "','" + valorCte + "','" + peso + "','" + tarifa + "','" + pedagio + "','" + ti.getUsuariosys() + "');";
+                                        + "VALUES ('" + chaveCte + "','" + numeroCte + "','" + dataCte + "','" + valorCte + "','" + peso + "','" + tarifa + "','" + pedagio + "','" + usu_inc + "');";
 
                                 cn.executeAtualizacao(sql);
                                 System.out.println("Contagem regressiva das linhas: " + x);
@@ -1719,7 +1734,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
 
                 montaTabela();
 
-                sql = "SELECT * FROM tmp_cte_rpa WHERE usu_inc = '" + ti.getUsuariosys() + "';";
+                sql = "SELECT * FROM tmp_cte_rpa WHERE usu_inc = '" + usu_inc + "';";
 
                 if (cn.conecta()) {
                     try {
@@ -1836,6 +1851,9 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
         } else {
             JOptionPane.showMessageDialog(this, "Defina um estabelecimento e um transportador para continuar", "Calculadora RPA", JOptionPane.ERROR_MESSAGE);
         }
+
+        calculaMargem();
+
     }
 
     private void montaTabela() {
@@ -1886,7 +1904,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Não foi possível converer a data. " + e);
         }
-        System.out.println("Data formatada: " + data);
+        System.out.println("Acumulados. Data formatada: " + data);
         res.calculaResumo(data, jTxtIdTransportador.getText(), jTxtId.getText());
 
         jTxtAcum.setText(res.getAcumulado());
@@ -1894,5 +1912,26 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
         jTxtAcumIrrf.setText(res.getIrrf());
         jTxtAcumTerc.setText(res.getTerceiros());
         jTxtAcumQtdeFrete.setText(res.getFretes());
+    }
+
+    private void calculaMargem() {
+        Double conhecimentos = 0.00;
+        Double inss = 0.00;
+        Double pisCofins = 0.00;
+        Double recibo = 0.00;
+
+        for (int i = 0; i < jTable1.getRowCount(); i++) {
+            conhecimentos += Double.parseDouble(jTable1.getValueAt(i, 2).toString().replace(".", "").replace(",", "."));
+        }
+
+        recibo = Double.parseDouble(jSpVlrPagar.getValue().toString());
+
+        if (!"Cooperado".equals(jTxtCategoria.getText())) {
+            inss = recibo * 0.20 * 0.20;
+            pisCofins = conhecimentos * 0.0365;
+        }
+
+        jLblMargem.setText(df.format((conhecimentos - recibo - inss - pisCofins) / conhecimentos * 100.00) + "%");
+
     }
 }

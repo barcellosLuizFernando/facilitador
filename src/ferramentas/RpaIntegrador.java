@@ -41,6 +41,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import telaCadastros.TelaInicial;
 import wsTerceiros.ObjectFactory;
 
 /**
@@ -49,16 +50,18 @@ import wsTerceiros.ObjectFactory;
  */
 public class RpaIntegrador {
 
+    private int usu_inc;
     private final conexoes.ConexaoMySQL cn = new ConexaoMySQL();
-    private final conexoes.ConexaoFB cnfb = new ConexaoFB();
+    private final conexoes.ConexaoFB cnfb;
     private final conexoes.ConexaoORCL cnSen = new ConexaoORCL();
-    ferramentas.FbGenerators gen = new FbGenerators();
+    private ferramentas.FbGenerators gen;
     private cadastros.ConfigDefault cd = new ConfigDefault();
-    private cadastros.Transportador transp = new Transportador();
+    private cadastros.Transportador transp;
 
     private DecimalFormat df = new DecimalFormat("0.00");
     private DecimalFormat dfSen = new DecimalFormat("#,##0.00");
     private DateFormat dateIn = new SimpleDateFormat("dd/MM/yyyy");
+    //private TelaInicial ti = new TelaInicial();
 
     private String empresa = "1";
     private int codigo;
@@ -68,7 +71,6 @@ public class RpaIntegrador {
     private String fornecedor;
     private String nome_fornecedor;
     private String portador = "1";
-    private int usu_inc = ConexaoFB.userlog;
     private String doc;
     private String historico;
     private Date dt_emissao;
@@ -114,6 +116,13 @@ public class RpaIntegrador {
     private Double perGrp;
     private Integer codSer = 1;
     private Double valIse;
+    
+    public RpaIntegrador(int user){
+        this.usu_inc = user;
+        cnfb = new ConexaoFB(usu_inc);
+        gen = new FbGenerators(usu_inc);
+        transp = new Transportador(usu_inc);
+    }
 
     public boolean buscaRpa(String nroRpa) {
         boolean resposta = false;
@@ -678,9 +687,9 @@ public class RpaIntegrador {
     }
 
     public static void main(String[] args) {
-        RpaIntegrador x = new RpaIntegrador();
+        RpaIntegrador x = new RpaIntegrador(131);
 
-        x.fechaFolha(true, "05/2017");
+        x.fechaFolha(true, "06/2017");
         //x.integraFolha();
         //System.out.println(x.escreveXML(null));
         //x.integraFinanceiro("678");

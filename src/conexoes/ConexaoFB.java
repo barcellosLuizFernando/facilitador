@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 import javax.swing.JOptionPane;
+import telaCadastros.TelaInicial;
 
 public class ConexaoFB {
 
@@ -22,11 +23,17 @@ public class ConexaoFB {
     public ResultSet rs;
 
     public static int resultadoUpd = 99;
-    public static int userlog = 131;
+    private int userlog;
 
     public static String arquivo = "fb.properties";
 
     String url, driver, usuario, senha;
+
+    public ConexaoFB(int user) {
+        System.out.println("Usuário recebido pela classe ConexaoFB: " + user);
+        this.userlog = user;
+        System.out.println("Usuário setado pela classe ConexaoFB: " + userlog);
+    }
 
     public static Properties getProp() throws IOException {
 

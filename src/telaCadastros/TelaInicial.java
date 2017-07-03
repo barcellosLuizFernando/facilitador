@@ -5,12 +5,9 @@
  */
 package telaCadastros;
 
-import com.lowagie.text.Cell;
 import ferramentas.ConfereTipo;
 import ferramentas.ImportaCte;
 import ferramentas.RpaIntegrador;
-import ferramentas.VerificaFrame;
-import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
@@ -25,8 +22,9 @@ public final class TelaInicial extends javax.swing.JFrame {
     public static int usuariosys;
     private static VincularConhecimentos vincularConhecimentos;
 
-    private RpaIntegrador rpa = new RpaIntegrador();
-    private ImportaCte cte = new ImportaCte();
+    //private RpaIntegrador rpa = new RpaIntegrador(this);
+    private ImportaCte cte = new ImportaCte(27);
+    private RpaIntegrador rpa;
 
     /**
      * Inicial a Tela Inicial do Facilitador. Executa na inicialização a thread
@@ -275,7 +273,9 @@ public final class TelaInicial extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
-        abreTelaInterna(new EmitirRpa());
+       abreTelaInterna(new EmitirRpa(usuariosys));
+            
+       
 
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
@@ -295,7 +295,7 @@ public final class TelaInicial extends javax.swing.JFrame {
             }
 
             int numero = Integer.parseInt(resposta);
-            ferramentas.ImportaCte x = new ImportaCte();
+            ferramentas.ImportaCte x = new ImportaCte(usuariosys);
             x.buscaCteAutorizado(numero, false, this, true);
         }
 
@@ -306,11 +306,11 @@ public final class TelaInicial extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        int lctos = rpa.integraFinanceiroMult();
+        /*int lctos = rpa.integraFinanceiroMult();
 
         if (lctos > 1) {
             JOptionPane.showMessageDialog(this, "Lançamentos importados com sucesso: " + lctos + ".");
-        }
+        }*/
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
@@ -341,7 +341,7 @@ public final class TelaInicial extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
-        abreTelaInterna(new RelRpaRecibo());
+        abreTelaInterna(new RelRpaRecibo(usuariosys));
 
         /*try {
             RelRpaRecibo x = new RelRpaRecibo();
@@ -355,7 +355,7 @@ public final class TelaInicial extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem8ActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        abreTelaInterna(new RpaAnterior());
+        abreTelaInterna(new RpaAnterior(this.getUsuariosys()));
 
         /*try {
             RpaAnterior x = new RpaAnterior();
@@ -369,7 +369,7 @@ public final class TelaInicial extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
-        vincularConhecimentos = new VincularConhecimentos();
+        vincularConhecimentos = new VincularConhecimentos(usuariosys);
         abreTelaInterna(vincularConhecimentos);
         vincularConhecimentos.setFramePai(this);
 
@@ -390,7 +390,7 @@ public final class TelaInicial extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem10ActionPerformed
 
     private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
-        abreTelaInterna(new AlteraConhecimentos());
+        abreTelaInterna(new AlteraConhecimentos(usuariosys));
 
         /*try {
             AlteraConhecimentos x = new AlteraConhecimentos();
@@ -404,7 +404,7 @@ public final class TelaInicial extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem11ActionPerformed
 
     private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
-        abreTelaInterna(new UtilResumo());
+        abreTelaInterna(new UtilResumo(usuariosys));
     }//GEN-LAST:event_jMenuItem12ActionPerformed
 
     private void jMenuItem13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem13ActionPerformed
@@ -412,8 +412,7 @@ public final class TelaInicial extends javax.swing.JFrame {
 
         switch (x) {
             case 0:
-                RpaIntegrador integ = new RpaIntegrador();
-                if (integ.integraFolha()) {
+                if (rpa.integraFolha()) {
                     JOptionPane.showMessageDialog(null, "Integração realizada com Sucesso.", "Integração - Folha de Pagamentos", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(null, "Erro na integração.", "Integração - Folha de Pagamentos", JOptionPane.ERROR_MESSAGE);
@@ -452,6 +451,8 @@ public final class TelaInicial extends javax.swing.JFrame {
     public void recebendo(String usuariolog, int id) {
         jTxtUsuario.setText(id + " - " + usuariolog);
         usuariosys = id;
+        rpa = new RpaIntegrador(usuariosys);
+        
     }
 
     public int getUsuariosys() {

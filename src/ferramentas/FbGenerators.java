@@ -14,8 +14,15 @@ import javax.swing.JOptionPane;
  * @author Luiz Fernando Dill Barcellos
  */
 public class FbGenerators {
+    
+    private int usu_inc;
+    private ConexaoFB cnfb;
+    
+    public FbGenerators(int user){
+        this.usu_inc = user;
+        cnfb = new ConexaoFB(usu_inc);
+    }
 
-    private ConexaoFB cnfb = new ConexaoFB();
 
     String sql;
 
@@ -60,9 +67,8 @@ public class FbGenerators {
     }
 
     public static void main(String[] args) {
-        FbGenerators gen = new FbGenerators();
+        FbGenerators gen = new FbGenerators(131);
         System.out.println("Próximo Código: " + gen.getCodigo("fin_contas_pagar"));
-
     }
 
 }

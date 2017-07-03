@@ -25,13 +25,15 @@ public class RelRpaRecibo extends javax.swing.JInternalFrame {
     private DateFormat dateIn = new SimpleDateFormat("dd/MM/yyyy");
     private DecimalFormat df = new DecimalFormat("#,##0.00");
     private ImprimeRelatorio rel = new ImprimeRelatorio();
+    private int usu_inc;
 
     /**
      * Creates new form RelRpaRecibo
      */
-    public RelRpaRecibo() {
+    public RelRpaRecibo(int user) {
         initComponents();
         montaTabela();
+        this.usu_inc = user;
     }
 
     /**
@@ -339,7 +341,7 @@ public class RelRpaRecibo extends javax.swing.JInternalFrame {
 
     private void jTextField1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField1FocusLost
         if (!"".equals(jTextField1.getText())) {
-            Transportador transp = new Transportador();
+            Transportador transp = new Transportador(usu_inc);
             transp.buscaPessoa(Integer.parseInt(jTextField1.getText()));
             jTextField2.setText(transp.getNome());
         }

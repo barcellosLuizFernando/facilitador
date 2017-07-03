@@ -24,21 +24,26 @@ import javax.swing.JOptionPane;
  */
 public class UtilResumo extends javax.swing.JInternalFrame {
 
+    private int usu_inc;
     private final conexoes.ConexaoMySQL cn = new ConexaoMySQL();
-    private final conexoes.ConexaoFB cnfb = new ConexaoFB();
     private final conexoes.ConexaoORCL cnor = new ConexaoORCL();
     private final DateFormat dateOut = new SimpleDateFormat("yyyy/MM/dd");
     private final DateFormat dateIn = new SimpleDateFormat("dd/MM/yyyy");
     private final DateFormat dateFb = new SimpleDateFormat("dd.MM.yyyy HH:mm");
     private final DecimalFormat df = new DecimalFormat("#,##0.00");
+    private conexoes.ConexaoFB cnfb;
 
     //private Timestamp
     /**
      * Creates new form UtilResumo
      */
-    public UtilResumo() {
+    public UtilResumo(int user) {
         initComponents();
+        System.out.println("Usuário recebido pelo UtilResumo: " + user);
+        this.usu_inc = user;
+        this.cnfb = new ConexaoFB(usu_inc);
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -630,6 +635,7 @@ public class UtilResumo extends javax.swing.JInternalFrame {
                         + "bruto - case when inss is null then 0.00 else inss end - case when irrf is null then 0.00 else irrf end as liquido "
                         + "FROM contagem ;";
 
+                
                 if (cnfb.conecta()) {
                     try {
                         cnfb.executeConsulta(sql);

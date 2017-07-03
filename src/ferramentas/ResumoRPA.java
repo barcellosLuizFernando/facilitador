@@ -43,7 +43,7 @@ public class ResumoRPA {
 
         String sql;
 
-        System.out.println("Data informada: " + data);
+        System.out.println("Resumo. Data informada: " + data);
 
         String mes = this.mes.format(data);
         String ano = this.ano.format(data);

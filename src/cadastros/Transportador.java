@@ -17,6 +17,16 @@ import javax.swing.JOptionPane;
  * @author ferna
  */
 public class Transportador {
+    
+    public int usu_inc;
+    
+    public Transportador(int user){
+        
+        this.usu_inc = user;
+        
+        cnfb = new ConexaoFB(usu_inc);
+        
+    }
 
     public static Properties getProp() throws IOException {
 
@@ -33,24 +43,24 @@ public class Transportador {
 
     }
 
-    conexoes.ConexaoFB cnfb = new ConexaoFB();
-    conexoes.ConexaoMySQL cn = new ConexaoMySQL();
+    private conexoes.ConexaoFB cnfb;
+    private conexoes.ConexaoMySQL cn = new ConexaoMySQL();
 
-    String id_fin;
-    String id_folha;
-    String nome;
-    String cpf;
-    String pis;
-    String rg;
-    String org_emissor;
-    String rg_dt_emissao;
-    String classificacao;
-    Double inss_bc;
-    Double inss_aliq;
-    Double inss_teto;
-    Double irrf_bc;
-    Double irrf_aliq;
-    Double margem;
+    private String id_fin;
+    private String id_folha;
+    private String nome;
+    private String cpf;
+    private String pis;
+    private String rg;
+    private String org_emissor;
+    private String rg_dt_emissao;
+    private String classificacao;
+    private Double inss_bc;
+    private Double inss_aliq;
+    private Double inss_teto;
+    private Double irrf_bc;
+    private Double irrf_aliq;
+    private Double margem;
 
     public void buscaPessoa(int pessoa, String data) {
         id_fin = null;
@@ -355,7 +365,7 @@ public class Transportador {
     }
 
     public static void main(String[] args) {
-        Transportador transp = new Transportador();
+        Transportador transp = new Transportador(131);
         transp.validatePIS("10721541841");
     }
 

@@ -497,6 +497,20 @@ ORDER BY
 						<pen lineWidth="0.5" lineColor="#999999"/>
 					</graphicElement>
 				</line>
+				<textField pattern="dd/MM/yyyy">
+					<reportElement x="479" y="4" width="74" height="20" uuid="5193f9a9-83fe-4a37-8806-d90b96115b41"/>
+					<textElement>
+						<font fontName="Calibri" size="11" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{data}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="427" y="4" width="52" height="20" uuid="21fc1186-2ff6-41b7-9a62-ae6341adc3c0"/>
+					<textElement>
+						<font fontName="Calibri" size="11"/>
+					</textElement>
+					<text><![CDATA[Emissão:]]></text>
+				</staticText>
 			</band>
 		</groupHeader>
 		<groupFooter>
