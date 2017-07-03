@@ -69,7 +69,7 @@ public class ImprimeRelatorio {
                 parametros.put("dataInicio", dti);
                 parametros.put("dataFim", dtf);
                 parametros.put("SUBREPORT_DIR", "./src/reports/");
-                parametros.put("REPORT_CONNECTION", cn.conexao);
+                parametros.put("REPORT_CONNECTION", cn.getConexao());
                 parametros.put("detalhe", param1);
                 parametros.put("totalUnidades", param2);
                 System.out.println("Parametros definidos: " + parametros);

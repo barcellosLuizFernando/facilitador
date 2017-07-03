@@ -18,7 +18,7 @@ import javax.swing.JOptionPane;
 
 public class ConexaoMySQL {
 
-    public Connection conexao;
+    private Connection conexao;
     private Statement st;
     private PreparedStatement pst;
     public ResultSet rs;
@@ -118,7 +118,6 @@ public class ConexaoMySQL {
 
         return conexao;
     }*/
-
     public void desconecta() {
 
         try {
@@ -156,7 +155,7 @@ public class ConexaoMySQL {
 
             System.out.println("Preparando para executar Query: \n" + sql);
             st.executeUpdate(sql);
-            
+
             resultadoUpd = 0;
 
         } catch (SQLException sqlEx) {
@@ -209,4 +208,7 @@ public class ConexaoMySQL {
         this.except = except;
     }
 
+    public Connection getConexao() {
+        return conexao;
+    }
 }
