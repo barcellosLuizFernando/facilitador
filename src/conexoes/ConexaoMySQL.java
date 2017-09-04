@@ -18,7 +18,7 @@ import javax.swing.JOptionPane;
 
 public class ConexaoMySQL {
 
-    private Connection conexao;
+    public static Connection conexao;
     private Statement st;
     private PreparedStatement pst;
     public ResultSet rs;

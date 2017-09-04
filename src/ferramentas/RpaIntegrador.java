@@ -575,7 +575,7 @@ public class RpaIntegrador {
 
             if (cn.conecta()) {
                 try {
-                    cn.executeConsulta("SELECT * FROM rpa WHERE integ_folha IS NULL;");
+                    cn.executeConsulta("SELECT * FROM rpa WHERE integ_folha IS NULL and codigo = 1567;");
                     while (cn.rs.next()) {
                         codigos.add(cn.rs.getString("codigo"));
                     }
@@ -689,8 +689,8 @@ public class RpaIntegrador {
     public static void main(String[] args) {
         RpaIntegrador x = new RpaIntegrador(131);
 
-        x.fechaFolha(true, "06/2017");
-        //x.integraFolha();
+        //x.fechaFolha(true, "06/2017");
+        x.integraFolha();
         //System.out.println(x.escreveXML(null));
         //x.integraFinanceiro("678");
         //System.out.println("Resultado final: " + x.buscaRpa("500"));

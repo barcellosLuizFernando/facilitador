@@ -257,6 +257,8 @@ public class ImportaCte {
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Não foi possível atualizar o STATUS dos conhecimentos.");
                 } finally {
+                    //cn.setResultadoUpd(0);
+                    System.out.println("Resultado UPD MySQL:" + cn.getResultadoUpd());
                     cn.desconecta();
                     cnfb.desconecta();
                 }
