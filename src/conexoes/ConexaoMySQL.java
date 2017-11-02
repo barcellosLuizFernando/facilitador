@@ -23,10 +23,9 @@ public class ConexaoMySQL {
     private PreparedStatement pst;
     public ResultSet rs;
 
-    String url, driver, usuario, senha;
+    private String url, driver, usuario, senha;
 
     int resultadoUpd = 99;
-    boolean except = true;
 
     public static Properties getProp() throws IOException {
 
@@ -43,13 +42,19 @@ public class ConexaoMySQL {
 
     }
 
-    public boolean conecta() {
+    public boolean conecta(String usuario, String senha) {
 
         boolean resposta = true;
 
         try {
             System.out.println("MySQL - Capturando arquivo de propriedades");
             Properties props = getProp();
+
+            props.setProperty("user", usuario);
+            this.usuario = usuario;
+            props.setProperty("password", senha);
+            this.senha = senha;
+
             System.out.println("MySQL - Arquivo capturado. Extraindo propriedade...");
             driver = props.getProperty("driver");
             url = props.getProperty("url");
@@ -64,18 +69,16 @@ public class ConexaoMySQL {
 
             resultadoUpd = 0;
 
-            st.executeUpdate("begin;");
-
         } catch (ClassNotFoundException | NullPointerException ex) {
             resposta = false;
             JOptionPane.showMessageDialog(null, "Não foi possível carregar o "
-                    + "driver do banco de dados.\n" + ex);
+                    + "driver do banco de dados.\n" + ex.getMessage());
         } catch (SQLException sqlEx) {
             resposta = false;
-            JOptionPane.showMessageDialog(null, "Erro na conexão com o banco de dados. \n" + sqlEx);
+            JOptionPane.showMessageDialog(null, "Erro na conexão com o banco de dados. \n" + sqlEx.getMessage());
         } catch (IOException ex) {
             resposta = false;
-            JOptionPane.showMessageDialog(null, "Não possível carregar o arquivo de configurações. \n" + ex);
+            JOptionPane.showMessageDialog(null, "Não possível carregar o arquivo de configurações. \n" + ex.getMessage());
         }
 
         return resposta;
@@ -122,16 +125,6 @@ public class ConexaoMySQL {
 
         try {
 
-            switch (resultadoUpd) {
-                case 0:
-                    st = conexao.createStatement();
-                    st.executeUpdate("commit;");
-                    break;
-                default:
-                    st = conexao.createStatement();
-                    st.executeUpdate("rollback;");
-            }
-
             conexao.close();
 
             System.out.println("MySQL - Conexão finalizada com sucesso.");
@@ -140,7 +133,7 @@ public class ConexaoMySQL {
 
             System.out.println("MySQL - Conexão não encerrada.");
 
-            JOptionPane.showMessageDialog(null, "Não foi possível desconectar o banco. \n" + sqlEx);
+            JOptionPane.showMessageDialog(null, "Não foi possível desconectar o banco. \n" + sqlEx.getMessage());
 
         }
 
@@ -153,21 +146,17 @@ public class ConexaoMySQL {
         try {
             st = conexao.createStatement();
 
-            System.out.println("Preparando para executar Query: \n" + sql);
+            System.out.println("\nPreparando para executar Query: \n" + sql);
             st.executeUpdate(sql);
 
             resultadoUpd = 0;
 
         } catch (SQLException sqlEx) {
             resultadoUpd = 1;
-            if (except) {
-                resposta = false;
-                //JOptionPane.showMessageDialog(null, "Não foi possível executar o comando sql\n" + sql + ".\nErro " + sqlEx);
-                JOptionPane.showMessageDialog(null, "Não foi possível executar o comando.\nErro: " + sqlEx.getMessage());
-            }
+            resposta = false;
+            //JOptionPane.showMessageDialog(null, "Não foi possível executar o comando sql\n" + sql + ".\nErro " + sqlEx);
+            JOptionPane.showMessageDialog(null, "\nNão foi possível executar o comando.\nErro: " + sqlEx.getMessage());
         }
-
-        System.out.println("Upd " + resultadoUpd + "\nStatus do Except: " + except);
         return resposta;
     }
 
@@ -180,15 +169,50 @@ public class ConexaoMySQL {
 
             rs = st.executeQuery(sql);
 
-            System.out.println("MySQL - Realizando consulta ao banco de dados MySQL: " + sql);
+            System.out.println("\nMySQL - Realizando consulta ao banco de dados MySQL: " + sql);
 
         } catch (SQLException sqlEx) {
             resposta = false;
-            System.out.println("MySQL - Consulta não realizada no banco de dados MySQL");
-            JOptionPane.showMessageDialog(null, "Não foi possível executar o comando sql" + sql + "\nErro " + sqlEx);
+            System.out.println("\nMySQL - Consulta não realizada no banco de dados MySQL");
+            JOptionPane.showMessageDialog(null, "Não foi possível executar o comando sql" + sql + "\nErro " + sqlEx.getMessage());
         }
 
         System.out.println("Resposta da consulta: " + resposta);
+        return resposta;
+    }
+
+    public boolean iniciarTransacao() {
+        boolean resposta = false;
+        try {
+            conexao.setAutoCommit(false);
+            resposta = true;
+            System.out.println("\nMYSQL - Transação Iniciada.");
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Erro ao setar autocommit:\n" + e.getMessage());
+            resposta = false;
+        }
+        return resposta;
+    }
+
+    public boolean finalizarTransacao() {
+
+        boolean resposta = false;
+
+        try {
+            switch (resultadoUpd) {
+                case 0:
+                    conexao.commit();
+                    break;
+                default:
+                    conexao.rollback();
+            }
+            resposta = true;
+            System.out.println("MYSQL - Transação Finalizada.\n");
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Erro ao finalizar transação:\n" + e.getMessage());
+            resposta = false;
+        }
+
         return resposta;
     }
 
@@ -200,15 +224,16 @@ public class ConexaoMySQL {
         this.resultadoUpd = resultadoUpd;
     }
 
-    public boolean isExcept() {
-        return except;
-    }
-
-    public void setExcept(boolean except) {
-        this.except = except;
-    }
-
     public Connection getConexao() {
         return conexao;
     }
+
+    public String getUsuario() {
+        return usuario;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
 }

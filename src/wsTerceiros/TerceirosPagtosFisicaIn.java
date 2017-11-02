@@ -79,8 +79,6 @@ import javax.xml.bind.annotation.XmlType;
  * 
  * 
  */
-
-@XmlRootElement(name = "parameters")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "terceirosPagtosFisicaIn", propOrder = {
     "assIrf",
@@ -133,6 +131,9 @@ import javax.xml.bind.annotation.XmlType;
     "valIss",
     "vlrPla"
 })
+
+@XmlRootElement(namespace = "", name = "parameters")
+
 public class TerceirosPagtosFisicaIn {
 
     @XmlElementRef(name = "assIrf", type = JAXBElement.class, required = false)

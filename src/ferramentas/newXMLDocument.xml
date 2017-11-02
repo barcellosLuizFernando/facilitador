@@ -1,7 +1,29 @@
-<?xml version="1.0" encoding="UTF-8"?><S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
-    <S:Body>
-        <ns2:PagtosFisicaResponse xmlns:ns2="http://services.senior.com.br">
-            <result>ok</result>
-        </ns2:PagtosFisicaResponse>
-    </S:Body>
-</S:Envelope>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://services.senior.com.br">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <ser:PagtosFisica_2>
+            <user>luiz.barcellos</user>
+            <password>Lu!z12345</password>
+            <encryption>0</encryption>
+            <parameters>
+                <cmpPte>10/2017</cmpPte>
+                <codFil>101</codFil>
+                <codIse>20</codIse>
+                <codRet>588</codRet>
+                <codSer>1</codSer>
+                <conIns>0.0</conIns>
+                <datPag>03/11/2017</datPag>
+                <insTrp>12.04</insTrp>
+                <irfRet>2.49</irfRet>
+                <nroRpa>3125</nroRpa>
+                <numCad>113</numCad>
+                <numEmp>7</numEmp>
+                <perGrp>0.0</perGrp>
+                <renBru>2408.38</renBru>
+                <seqPte>7</seqPte>
+                <tipOpe>I</tipOpe>
+                <valIse>2167.5420000000004</valIse>
+            </parameters>
+        </ser:PagtosFisica_2>
+    </soapenv:Body>
+</soapenv:Envelope>

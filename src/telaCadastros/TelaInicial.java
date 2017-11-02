@@ -5,6 +5,9 @@
  */
 package telaCadastros;
 
+import telaRelatorios.RelRpaRecibo;
+import telaRelatorios.RelRpa;
+import conexoes.ConexaoMySQL;
 import ferramentas.ConfereTipo;
 import ferramentas.ImportaCte;
 import ferramentas.RpaIntegrador;
@@ -12,6 +15,8 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
+import telaRelatorios.RelCteDisp;
+import telaRelatorios.RelMargens;
 
 /**
  *
@@ -23,17 +28,21 @@ public final class TelaInicial extends javax.swing.JFrame {
     private static VincularConhecimentos vincularConhecimentos;
 
     //private RpaIntegrador rpa = new RpaIntegrador(this);
-    private ImportaCte cte = new ImportaCte(27);
+    private ImportaCte cte;
     private RpaIntegrador rpa;
+    private ConexaoMySQL cn;
 
     /**
      * Inicial a Tela Inicial do Facilitador. Executa na inicialização a thread
      * <code>buscaCteAutorizado</code>, para atualizar o banco de dados local.
      */
-    public TelaInicial() {
+    public TelaInicial(ConexaoMySQL conn) {
         initComponents();
+        this.cn = conn;
+        this.cte = new ImportaCte(27, conn);
+        this.rpa = new RpaIntegrador(conn);
         setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-        cte.buscaCteAutorizado(0, false, this, false);
+        cte.buscaCteAutorizado(0, this, false);
         //jDPTelaPrincipal.setBackground(Color.DARK_GRAY);
     }
 
@@ -64,13 +73,18 @@ public final class TelaInicial extends javax.swing.JFrame {
         jMenuItem11 = new javax.swing.JMenuItem();
         jMenuItem9 = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
+        jMenuItem16 = new javax.swing.JMenuItem();
         jMenuItem7 = new javax.swing.JMenuItem();
         jMenuItem8 = new javax.swing.JMenuItem();
+        jMenuItem15 = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
+        jSeparator4 = new javax.swing.JPopupMenu.Separator();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem13 = new javax.swing.JMenuItem();
         jMenuItem12 = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem14 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Facilitador");
@@ -193,6 +207,14 @@ public final class TelaInicial extends javax.swing.JFrame {
 
         jMenu4.setText("Relatórios");
 
+        jMenuItem16.setText("Conhecimentos Disponíveis");
+        jMenuItem16.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem16ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem16);
+
         jMenuItem7.setText("Acompanhamento de Recibos");
         jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -201,13 +223,21 @@ public final class TelaInicial extends javax.swing.JFrame {
         });
         jMenu4.add(jMenuItem7);
 
-        jMenuItem8.setText("Impressão de Recibos");
+        jMenuItem8.setText("Recibo de Pagamento de Autônomo");
         jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem8ActionPerformed(evt);
             }
         });
         jMenu4.add(jMenuItem8);
+
+        jMenuItem15.setText("Margens Pessoa Física");
+        jMenuItem15.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem15ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem15);
 
         jMenuBar1.add(jMenu4);
 
@@ -221,6 +251,7 @@ public final class TelaInicial extends javax.swing.JFrame {
             }
         });
         jMenu5.add(jMenuItem1);
+        jMenu5.add(jSeparator4);
 
         jMenuItem2.setText("Integração Financeira");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
@@ -245,6 +276,15 @@ public final class TelaInicial extends javax.swing.JFrame {
             }
         });
         jMenu5.add(jMenuItem12);
+        jMenu5.add(jSeparator3);
+
+        jMenuItem14.setText("Conexões com o banco de dados");
+        jMenuItem14.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem14ActionPerformed(evt);
+            }
+        });
+        jMenu5.add(jMenuItem14);
 
         jMenuBar1.add(jMenu5);
 
@@ -273,9 +313,8 @@ public final class TelaInicial extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
-       abreTelaInterna(new EmitirRpa(usuariosys));
-            
-       
+        abreTelaInterna(new EmitirRpa(usuariosys, cn));
+
 
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
@@ -295,8 +334,8 @@ public final class TelaInicial extends javax.swing.JFrame {
             }
 
             int numero = Integer.parseInt(resposta);
-            ferramentas.ImportaCte x = new ImportaCte(usuariosys);
-            x.buscaCteAutorizado(numero, false, this, true);
+            ferramentas.ImportaCte x = new ImportaCte(usuariosys, cn);
+            x.buscaCteAutorizado(numero, this, true);
         }
 
         if (resposta == null) {
@@ -306,11 +345,11 @@ public final class TelaInicial extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        /*int lctos = rpa.integraFinanceiroMult();
+        int lctos = rpa.integraFinanceiroMult();
 
         if (lctos > 1) {
             JOptionPane.showMessageDialog(this, "Lançamentos importados com sucesso: " + lctos + ".");
-        }*/
+        }
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
@@ -327,7 +366,7 @@ public final class TelaInicial extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
-        abreTelaInterna(new RelRpa());
+        abreTelaInterna(new RelRpa(cn));
 
         /*try {
             RelRpa x = new RelRpa();
@@ -341,7 +380,7 @@ public final class TelaInicial extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
-        abreTelaInterna(new RelRpaRecibo(usuariosys));
+        abreTelaInterna(new RelRpaRecibo(usuariosys, cn));
 
         /*try {
             RelRpaRecibo x = new RelRpaRecibo();
@@ -355,7 +394,7 @@ public final class TelaInicial extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem8ActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        abreTelaInterna(new RpaAnterior(this.getUsuariosys()));
+        abreTelaInterna(new RpaAnterior(this.getUsuariosys(), cn));
 
         /*try {
             RpaAnterior x = new RpaAnterior();
@@ -369,14 +408,14 @@ public final class TelaInicial extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
-        vincularConhecimentos = new VincularConhecimentos(usuariosys);
+        vincularConhecimentos = new VincularConhecimentos(usuariosys, cn);
         abreTelaInterna(vincularConhecimentos);
         vincularConhecimentos.setFramePai(this);
 
     }//GEN-LAST:event_jMenuItem9ActionPerformed
 
     private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
-        abreTelaInterna(new Fechamento());
+        abreTelaInterna(new Fechamento(cn));
 
         /* try {
             Fechamento x = new Fechamento();
@@ -390,7 +429,7 @@ public final class TelaInicial extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem10ActionPerformed
 
     private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
-        abreTelaInterna(new AlteraConhecimentos(usuariosys));
+        abreTelaInterna(new AlteraConhecimentos(usuariosys, cn));
 
         /*try {
             AlteraConhecimentos x = new AlteraConhecimentos();
@@ -404,21 +443,24 @@ public final class TelaInicial extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem11ActionPerformed
 
     private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
-        abreTelaInterna(new UtilResumo(usuariosys));
+        abreTelaInterna(new UtilResumo(usuariosys, cn));
     }//GEN-LAST:event_jMenuItem12ActionPerformed
 
     private void jMenuItem13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem13ActionPerformed
-        int x = JOptionPane.showConfirmDialog(null, "Deseja integrar todos os conhecimentos com a Folha de Pagamentos?", "Integração - Folha de Pagamentos", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-
-        switch (x) {
-            case 0:
-                if (rpa.integraFolha()) {
-                    JOptionPane.showMessageDialog(null, "Integração realizada com Sucesso.", "Integração - Folha de Pagamentos", JOptionPane.INFORMATION_MESSAGE);
-                } else {
-                    JOptionPane.showMessageDialog(null, "Erro na integração.", "Integração - Folha de Pagamentos", JOptionPane.ERROR_MESSAGE);
-                }
-        }
+        abreTelaInterna(new IntegracaoRPA_Folha(cn));
     }//GEN-LAST:event_jMenuItem13ActionPerformed
+
+    private void jMenuItem14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem14ActionPerformed
+        abreTelaInterna(new ConectedUser(cn));        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem14ActionPerformed
+
+    private void jMenuItem15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem15ActionPerformed
+        abreTelaInterna(new RelMargens(cn));        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem15ActionPerformed
+
+    private void jMenuItem16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem16ActionPerformed
+        abreTelaInterna(new RelCteDisp(cn));        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem16ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane jDPTelaPrincipal;
@@ -432,6 +474,9 @@ public final class TelaInicial extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem11;
     private javax.swing.JMenuItem jMenuItem12;
     private javax.swing.JMenuItem jMenuItem13;
+    private javax.swing.JMenuItem jMenuItem14;
+    private javax.swing.JMenuItem jMenuItem15;
+    private javax.swing.JMenuItem jMenuItem16;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
@@ -443,6 +488,8 @@ public final class TelaInicial extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JPopupMenu.Separator jSeparator3;
+    private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JTextField jTxtStatus;
     private javax.swing.JLabel jTxtUsuario;
     private javax.swing.JLabel jTxtUsuario1;
@@ -451,8 +498,8 @@ public final class TelaInicial extends javax.swing.JFrame {
     public void recebendo(String usuariolog, int id) {
         jTxtUsuario.setText(id + " - " + usuariolog);
         usuariosys = id;
-        rpa = new RpaIntegrador(usuariosys);
-        
+        rpa = new RpaIntegrador(usuariosys, cn);
+
     }
 
     public int getUsuariosys() {
@@ -504,4 +551,10 @@ public final class TelaInicial extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Ops! Não foi possível abrir a tela '" + tela + "'. \nErro: " + e);
         }
     }
+
+    public ConexaoMySQL getConn() {
+        return cn;
+    }
+    
+    
 }

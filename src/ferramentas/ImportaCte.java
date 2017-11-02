@@ -21,46 +21,50 @@ import telaCadastros.TelaInicial;
  * @author ferna
  */
 public class ImportaCte {
-    
-    public ImportaCte(int user){
-        this.usu_inc = user;
-        cnfb = new ConexaoFB(usu_inc);
-    }
 
     private JFrame parent;
     telaCadastros.TelaInicial ti;
     private int usu_inc;
 
     private final conexoes.ConexaoFB cnfb;
-    private final conexoes.ConexaoMySQL cn = new ConexaoMySQL();
+    private final conexoes.ConexaoMySQL cn;
     private final cadastros.ConfigDefault cd = new ConfigDefault();
-    private final DataFechamento fechamento = new DataFechamento();
+    private final DataFechamento fechamento;
     private final DateFormat dateIn = new SimpleDateFormat("dd.MM.yyyy");
+    private final DateFormat dateOut = new SimpleDateFormat("yyyy/MM/dd");
+    private ArrayList chaveCTE_AU = new ArrayList();
+    private ArrayList chaveCTE_CA = new ArrayList();
 
     Timestamp sinc = null;
     int cteImportado;
     int cteDuplicado;
+
+    public ImportaCte(int user, ConexaoMySQL conn) {
+        this.usu_inc = user;
+        cnfb = new ConexaoFB(usu_inc);
+        this.cn = conn;
+        this.fechamento = new DataFechamento(cn);
+    }
 
     /**
      * Captura todos os CTEs autorizados. Método verifica quais os conhecimentos
      * de fretes que ainda não foram importados, e puxa para a base atual.
      *
      * @param numeroCte Informar 0 para importar todos
-     * @param mostraExcept Booleano que define se serão mostradas Exceptions.
      * @param p JFrame que está requisitando a Thread
+     * @param msgResumo
      */
-    public void buscaCteAutorizado(final int numeroCte, final boolean mostraExcept, final JFrame p, final boolean msgResumo) {
+    public void buscaCteAutorizado(final int numeroCte, final JFrame p, final boolean msgResumo) {
         new Thread() {
             public void run() {
-                System.out.println("CULSULTA CTE - Iniciando Thread");
+                chaveCTE_AU.clear();
+                System.out.println("CONSULTA CTE - Iniciando Thread");
                 parent = p;
                 ti = (TelaInicial) parent;
                 ti.setState(TelaInicial.NORMAL);
                 System.out.println("CONSULTA CTE - State = NORMAL: " + ti);
                 ti.setStatus(1);
                 System.out.println("CONSULTA CTE - Status enviado para tela inicial.");
-
-                cn.setExcept(mostraExcept);
 
                 int qtdCte = 0;
                 int qtdCteDup = 0;
@@ -70,16 +74,24 @@ public class ImportaCte {
                 System.out.println("Iniciando procedimento para sincronização de CTEs.");
                 cd.carregaProp();
 
-                if (cn.conecta()) {
+                if (cn.iniciarTransacao()) {
                     try {
                         cn.executeConsulta("SELECT data FROM fechamento;");
                         while (cn.rs.next()) {
                             sinc = cn.rs.getTimestamp("data");
                         }
+                        cn.rs.close();
+
+                        cn.executeConsulta("SELECT chave FROM bsctranscooper.conhecimentos WHERE emissao >= '" + dateOut.format(sinc) + "';");
+                        while (cn.rs.next()) {
+                            chaveCTE_AU.add(cn.rs.getString("chave"));
+                        }
+                        cn.rs.close();
+
                     } catch (Exception e) {
                         JOptionPane.showMessageDialog(null, e);
                     } finally {
-                        cn.desconecta();
+                        cn.finalizarTransacao();
                     }
                 }
 
@@ -114,10 +126,10 @@ public class ImportaCte {
                         + "left join cad_veiculos zz on (zz.empresa = z.empresa and zz.placa = z.placa) "
                         + "left join cad_terceiros y on (y.empresa = zz.empresa and y.codigo = zz.cliente)"
                         + "WHERE y.pessoa_fj = 'F';";
-                System.out.println("Comando: " + sql);
+                //System.out.println("Comando: " + sql);
 
                 if (cnfb.conecta()) {
-                    if (cn.conecta()) {
+                    if (cn.iniciarTransacao()) {
                         try {
                             cnfb.executeConsulta(sql);
                             while (cnfb.rs.next()) {
@@ -142,27 +154,30 @@ public class ImportaCte {
                                         + cnfb.rs.getString("transportador") + "','"
                                         + cnfb.rs.getTimestamp("importacao") + "','"
                                         + cnfb.rs.getDouble("peso") + "','"
-                                        + cnfb.rs.getString("origem") + "','"
-                                        + cnfb.rs.getString("destino") + "','"
+                                        + cnfb.rs.getString("origem").replace("'", "") + "','"
+                                        + cnfb.rs.getString("destino").replace("'", "") + "','"
                                         + cnfb.rs.getDouble("pedagio")
                                         + "');";
-                                if (cn.executeAtualizacao(sql)) {
-                                    sinc = cnfb.rs.getTimestamp("importacao");
-                                } else {
-                                    System.out.println("Não foi possível executar a importação.");
-                                }
 
-                                //System.out.println("UPD Classe: " + cn.getResultadoUpd());
-                                if (cn.getResultadoUpd() > 0) {
-                                    qtdCteDup++;
-                                } else {
-                                    qtdCte++;
-                                }
-                                //System.out.println("Quantidade de Duplicados: " + qtdCteDup);
-                                //System.out.println("Quantidade de Importados: " + qtdCte);
+                                if (!chaveCTE_AU.contains(cnfb.rs.getString("chave_cte"))) {
+                                    if (cn.executeAtualizacao(sql)) {
+                                        sinc = cnfb.rs.getTimestamp("importacao");
+                                    } else {
+                                        System.out.println("Não foi possível executar a importação.");
+                                        throw new UnsupportedOperationException("Não foi possível executar a importação.");
+                                    }
 
+                                    //System.out.println("UPD Classe: " + cn.getResultadoUpd());
+                                    if (cn.getResultadoUpd() > 0) {
+                                        qtdCteDup++;
+                                    } else {
+                                        qtdCte++;
+                                    }
+                                    //System.out.println("Quantidade de Duplicados: " + qtdCteDup);
+                                    //System.out.println("Quantidade de Importados: " + qtdCte);
+
+                                }
                             }
-
                             ti.setStatus(2);
                             cn.setResultadoUpd(0);
                         } catch (Exception e) {
@@ -170,7 +185,7 @@ public class ImportaCte {
                             JOptionPane.showMessageDialog(null, "Não foi possível importar os Conhecimentos de Frete. " + e);
                         } finally {
                             cnfb.desconecta();
-                            cn.desconecta();
+                            cn.finalizarTransacao();
                             setCteImportado(qtdCte);
                             setCteDuplicado(qtdCteDup);
                         }
@@ -208,11 +223,28 @@ public class ImportaCte {
 
     public int buscaCteCancelado() {
         int qtdCte = 0;
+        chaveCTE_CA.clear();
 
         String chave;
         String status;
 
         String sql;
+
+        if (cn.iniciarTransacao()) {
+            try {
+
+                cn.executeConsulta("SELECT chave FROM bsctranscooper.conhecimentos WHERE emissao >= '" + dateOut.format(sinc) + "' AND status_envio = 'CA';");
+                while (cn.rs.next()) {
+                    chaveCTE_CA.add(cn.rs.getString("chave"));
+                }
+                cn.rs.close();
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
+            } finally {
+                cn.finalizarTransacao();
+            }
+        }
 
         if (cnfb.conecta()) {
 
@@ -241,7 +273,7 @@ public class ImportaCte {
                     + "WHERE y.pessoa_fj = 'F';";
 
             cnfb.executeConsulta(sql);
-            if (cn.conecta()) {
+            if (cn.iniciarTransacao()) {
                 try {
                     while (cnfb.rs.next()) {
                         chave = cnfb.rs.getString("chave_cte");
@@ -250,16 +282,19 @@ public class ImportaCte {
                         sql = "UPDATE conhecimentos SET status_envio = '" + status + "' "
                                 + "WHERE chave = '" + chave + "';";
 
-                        if (cn.executeAtualizacao(sql)) {
-                            qtdCte++;
+                        if (!chaveCTE_CA.contains(chave) && chaveCTE_AU.contains(chave)) {
+                            if (cn.executeAtualizacao(sql)) {
+                                qtdCte++;
+                            }
                         }
+
                     }
                 } catch (Exception e) {
-                    JOptionPane.showMessageDialog(null, "Não foi possível atualizar o STATUS dos conhecimentos.");
+                    JOptionPane.showMessageDialog(null, "Não foi possível atualizar o STATUS dos conhecimentos.\n" + e);
                 } finally {
                     //cn.setResultadoUpd(0);
                     System.out.println("Resultado UPD MySQL:" + cn.getResultadoUpd());
-                    cn.desconecta();
+                    cn.finalizarTransacao();
                     cnfb.desconecta();
                 }
             }
@@ -283,7 +318,7 @@ public class ImportaCte {
         String sql;
 
         atualiza:
-        if (cn.conecta()) {
+        if (cn.iniciarTransacao()) {
             try {
                 sql = "SELECT * FROM conhecimentos WHERE pedagio IS NULL;";
                 cn.executeConsulta(sql);
@@ -339,7 +374,7 @@ public class ImportaCte {
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Não foi possível atualizar os conhecimentos. " + e);
             } finally {
-                cn.desconecta();
+                cn.finalizarTransacao();
                 cnfb.desconecta();
             }
         }
@@ -364,10 +399,13 @@ public class ImportaCte {
     }
 
     public static void main(String[] args) {
-        ImportaCte cte = new ImportaCte(131);
-        TelaInicial ti = new TelaInicial();
 
-        cte.buscaCteAutorizado(0, false, ti, false);
+        ConexaoMySQL conn = new ConexaoMySQL();
+        conn.conecta("luiz.barcellos", "Lu!z12345");
+        TelaInicial ti = new TelaInicial(conn);
+
+        //ImportaCte cte = new ImportaCte(131, conn);
+        //cte.buscaCteAutorizado(0, ti, true);
         ti.dispose();
 
         //System.out.println("CTe cancelado, atualizado: " + cte.buscaCteCancelado());

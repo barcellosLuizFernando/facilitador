@@ -19,14 +19,18 @@ import javax.swing.JOptionPane;
 
 public class DataFechamento {
 
-    private conexoes.ConexaoMySQL cn = new ConexaoMySQL();
+    private conexoes.ConexaoMySQL cn;
     private DateFormat dateOut = new SimpleDateFormat("yyyy/MM/dd");
     private DateFormat dateIn = new SimpleDateFormat("dd/MM/yyyy");
 
     private Date data;
+    
+    public DataFechamento(ConexaoMySQL conn){
+        this.cn = conn;
+    }
 
     private void buscaFechamento() {
-        if (cn.conecta()) {
+        if (cn.iniciarTransacao()) {
             try {
                 cn.executeConsulta("SELECT * FROM fechamento;");
                 while (cn.rs.next()) {
@@ -35,7 +39,7 @@ public class DataFechamento {
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Não foi possível recuperar a data de fechamento.", "Fechamento", JOptionPane.ERROR_MESSAGE);
             } finally {
-                cn.desconecta();
+                cn.finalizarTransacao();
             }
         }
     }
@@ -91,10 +95,10 @@ public class DataFechamento {
         return resposta;
     }
 
-    public static void main(String[] args) {
-        DataFechamento d = new DataFechamento();
-        //System.out.println("Data de fechamento atual: " + d.getData("br"));
-        System.out.println("Status: " + d.verificaFechamento("05/2017"));
-        System.out.println("Data de fechamento atual: " + d.data);
-    }
+//    public static void main(String[] args) {
+//        DataFechamento d = new DataFechamento();
+//        //System.out.println("Data de fechamento atual: " + d.getData("br"));
+//        System.out.println("Status: " + d.verificaFechamento("05/2017"));
+//        System.out.println("Data de fechamento atual: " + d.data);
+//    }
 }

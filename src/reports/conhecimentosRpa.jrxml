@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="conhecimentosRpa" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="74aedbe4-bc9e-4073-908e-236a5cb29ca0">
 	<property name="ireport.zoom" value="1.3310000000000195"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="27"/>
 	<subDataset name="conhecimentos" uuid="9d2441df-cbd3-45a2-b31b-015adac79ebc">
 		<parameter name="codigo" class="java.lang.Integer">
 			<defaultValueExpression><![CDATA[]]></defaultValueExpression>

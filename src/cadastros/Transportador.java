@@ -18,11 +18,30 @@ import javax.swing.JOptionPane;
  */
 public class Transportador {
     
+    private conexoes.ConexaoFB cnfb;
+    private conexoes.ConexaoMySQL cn;
+
+    private String id_fin;
+    private String id_folha;
+    private String nome;
+    private String cpf;
+    private String pis;
+    private String rg;
+    private String org_emissor;
+    private String rg_dt_emissao;
+    private String classificacao;
+    private Double inss_bc;
+    private Double inss_aliq;
+    private Double inss_teto;
+    private Double irrf_bc;
+    private Double irrf_aliq;
+    private Double margem;
     public int usu_inc;
     
-    public Transportador(int user){
+    public Transportador(int user, ConexaoMySQL conn){
         
         this.usu_inc = user;
+        this.cn = conn;
         
         cnfb = new ConexaoFB(usu_inc);
         
@@ -43,24 +62,6 @@ public class Transportador {
 
     }
 
-    private conexoes.ConexaoFB cnfb;
-    private conexoes.ConexaoMySQL cn = new ConexaoMySQL();
-
-    private String id_fin;
-    private String id_folha;
-    private String nome;
-    private String cpf;
-    private String pis;
-    private String rg;
-    private String org_emissor;
-    private String rg_dt_emissao;
-    private String classificacao;
-    private Double inss_bc;
-    private Double inss_aliq;
-    private Double inss_teto;
-    private Double irrf_bc;
-    private Double irrf_aliq;
-    private Double margem;
 
     public void buscaPessoa(int pessoa, String data) {
         id_fin = null;
@@ -129,7 +130,7 @@ public class Transportador {
 
         String sql = "SELECT * FROM cad_pessoas WHERE codigo = '" + pessoa + "';";
 
-        if (cn.conecta()) {
+        if (cn.iniciarTransacao()) {
             try {
                 cn.executeConsulta(sql);
                 while (cn.rs.next()) {
@@ -145,7 +146,7 @@ public class Transportador {
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Não foi possível recuperar os dados da pessoa na base local.");
             } finally {
-                cn.desconecta();
+                cn.finalizarTransacao();
             }
         }
     }
@@ -210,7 +211,7 @@ public class Transportador {
 
         int confereCad = 0;
 
-        if (cn.conecta()) {
+        if (cn.iniciarTransacao()) {
             try {
                 cn.executeConsulta("SELECT codigo FROM cad_pessoas WHERE codigo = '" + id_fin + "';");
                 while (cn.rs.next()) {
@@ -224,7 +225,7 @@ public class Transportador {
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Não foi possível consultar o cadastro local de pessoas.");
             } finally {
-                cn.desconecta();
+                cn.finalizarTransacao();
             }
         }
 
@@ -247,7 +248,7 @@ public class Transportador {
             this.pis = pis;
             String sql;
 
-            if (cn.conecta()) {
+            if (cn.iniciarTransacao()) {
                 try {
                     sql = "INSERT INTO cad_pessoas (codigo,nome,rg,rg_emissor,cpf,pis) "
                             + "VALUES ('" + id_fin + "','" + nome + "','" + rg + "','"
@@ -258,7 +259,7 @@ public class Transportador {
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Não foi possível importar o cadastro de transportador automaticamente.");
                 } finally {
-                    cn.desconecta();
+                    cn.finalizarTransacao();
                 }
             }
 
@@ -364,9 +365,9 @@ public class Transportador {
         return irrf_aliq;
     }
 
-    public static void main(String[] args) {
-        Transportador transp = new Transportador(131);
-        transp.validatePIS("10721541841");
-    }
+//    public static void main(String[] args) {
+//        Transportador transp = new Transportador(131);
+//        transp.validatePIS("10721541841");
+//    }
 
 }

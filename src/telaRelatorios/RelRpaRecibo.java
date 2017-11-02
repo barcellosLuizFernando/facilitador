@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package telaCadastros;
+package telaRelatorios;
 
 import cadastros.Transportador;
 import conexoes.ConexaoMySQL;
@@ -21,19 +21,21 @@ import javax.swing.table.DefaultTableModel;
  */
 public class RelRpaRecibo extends javax.swing.JInternalFrame {
 
-    private ConexaoMySQL cn = new ConexaoMySQL();
+    private ConexaoMySQL cn;
     private DateFormat dateIn = new SimpleDateFormat("dd/MM/yyyy");
     private DecimalFormat df = new DecimalFormat("#,##0.00");
-    private ImprimeRelatorio rel = new ImprimeRelatorio();
+    private ImprimeRelatorio rel;
     private int usu_inc;
 
     /**
      * Creates new form RelRpaRecibo
      */
-    public RelRpaRecibo(int user) {
+    public RelRpaRecibo(int user, ConexaoMySQL conn) {
         initComponents();
         montaTabela();
         this.usu_inc = user;
+        this.cn = conn;
+        rel = new ImprimeRelatorio(conn);
     }
 
     /**
@@ -307,7 +309,7 @@ public class RelRpaRecibo extends javax.swing.JInternalFrame {
 
             String transportador = jTextField1.getText();
             String sql = "SELECT * FROM rpa WHERE transportador = '" + transportador + "';";
-            if (cn.conecta()) {
+            if (cn.iniciarTransacao()) {
                 try {
                     cn.executeConsulta(sql);
                     while (cn.rs.next()) {
@@ -328,7 +330,7 @@ public class RelRpaRecibo extends javax.swing.JInternalFrame {
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(this, "Não foi possível montar a tabela de Recibos. " + e);
                 } finally {
-                    cn.desconecta();
+                    cn.finalizarTransacao();
                 }
             }
 
@@ -341,7 +343,7 @@ public class RelRpaRecibo extends javax.swing.JInternalFrame {
 
     private void jTextField1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField1FocusLost
         if (!"".equals(jTextField1.getText())) {
-            Transportador transp = new Transportador(usu_inc);
+            Transportador transp = new Transportador(usu_inc, cn);
             transp.buscaPessoa(Integer.parseInt(jTextField1.getText()));
             jTextField2.setText(transp.getNome());
         }
@@ -455,9 +457,9 @@ public class RelRpaRecibo extends javax.swing.JInternalFrame {
         jTable1.getTableHeader().getColumnModel().getColumn(0).setMinWidth(100);*/
     }
 
-    public static void main(String args[]) {
-        TelaInicial ti = new TelaInicial();
-        ti.setVisible(true);
-    }
+//    public static void main(String args[]) {
+//        TelaInicial ti = new TelaInicial();
+//        ti.setVisible(true);
+//    }
 
 }

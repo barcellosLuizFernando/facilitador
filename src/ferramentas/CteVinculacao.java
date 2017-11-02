@@ -22,10 +22,14 @@ public class CteVinculacao {
     private String id, ca_numero, ca_serie, ca_chave, au_numero, au_serie,
             au_chave, cod_rpa, usu_inc, nro_rpa, talao, sql, tarifa, ca_peso,
             au_peso, au_data, au_valor, au_pedagio, idVinculo;
-    private ConexaoMySQL cn = new ConexaoMySQL();
+    private ConexaoMySQL cn;
     private TelaInicial ti;
     private DateFormat dateIn = new SimpleDateFormat("dd/MM/yyyy");
     private DateFormat dateOut = new SimpleDateFormat("yyyy/MM/dd");
+    
+    public CteVinculacao(ConexaoMySQL conn){
+        this.cn = conn;
+    }
 
     public boolean vinculaCTe(String chave_ca, String chave_au, JFrame x) {
         boolean resposta = false;
@@ -33,8 +37,8 @@ public class CteVinculacao {
         this.ti = (TelaInicial) x;
         //ti.usuariosys = 131;
 
-        Conhecimentos cte_ca = new Conhecimentos();
-        Conhecimentos cte_au = new Conhecimentos();
+        Conhecimentos cte_ca = new Conhecimentos(cn);
+        Conhecimentos cte_au = new Conhecimentos(cn);
 
         //BUSCA DADOS DO CONHECIMENTO CANCELADO
         if (cte_ca.buscaConhecimento(chave_ca)) {
@@ -98,7 +102,7 @@ public class CteVinculacao {
                     + "'" + au_chave + "','" + cod_rpa + "','" + usu_inc + "',"
                     + "current_date());";
 
-            if (cn.conecta()) {
+            if (cn.iniciarTransacao()) {
                 try {
                     if (cn.executeAtualizacao(sql)) {
                         System.out.println("cod_rpa: " + cod_rpa);
@@ -128,7 +132,7 @@ public class CteVinculacao {
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, e);
                 } finally {
-                    cn.desconecta();
+                    cn.finalizarTransacao();
                 }
             }
 
@@ -144,7 +148,7 @@ public class CteVinculacao {
                 + "WHERE ca_chave = '" + chave_ca + "' "
                 + "AND au_chave = '" + chave_au + "' ;";
 
-        if (cn.conecta()) {
+        if (cn.iniciarTransacao()) {
             try {
                 cn.executeConsulta(sql);
                 while (cn.rs.next()) {
@@ -154,14 +158,14 @@ public class CteVinculacao {
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
             } finally {
-                cn.desconecta();
+                cn.finalizarTransacao();
             }
         }
 
         if (cod_rpa != null && idVinculo != null) {
             sql = "DELETE FROM rpa_vinculacao WHERE id = '" + idVinculo + "';";
 
-            if (cn.conecta()) {
+            if (cn.iniciarTransacao()) {
                 try {
                     if (cn.executeAtualizacao(sql)) {
                         sql = "DELETE FROM rpa_detalhe WHERE chave = '" + chave_au + "';";
@@ -172,7 +176,7 @@ public class CteVinculacao {
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, e);
                 } finally {
-                    cn.desconecta();
+                    cn.finalizarTransacao();
                 }
             }
         } else {
@@ -182,13 +186,13 @@ public class CteVinculacao {
         return resposta;
     }
 
-    public static void main(String[] args) {
-        CteVinculacao vin = new CteVinculacao();
-
-        System.out.println("Resposta: "
-                + vin.vinculaCTe("CTe42170415278561000205570000000065871635582514",
-                        "CTe42170315278561000205570000000060911460964849", new TelaInicial()));
-        vin.ti.dispose();
+//    public static void main(String[] args) {
+//        CteVinculacao vin = new CteVinculacao();
+//
+//        System.out.println("Resposta: "
+//                + vin.vinculaCTe("CTe42170415278561000205570000000065871635582514",
+//                        "CTe42170315278561000205570000000060911460964849", new TelaInicial()));
+//        vin.ti.dispose();
 //        Conhecimentos cte = new Conhecimentos();
 //
 //        if (cte.buscaConhecimento("CTe41170115278561000124570000000319701261571120")) {
@@ -200,6 +204,6 @@ public class CteVinculacao {
 //            JOptionPane.showMessageDialog(null, "Não foram encontrados conhecimentos com esta chave.");
 //        }
 
-    }
+//    }
 
 }

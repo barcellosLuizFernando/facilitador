@@ -17,7 +17,7 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.2
  * 
  */
-@WebServiceClient(name = "g5-senior-services", targetNamespace = "http://services.senior.com.br", wsdlLocation = "file:/C:/Users/luiz.barcellos/AppData/Roaming/NetBeans/8.1/config/WebServices/rubi_Asynccom_senior_g5_rh_fp_terceiros/catalog/DANNU_8080/g5-senior-services/rubi_Asynccom_senior_g5_rh_fp_terceiros.wsdl")
+@WebServiceClient(name = "g5-senior-services", targetNamespace = "http://services.senior.com.br", wsdlLocation = "http://DANNU:8080/g5-senior-services/rubi_Asynccom_senior_g5_rh_fp_terceiros?wsdl")
 public class G5SeniorServices
     extends Service
 {
@@ -30,11 +30,9 @@ public class G5SeniorServices
         URL url = null;
         WebServiceException e = null;
         try {
-            url = new URL("file:/C:/Users/luiz.barcellos/AppData/Roaming/NetBeans/8.1/config/WebServices/rubi_Asynccom_senior_g5_rh_fp_terceiros/catalog/DANNU_8080/g5-senior-services/rubi_Asynccom_senior_g5_rh_fp_terceiros.wsdl");
+            url = new URL("http://DANNU:8080/g5-senior-services/rubi_Asynccom_senior_g5_rh_fp_terceiros?wsdl");
         } catch (MalformedURLException ex) {
-            System.out.println("Erro de URL no webservice: " + ex);
             e = new WebServiceException(ex);
-            System.out.println("WebService Exception: " + e);
         }
         G5SENIORSERVICES_WSDL_LOCATION = url;
         G5SENIORSERVICES_EXCEPTION = e;

@@ -3,11 +3,10 @@
   <services/>
   <clients>
     <client name="rubi_Asynccom_senior_g5_rh_fp_terceiros">
-      <wsdl-url>file:/C:/Users/luiz.barcellos/AppData/Roaming/NetBeans/8.1/config/WebServices/rubi_Asynccom_senior_g5_rh_fp_terceiros/catalog/DANNU_8080/g5-senior-services/rubi_Asynccom_senior_g5_rh_fp_terceiros.wsdl</wsdl-url>
-      <local-wsdl-file>rubi_Asynccom_senior_g5_rh_fp_terceiros.wsdl</local-wsdl-file>
-      <package-name forceReplace="true">ws</package-name>
+      <wsdl-url>http://192.168.1.93:8080/g5-senior-services/rubi_Asynccom_senior_g5_rh_fp_terceiros?wsdl</wsdl-url>
+      <local-wsdl-file>192.168.1.93_8080/g5-senior-services/rubi_Asynccom_senior_g5_rh_fp_terceiros.wsdl</local-wsdl-file>
+      <package-name forceReplace="true">wsTerceiros_Original</package-name>
       <catalog-file>catalog.xml</catalog-file>
-      <use-dispatch>true</use-dispatch>
       <wsimport-options>
         <wsimport-option>
           <wsimport-option-name>extension</wsimport-option-name>
@@ -23,7 +22,7 @@
         </wsimport-option>
         <wsimport-option>
           <wsimport-option-name>wsdlLocation</wsimport-option-name>
-          <wsimport-option-value>file:/C:/Users/luiz.barcellos/AppData/Roaming/NetBeans/8.1/config/WebServices/rubi_Asynccom_senior_g5_rh_fp_terceiros/catalog/DANNU_8080/g5-senior-services/rubi_Asynccom_senior_g5_rh_fp_terceiros.wsdl</wsimport-option-value>
+          <wsimport-option-value>http://192.168.1.93:8080/g5-senior-services/rubi_Asynccom_senior_g5_rh_fp_terceiros?wsdl</wsimport-option-value>
         </wsimport-option>
         <wsimport-option>
           <wsimport-option-name>xnocompile</wsimport-option-name>
@@ -35,7 +34,7 @@
         </wsimport-option>
         <wsimport-option>
           <wsimport-option-name>package</wsimport-option-name>
-          <wsimport-option-value>ws</wsimport-option-value>
+          <wsimport-option-value>wsTerceiros_Original</wsimport-option-value>
         </wsimport-option>
       </wsimport-options>
     </client>

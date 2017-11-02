@@ -13,6 +13,7 @@ import cadastros.Transportador;
 import conexoes.ConexaoFB;
 import conexoes.ConexaoMySQL;
 import ferramentas.CalculadoraRPA;
+import ferramentas.FiltrarTabela;
 import ferramentas.ImprimeRelatorio;
 import ferramentas.ResumoRPA;
 import java.awt.Dimension;
@@ -21,10 +22,12 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import ferramentas.JNumberFormatField99;
 
 /**
  *
@@ -32,21 +35,20 @@ import javax.swing.table.DefaultTableModel;
  */
 public class EmitirRpa extends javax.swing.JInternalFrame {
 
-    
     private int var_consulta;
     //private TelaInicial ti = new TelaInicial();
     private int usu_inc;
 
-    private conexoes.ConexaoMySQL cn = new ConexaoMySQL();
+    private conexoes.ConexaoMySQL cn;
     private conexoes.ConexaoFB cnfb;
-    private cadastros.Estabelecimento estab = new Estabelecimento();
+    private cadastros.Estabelecimento estab;
     private cadastros.Transportador transp;
     private cadastros.ConfigDefault cd = new ConfigDefault();
-    private ferramentas.ResumoRPA res = new ResumoRPA();
-    private ferramentas.RpaCodigos rpa = new RpaCodigos();
+    private ferramentas.ResumoRPA res;
+    private ferramentas.RpaCodigos rpa;
     private ferramentas.RpaIntegrador integ;
-    private ferramentas.CalculadoraRPA cRpa = new CalculadoraRPA();
-    private ferramentas.ImprimeRelatorio print = new ImprimeRelatorio();
+    private ferramentas.CalculadoraRPA cRpa;
+    private ferramentas.ImprimeRelatorio print;
 
     private DateFormat dateOut = new SimpleDateFormat("yyyy/MM/dd");
     private DateFormat dateIn = new SimpleDateFormat("dd/MM/yyyy");
@@ -57,15 +59,21 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
     /**
      * Creates new form emitirRpa
      */
-    public EmitirRpa(int user) {
+    public EmitirRpa(int user, ConexaoMySQL conn) {
         initComponents();
+        this.cn = conn;
+        criaTabelaTemporaria();
+        cRpa = new CalculadoraRPA(conn);
+        estab = new Estabelecimento(conn);
+        res = new ResumoRPA(conn);
+        rpa = new RpaCodigos(conn);
+        print = new ImprimeRelatorio(conn);
         montaTabela();
         this.usu_inc = user;
         cnfb = new ConexaoFB(usu_inc);
-        transp = new Transportador(usu_inc);
-        integ = new RpaIntegrador(usu_inc);
+        transp = new Transportador(usu_inc, conn);
+        integ = new RpaIntegrador(usu_inc, cn);
     }
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -121,9 +129,9 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
         jLabel15 = new javax.swing.JLabel();
         jTxtLiquido = new javax.swing.JTextField();
         jTxtTerceiros = new javax.swing.JTextField();
-        jSpVlrPagar = new javax.swing.JSpinner();
         jLabel16 = new javax.swing.JLabel();
         jSpPgto = new javax.swing.JSpinner();
+        jSpVlrPagar = new JNumberFormatField99(new DecimalFormat("#,##0.00"));
         jBtnAddCte = new javax.swing.JButton();
         jBtnRemoveCte = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
@@ -154,14 +162,12 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
         jPesquisar.setMinimumSize(new java.awt.Dimension(700, 400));
 
         jTxtPesquisa_Multi.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jTxtPesquisa_Multi.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                jTxtPesquisa_MultiFocusLost(evt);
-            }
-        });
         jTxtPesquisa_Multi.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jTxtPesquisa_MultiKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTxtPesquisa_MultiKeyReleased(evt);
             }
         });
 
@@ -479,16 +485,13 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
         jTxtTerceiros.setText("0,00");
         jTxtTerceiros.setEnabled(false);
 
-        jSpVlrPagar.setModel(new javax.swing.SpinnerNumberModel(0.0d, 0.0d, null, 0.0d));
-        jSpVlrPagar.setDoubleBuffered(true);
-        jSpVlrPagar.setEditor(new javax.swing.JSpinner.NumberEditor(jSpVlrPagar, "#,##0.00"));
-        jSpVlrPagar.setEnabled(false);
-
         jLabel16.setText("Pagamento");
 
         jSpPgto.setModel(new javax.swing.SpinnerDateModel());
         jSpPgto.setEditor(new javax.swing.JSpinner.DateEditor(jSpPgto, "dd/MM/yyyy"));
         jSpPgto.setEnabled(false);
+
+        jSpVlrPagar.setEnabled(false);
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -504,10 +507,9 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                 .addGap(12, 12, 12)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jSpPgto, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
-                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jTxtTerceiros)
-                        .addComponent(jTxtLiquido)
-                        .addComponent(jSpVlrPagar, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)))
+                    .addComponent(jTxtTerceiros)
+                    .addComponent(jTxtLiquido)
+                    .addComponent(jSpVlrPagar))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
@@ -647,7 +649,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                     .addGroup(jPanel7Layout.createSequentialGroup()
                         .addGap(3, 3, 3)
                         .addComponent(jLblMargem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -660,22 +662,22 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTxtIdEst, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTxtNomeEst)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel3))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jTxtIdTransportador)
+                                    .addComponent(jTxtIdEst, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jBtnPesqEst))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addGap(19, 19, 19)
-                                .addComponent(jTxtIdTransportador, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTxtNomeTransportador)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jTxtNomeEst)
+                                    .addComponent(jTxtNomeTransportador, javax.swing.GroupLayout.DEFAULT_SIZE, 444, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jBtnPesqTransp)))
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jBtnPesqTransp, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jBtnPesqEst, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addContainerGap())
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -841,14 +843,14 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
             habilitarEdicao();
             jLblStatus.setText("INCLUINDO");
 
-            if (cn.conecta()) {
+            if (cn.iniciarTransacao()) {
                 try {
                     cn.executeAtualizacao("DELETE FROM tmp_cte_rpa WHERE usu_inc = '" + usu_inc + "';");
 
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(this, "Não foi possível limpar a tabela temporária.");
                 } finally {
-                    cn.desconecta();
+                    cn.finalizarTransacao();
                 }
             }
 
@@ -893,9 +895,6 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
             jTblConsulta_Multi.setRowSelectionInterval(0, 0);
             IncluiPesquisa();
             jPesquisar.dispose();
-        } else if (evt.getKeyCode() == KeyEvent.VK_F2) {
-            System.out.println("Pesquisando por texto: " + jTxtPesquisa_Multi.getText() + ".");
-            montaLista();
         }
     }//GEN-LAST:event_jTxtPesquisa_MultiKeyPressed
 
@@ -941,10 +940,6 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
         montaLista();
     }//GEN-LAST:event_jBtnPesqTranspActionPerformed
 
-    private void jTxtPesquisa_MultiFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTxtPesquisa_MultiFocusLost
-
-    }//GEN-LAST:event_jTxtPesquisa_MultiFocusLost
-
     private void jTxtIdTransportadorFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTxtIdTransportadorFocusLost
         jTxtNomeTransportador.setText("");
         if (!"".equals(jTxtIdTransportador.getText())) {
@@ -983,7 +978,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
         String sql;
 
         if (qtdeLinhas > 0) {
-            if (cn.conecta()) {
+            if (cn.iniciarTransacao()) {
                 try {
                     for (int x = qtdeLinhas; x != 0; x--) {
                         linha = jTable1.getSelectedRow();
@@ -999,7 +994,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                 } catch (Exception e) {
                     System.out.println(e);
                 } finally {
-                    cn.desconecta();
+                    cn.finalizarTransacao();
                 }
             }
 
@@ -1029,7 +1024,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
             String emissao = dateOut.format(jSpEmissao.getValue());
             String pagamento = dateOut.format(jSpPgto.getValue());
             String faturamento = jTxtFaturamento.getText();
-            String bruto = jSpVlrPagar.getValue().toString();
+            String bruto = jSpVlrPagar.getText().replace(".", "").replace(",", ".");
             String inss = jTxtInss.getText();
             String irrf = jTxtIRRF.getText();
             String terceiros = jTxtTerceiros.getText();
@@ -1062,7 +1057,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
 
                         if (numero > 0) {
 
-                            if (cn.conecta()) {
+                            if (cn.iniciarTransacao()) {
                                 try {
                                     competencia = this.competencia.format(jSpEmissao.getValue());
                                     sequencia = rpa.getSequencia(competencia, transportador, estabelecimento, 1);
@@ -1119,7 +1114,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                                 } catch (Exception e) {
                                     JOptionPane.showMessageDialog(this, "Não foi possível gravar o RPA.");
                                 } finally {
-                                    cn.desconecta();
+                                    cn.finalizarTransacao();
                                 }
                             }
                         } else {
@@ -1130,7 +1125,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                         JOptionPane.showMessageDialog(this, "Não foi possível gravar o RPA.");
                     }
                 } // FIM DO COMANDO CONFERE PESSOA
-            } else if (cn.conecta()) {
+            } else if (cn.iniciarTransacao()) {
                 try {
                     sql = "DELETE FROM rpa_detalhe WHERE codigo = '" + id + "';";
                     cn.executeAtualizacao(sql);
@@ -1155,7 +1150,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(this, "Não foi possível atualizar o RPA.");
                 } finally {
-                    cn.desconecta();
+                    cn.finalizarTransacao();
                 }
             }
 
@@ -1190,6 +1185,10 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
             IncluiPesquisa();
         }
     }//GEN-LAST:event_jTxtIdFocusLost
+
+    private void jTxtPesquisa_MultiKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTxtPesquisa_MultiKeyReleased
+        new FiltrarTabela(jTblConsulta_Multi, jTxtPesquisa_Multi.getText());
+    }//GEN-LAST:event_jTxtPesquisa_MultiKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1242,7 +1241,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSpinner jSpEmissao;
     private javax.swing.JSpinner jSpPgto;
-    private javax.swing.JSpinner jSpVlrPagar;
+    private javax.swing.JTextField jSpVlrPagar;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTblConsulta_Multi;
     private javax.swing.JTextField jTxtAcum;
@@ -1331,15 +1330,21 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
         jTxtAcum.setText("0,00");
         jTxtAcumInss.setText("0,00");
         jTxtAcumIrrf.setText("0,00");
+        jTxtAcumTerc.setText("0,00");
         jTxtAcumQtdeFrete.setText("");
         jTxtCategoria.setText("");
         jTxtCodFolha.setText("0");
         jTxtQtdCte.setText("");
+        
+        jLblMargem.setText("");
 
-        jSpVlrPagar.setValue(0.00);
+        jSpVlrPagar.setText("0,00");
     }
 
     private void montaLista() {
+        
+        jTxtPesquisa_Multi.setText("");
+        
         DefaultTableModel lista = (DefaultTableModel) jTblConsulta_Multi.getModel();
 
         lista.setRowCount(0);
@@ -1348,7 +1353,6 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
         String sql;
         String condicao;
 
-        String txt = jTxtPesquisa_Multi.getText().toUpperCase();
 
         switch (var_consulta) {
             case 1:
@@ -1381,20 +1385,12 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                 jTblConsulta_Multi.getTableHeader().getColumnModel().getColumn(5).setMaxWidth(80);
                 jTblConsulta_Multi.getTableHeader().getColumnModel().getColumn(5).setMinWidth(80);
 
-                if (!"".equals(txt)) {
-                    condicao = " AND UPPER(b.nome) like '%" + txt + "%' "
-                            + "OR a.numero LIKE '%" + txt + "%' ";
-                } else {
-                    condicao = " ";
-                }
-
                 sql = "SELECT a.codigo,a.estabelecimento,a.numero,b.nome,a.vlr_bruto,a.emissao "
                         + "FROM rpa a LEFT JOIN cad_pessoas b on (b.codigo = a.transportador) "
                         + "WHERE (a.integ_folha != 'X' or a.integ_folha IS NULL) "
-                        + condicao
                         + "ORDER BY b.nome, a.numero";
 
-                if (cn.conecta()) {
+                if (cn.iniciarTransacao()) {
                     try {
                         cn.executeConsulta(sql);
                         while (cn.rs.next()) {
@@ -1410,7 +1406,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                     } catch (Exception e) {
                         JOptionPane.showMessageDialog(this, "Não foi possível montar a lista de RPAs.");
                     } finally {
-                        cn.desconecta();
+                        cn.finalizarTransacao();
                     }
                 }
 
@@ -1427,7 +1423,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
 
                 sql = "SELECT * FROM cad_estabelecimentos ORDER BY razao_social;";
 
-                cn.conecta();
+                cn.iniciarTransacao();
                 cn.executeConsulta(sql);
                 try {
                     while (cn.rs.next()) {
@@ -1439,12 +1435,30 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(this, "Não foi possível consultar o banco de dados.");
                 } finally {
-                    cn.desconecta();
+                    cn.finalizarTransacao();
                 }
 
                 break;
 
             case 3:
+                //SELECIONA CÓDIGOS DOS CLIENTES QUE POSSUEM CAMINHÃO NO NOME
+                ArrayList codTransp = new ArrayList();
+
+                sql = "select cliente from cad_veiculos WHERE tipo_veiculo = 0";
+                if (cnfb.conecta()) {
+                    try {
+                        cnfb.executeConsulta(sql);
+                        while (cnfb.rs.next()) {
+                            codTransp.add(cnfb.rs.getString("cliente"));
+                        }
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(null, e);
+                    } finally {
+                        cnfb.desconecta();
+                    }
+                }
+
+                //MONTA TABELA
                 lista.addColumn("Código");
                 lista.addColumn("Nome");
                 lista.addColumn("CPF");
@@ -1454,28 +1468,25 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                 jTblConsulta_Multi.getTableHeader().getColumnModel().getColumn(0).setMaxWidth(60);
                 jTblConsulta_Multi.getTableHeader().getColumnModel().getColumn(0).setMinWidth(60);
 
-                if (!"".equals(txt)) {
-                    condicao = " AND UPPER(a.nome) LIKE '%" + txt + "%' "
-                            + "OR a.cpf_cnpj like '%" + txt + "%' ";
-                } else {
-                    condicao = " ";
-                }
-
                 sql = "select a.codigo, a.nome, a.cpf_cnpj from cad_terceiros a "
-                        + "WHERE a.codigo in (select cliente from cad_veiculos WHERE tipo_veiculo = 0 ) "
-                        + "AND a.pessoa_fj = 'F' "
-                        + condicao
+                        + "WHERE a.pessoa_fj = 'F' "
                         + "ORDER BY a.nome";
 
                 if (cnfb.conecta()) {
                     try {
                         cnfb.executeConsulta(sql);
                         while (cnfb.rs.next()) {
-                            lista.addRow(new String[]{
-                                cnfb.rs.getString("codigo"),
-                                cnfb.rs.getString("nome"),
-                                cnfb.rs.getString("cpf_cnpj")
-                            });
+
+                            if (codTransp.contains(cnfb.rs.getString("codigo"))) {
+
+                                lista.addRow(new String[]{
+                                    cnfb.rs.getString("codigo"),
+                                    cnfb.rs.getString("nome"),
+                                    cnfb.rs.getString("cpf_cnpj")
+
+                                });
+
+                            }
                         }
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(this, "Não foi possível consultar o banco de dados.");
@@ -1519,22 +1530,14 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                 String idEst = jTxtIdEst.getText();
                 String idTransp = jTxtIdTransportador.getText();
 
-                if (!"".equals(txt)) {
-                    condicao = " AND numero LIKE '%" + txt + "%' "
-                            + " OR chave LIKE '%" + txt + "%' ";
-                } else {
-                    condicao = " ";
-                }
-
                 sql = "SELECT * FROM conhecimentos WHERE emitente = " + idEst
                         + " AND cod_transportador = " + idTransp
-                        + condicao
                         + " AND chave NOT IN (SELECT chave FROM tmp_cte_rpa) "
                         + " AND chave NOT IN (SELECT chave FROM rpa_detalhe WHERE codigo != '" + jTxtId.getText() + "') "
                         + " AND status_envio = 'AU' "
                         + " ORDER BY numero, emissao";
 
-                if (cn.conecta()) {
+                if (cn.iniciarTransacao()) {
                     try {
                         cn.executeConsulta(sql);
                         while (cn.rs.next()) {
@@ -1551,7 +1554,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                     } catch (Exception e) {
                         JOptionPane.showMessageDialog(this, "Não foi possível consultar os conhecimentos.");
                     } finally {
-                        cn.desconecta();
+                        cn.finalizarTransacao();
                     }
                 }
 
@@ -1578,7 +1581,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
 
                 if (integ.buscaRpa(jTxtId.getText())) {
                     System.out.println("\n\nExecutando preenchimento de RPA.\n");
-                    if (cn.conecta()) {
+                    if (cn.iniciarTransacao()) {
                         try {
                             cn.executeAtualizacao("DELETE FROM tmp_cte_rpa WHERE usu_inc = '" + usu_inc + "';");
                             cn.executeAtualizacao("INSERT INTO tmp_cte_rpa (chave,numero,data,valor,peso,tarifa,pedagio,usu_inc) "
@@ -1589,7 +1592,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                             JOptionPane.showMessageDialog(this, "Não foi possível limpar a tabela temporária.");
                         } finally {
                             System.out.println("Tabela temporária está limpa.");
-                            cn.desconecta();
+                            cn.finalizarTransacao();
                         }
                     }
 
@@ -1600,7 +1603,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                     jTxtCompetencia.setText(integ.getCompetencia());
                     jTxtSequencia.setText(integ.getSequencia());
                     jTxtCodFolha.setText(integ.getCod_folha());
-                    jSpVlrPagar.setValue(integ.getValor_bruto());
+                    jSpVlrPagar.setText(df.format(integ.getValor_bruto()));
                     jTxtInss.setText(df.format(integ.getInss()));
                     jTxtIRRF.setText(df.format(integ.getIrrf()));
                     jTxtTerceiros.setText(df.format(integ.getTerceiros()));
@@ -1614,7 +1617,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
 
                     sql = "SELECT * FROM tmp_cte_rpa WHERE usu_inc = '" + usu_inc + "';";
 
-                    if (cn.conecta()) {
+                    if (cn.iniciarTransacao()) {
                         try {
                             cn.executeConsulta(sql);
                             while (cn.rs.next()) {
@@ -1628,7 +1631,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                         } catch (Exception e) {
                             JOptionPane.showMessageDialog(this, "Não foi possível recuperar os CTEs.");
                         } finally {
-                            cn.desconecta();
+                            cn.finalizarTransacao();
                         }
                     }
 
@@ -1691,7 +1694,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                 Double tarifa;
                 Double pedagio;
 
-                if (cn.conecta()) {
+                if (cn.iniciarTransacao()) {
                     try {
                         for (int x = jTblConsulta_Multi.getSelectedRowCount(); x != 0; x--) {
 
@@ -1726,7 +1729,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                         }
                     } catch (Exception e) {
                     } finally {
-                        cn.desconecta();
+                        cn.finalizarTransacao();
                     }
                 }
 
@@ -1736,7 +1739,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
 
                 sql = "SELECT * FROM tmp_cte_rpa WHERE usu_inc = '" + usu_inc + "';";
 
-                if (cn.conecta()) {
+                if (cn.iniciarTransacao()) {
                     try {
                         cn.executeConsulta(sql);
                         while (cn.rs.next()) {
@@ -1753,7 +1756,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
                     } catch (Exception e) {
                         JOptionPane.showMessageDialog(this, "Não foi possível recuperar os CTEs.");
                     } finally {
-                        cn.desconecta();
+                        cn.finalizarTransacao();
                     }
                 }
 
@@ -1792,7 +1795,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
             bruto_pagar = receita * (1.00 - transp.getMargem());
         }
 
-        jSpVlrPagar.setValue(bruto_pagar);
+        jSpVlrPagar.setText(df.format(bruto_pagar));
         System.out.println("Soma dos Conhecimentos: " + receita);
         System.out.println("Valor bruto da RPA: " + bruto_pagar);
         System.out.println("Soma do Pedágio: " + pedagio);
@@ -1822,7 +1825,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Não foi possível converter as datas. " + e);
             }
-            Double vlrBrutoPagar = Double.parseDouble(jSpVlrPagar.getValue().toString());
+            Double vlrBrutoPagar = Double.parseDouble(jSpVlrPagar.getText().replace(".", "").replace(",", "."));
             System.out.println("Valor bruto definido:" + vlrBrutoPagar);
 
             Double inss;
@@ -1924,7 +1927,7 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
             conhecimentos += Double.parseDouble(jTable1.getValueAt(i, 2).toString().replace(".", "").replace(",", "."));
         }
 
-        recibo = Double.parseDouble(jSpVlrPagar.getValue().toString());
+        recibo = Double.parseDouble(jSpVlrPagar.getText().replace(".", "").replace(",", "."));
 
         if (!"Cooperado".equals(jTxtCategoria.getText())) {
             inss = recibo * 0.20 * 0.20;
@@ -1932,6 +1935,37 @@ public class EmitirRpa extends javax.swing.JInternalFrame {
         }
 
         jLblMargem.setText(df.format((conhecimentos - recibo - inss - pisCofins) / conhecimentos * 100.00) + "%");
+
+    }
+
+    private void criaTabelaTemporaria() {
+
+        String sql = "DROP TEMPORARY TABLE IF EXISTS `tmp_cte_rpa`;";
+        if (cn.iniciarTransacao()) {
+            try {
+                cn.executeAtualizacao(sql);
+
+                sql = "CREATE TEMPORARY TABLE `tmp_cte_rpa` ("
+                        + "  `chave` varchar(47) NOT NULL,"
+                        + "  `numero` int(11) DEFAULT NULL,"
+                        + "  `data` date DEFAULT NULL,"
+                        + "  `valor` double DEFAULT NULL,"
+                        + "  `peso` double DEFAULT NULL,"
+                        + "  `tarifa` double DEFAULT NULL,"
+                        + "  `pedagio` double DEFAULT NULL,"
+                        + "  `usu_inc` int(11) DEFAULT NULL,"
+                        + "  PRIMARY KEY (`chave`)"
+                        + ") ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+
+                cn.executeAtualizacao(sql);
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e.getMessage());
+            } finally {
+                cn.finalizarTransacao();
+            }
+
+        }
 
     }
 }

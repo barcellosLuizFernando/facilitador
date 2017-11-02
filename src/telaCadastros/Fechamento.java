@@ -19,16 +19,17 @@ import javax.swing.JOptionPane;
  */
 public class Fechamento extends javax.swing.JInternalFrame {
 
-    DateFormat dateOut = new SimpleDateFormat("yyyy/MM/dd");
-    DateFormat dateIn = new SimpleDateFormat("dd/MM/yyyy");
+    private final DateFormat dateOut = new SimpleDateFormat("yyyy/MM/dd");
+    private final DateFormat dateIn = new SimpleDateFormat("dd/MM/yyyy");
 
-    conexoes.ConexaoMySQL cn = new ConexaoMySQL();
+    private ConexaoMySQL cn;
 
     /**
      * Creates new form Fechamento
      */
-    public Fechamento() {
+    public Fechamento(ConexaoMySQL conn) {
         initComponents();
+        this.cn = conn;
         buscaFechamento();
     }
 
@@ -143,7 +144,7 @@ public class Fechamento extends javax.swing.JInternalFrame {
             String sql;
             Date data2 = dateIn.parse(data);
 
-            if (cn.conecta()) {
+            if (cn.iniciarTransacao()) {
                 try {
                     sql = "UPDATE fechamento SET data = '" + dateOut.format(data2) + "';";
                     if (cn.executeAtualizacao(sql)) {
@@ -152,7 +153,7 @@ public class Fechamento extends javax.swing.JInternalFrame {
                         JOptionPane.showMessageDialog(this, "Não foi possível gravar o fechamento.", "Fechamento", JOptionPane.ERROR_MESSAGE);
                     }
                 } finally {
-                    cn.desconecta();
+                    cn.finalizarTransacao();
                 }
             }
         } catch (ParseException ex) {
@@ -172,7 +173,7 @@ public class Fechamento extends javax.swing.JInternalFrame {
     // End of variables declaration//GEN-END:variables
 
     private void buscaFechamento() {
-        DataFechamento d = new DataFechamento();
+        DataFechamento d = new DataFechamento(cn);
         jTextField1.setText(dateIn.format(d.getData("br")));
     }
 

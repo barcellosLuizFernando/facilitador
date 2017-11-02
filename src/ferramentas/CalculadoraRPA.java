@@ -43,6 +43,12 @@ public class CalculadoraRPA {
     private Double acum_inss;
     private Double acum_irrf;
     private Double acum_terceiros;
+    
+    public CalculadoraRPA(ConexaoMySQL conn){
+        
+        this.cn = conn;
+        
+    }
 
     /**
      * Este Método recebe os valores acumulados pagos a pessoa durante a
@@ -154,7 +160,7 @@ public class CalculadoraRPA {
         //BUSCA VARIÁVEIS DO BANCO MYSQL
         System.out.println("Buscando informações do INSS. Tabela local: " + inss_tab_local);
         if (inss_tab_local) {
-            if (cn.conecta()) {
+            if (cn.iniciarTransacao()) {
                 try {
                     sql = "SELECT * FROM tab_inss "
                             + "WHERE valor = (SELECT MAX(valor) "
@@ -168,7 +174,7 @@ public class CalculadoraRPA {
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Não foi possível consultar as variáveis no Banco de Dados MySQL.");
                 } finally {
-                    cn.desconecta();
+                    cn.finalizarTransacao();
                 }
 
             }
@@ -191,7 +197,7 @@ public class CalculadoraRPA {
         boolean irrf_tab_local = cd.getIrrf_tab_local();
 
         if (irrf_tab_local) {
-            if (cn.conecta()) {
+            if (cn.iniciarTransacao()) {
                 try {
                     sql = "SELECT * FROM tab_irrf "
                             + "WHERE valor = (SELECT valor from tab_irrf "
@@ -212,7 +218,7 @@ public class CalculadoraRPA {
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Não foi possível definir as variáveis do Imposto de Renda.");
                 } finally {
-                    cn.desconecta();
+                    cn.finalizarTransacao();
                 }
             }
         } else {
@@ -257,19 +263,19 @@ public class CalculadoraRPA {
         return terceiros;
     }
 
-    public static void main(String[] args) {
-
-        System.out.println("Criando Objeto 'Calculadora RPA'");
-        try {
-            ferramentas.CalculadoraRPA rpa = new CalculadoraRPA();
-            System.out.println("Calculando RPA com os dados informados");
-            rpa.calculaRPA(1711.17, 33128.92, 1106.26, 0.00, 165.64, "Cooperado");
-            System.out.println("Valor líquido: " + rpa.valor_liquido);
-
-        } catch (Exception e) {
-            System.out.println("Erro ao criar o objeto. Resposta: " + e);
-        }
-
-    }
+//    public static void main(String[] args) {
+//
+//        System.out.println("Criando Objeto 'Calculadora RPA'");
+//        try {
+//            ferramentas.CalculadoraRPA rpa = new CalculadoraRPA();
+//            System.out.println("Calculando RPA com os dados informados");
+//            rpa.calculaRPA(1711.17, 33128.92, 1106.26, 0.00, 165.64, "Cooperado");
+//            System.out.println("Valor líquido: " + rpa.valor_liquido);
+//
+//        } catch (Exception e) {
+//            System.out.println("Erro ao criar o objeto. Resposta: " + e);
+//        }
+//
+//    }
 
 }

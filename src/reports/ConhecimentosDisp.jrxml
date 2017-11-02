@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ConhecimentosDisp" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9fd9e7da-1dd9-4ef9-a1fa-e357f31581a2">
+	<property name="ireport.zoom" value="1.9487171000000083"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="dataInicio" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="dataFim" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select *
+from bsctranscooper.conhecimentos a
+left join bsctranscooper.rpa_detalhe b on (b.chave = a.chave and b.numero = a.numero)
+
+where b.codigo is null and a.status_envio = 'AU' and a.emissao between $P{dataInicio} and  $P{dataFim}
+
+order by a.nome_transportador, a.emissao, a.numero
+;]]>
+	</queryString>
+	<field name="empresa" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="emitente" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="numero" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="serie" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="emissao" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="chave" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="operacao" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="natureza" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tp_cte" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="status_envio" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="valor" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="pedagio" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="placa" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cod_transportador" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nome_transportador" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="importacao" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="peso" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="mun_origem" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="mun_destino" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="codigo" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="data" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tarifa" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="sumFatTransp" class="java.lang.Double" resetType="Group" resetGroup="TRANSPORTADOR" calculation="Sum">
+		<variableExpression><![CDATA[$F{valor}]]></variableExpression>
+	</variable>
+	<variable name="sumFatTransp_T" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{valor}]]></variableExpression>
+	</variable>
+	<variable name="linha" class="java.lang.Integer" resetType="Group" resetGroup="TRANSPORTADOR" calculation="Count">
+		<variableExpression><![CDATA[1]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<group name="TRANSPORTADOR">
+		<groupExpression><![CDATA[$F{nome_transportador}]]></groupExpression>
+		<groupHeader>
+			<band height="19">
+				<line>
+					<reportElement x="0" y="0" width="555" height="1" forecolor="#999999" uuid="e1fcba00-eb51-485f-99c3-9aca2fe06685"/>
+					<graphicElement>
+						<pen lineWidth="2.0"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement x="0" y="3" width="133" height="15" uuid="56397857-9aca-459a-9993-538eab8cb1b8"/>
+					<textElement textAlignment="Center">
+						<font fontName="Calibri" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Transportador]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="493" y="3" width="62" height="15" uuid="a4e24fa2-1217-4c6b-a8cc-a2ff8fa0fbae"/>
+					<textElement textAlignment="Center">
+						<font fontName="Calibri" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Faturamento]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="206" y="3" width="62" height="15" uuid="92f672d6-f1ed-4bb8-9881-e568bae4c0a6"/>
+					<textElement textAlignment="Center">
+						<font fontName="Calibri" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Documento]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="133" y="3" width="73" height="15" uuid="fa117f0a-44c5-4340-8a8b-c95f6492a8cc"/>
+					<textElement textAlignment="Center">
+						<font fontName="Calibri" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Placa]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="268" y="3" width="62" height="15" uuid="ec8feef7-b3e6-438e-aabb-432df68199dd"/>
+					<textElement textAlignment="Center">
+						<font fontName="Calibri" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Data]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="330" y="3" width="80" height="15" uuid="0085191b-1e07-4d52-84a0-a37113c09280"/>
+					<textElement textAlignment="Center">
+						<font fontName="Calibri" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Origem]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="410" y="3" width="80" height="15" uuid="dde41ca3-5268-4392-9faf-98245d143356"/>
+					<textElement textAlignment="Center">
+						<font fontName="Calibri" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Destino]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="16">
+				<textField>
+					<reportElement x="0" y="1" width="268" height="15" uuid="d65d8027-b9bf-44f2-a5bf-e0f28a4b6dfe"/>
+					<textElement>
+						<font fontName="Calibri" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Total do transportador " + $F{nome_transportador}.toUpperCase()]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="TRANSPORTADOR" pattern="#,##0.00">
+					<reportElement x="493" y="1" width="62" height="15" uuid="7596b6dc-17c2-4d70-a76b-4b61e9b50353"/>
+					<textElement textAlignment="Right">
+						<font fontName="Calibri" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{sumFatTransp}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="TRANSPORTADOR" pattern="#,##0.00">
+					<reportElement x="268" y="1" width="222" height="15" uuid="19b492c4-5ac2-42bc-b060-f496158a566e"/>
+					<textElement>
+						<font fontName="Calibri" isBold="false" isItalic="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Conhecimentos não processados: " + $V{TRANSPORTADOR_COUNT} + "."]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="0" width="555" height="1" forecolor="#999999" uuid="7ca9211b-ac3c-4610-91ed-cc0dc1516c40"/>
+					<graphicElement>
+						<pen lineWidth="2.0"/>
+					</graphicElement>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<pageHeader>
+		<band height="61" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="7" width="88" height="52" uuid="c98b9aaf-8535-4fa4-9e4d-cd0cfc2f8ecd"/>
+				<imageExpression><![CDATA["\\LogoTranscooper.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="99" y="0" width="381" height="21" uuid="f165557d-3f80-431e-a6fc-fda114cc8092"/>
+				<textElement>
+					<font fontName="Calibri" size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONHECIMENTOS NÃO VINCULADOS AO RPA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="99" y="21" width="279" height="21" uuid="41e33177-ef80-47a0-81a3-01d1d8a7b2da"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[COOPERATIVA DE TRANSPORTES BOM RETIRO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="99" y="42" width="364" height="16" uuid="3e09fc65-b261-4a6d-86cb-fb7f9346b581"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Período: " + new SimpleDateFormat("dd/MM/yyyy").format($P{dataInicio}) + " até " + new SimpleDateFormat("dd/MM/yyyy").format($P{dataFim})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="463" y="42" width="92" height="16" uuid="616d069c-cad1-4c99-b786-ccfb9c580b70"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Valores expressos em R$]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<rectangle>
+				<reportElement mode="Opaque" x="0" y="0" width="555" height="15" backcolor="#F5F5F5" uuid="0a884cdf-3b3e-4ac9-9dba-7c3bf90b6056">
+					<printWhenExpression><![CDATA[new Boolean(($V{linha}.intValue()%2!=0))]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement x="0" y="0" width="133" height="15" uuid="380bcb11-7dfc-4a90-aee6-7810259a10b4"/>
+				<textElement>
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nome_transportador}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="133" y="0" width="73" height="15" uuid="51988a0d-ee70-4d83-b70f-21d09532202a"/>
+				<textElement textAlignment="Center">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{placa}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="493" y="0" width="62" height="15" uuid="3e803082-af8b-4f15-bd22-a4efa70e820a"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="206" y="0" width="62" height="15" uuid="3cdc0794-47ef-4caa-9187-563544c392ba"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numero}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="268" y="0" width="62" height="15" uuid="1a0a3833-64b7-49cf-915c-7c30b7a1e8d1"/>
+				<textElement textAlignment="Center">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{emissao}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="330" y="0" width="80" height="15" uuid="f7031ca4-0ef2-406f-9465-8f083964c2d0"/>
+				<textElement>
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{mun_origem}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="410" y="0" width="80" height="15" uuid="2c7c61d4-0e05-43a1-9459-11ae33805716"/>
+				<textElement>
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{mun_destino}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="16" splitType="Stretch">
+			<textField>
+				<reportElement x="251" y="1" width="304" height="13" forecolor="#999999" uuid="5c8adba8-c326-4867-ad1a-27c0d8a7ca2c"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Emissão em " + new SimpleDateFormat("dd/MM/yyyy, ' às ' HH:mm:ss").format(new Date())
++ ". Página " + $V{PAGE_NUMBER} + "."]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="0" width="555" height="1" forecolor="#999999" uuid="4bcc22e0-b3ff-4606-b32e-07962bdb738a"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+		</band>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="30">
+			<line>
+				<reportElement x="0" y="0" width="555" height="1" forecolor="#999999" uuid="84cb6bd7-a30b-4513-a1fa-11cec97f7d73"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="0" width="50" height="16" uuid="8e2688f9-af9c-4c66-8266-328e570bc196"/>
+				<textElement>
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total:]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="493" y="0" width="62" height="16" uuid="47689aa8-7243-4066-89d7-36d03aca42c5"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumFatTransp_T}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="15" width="555" height="1" forecolor="#999999" uuid="e831c57e-13f6-4f09-9e0b-2979990c8c25"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="251" y="16" width="304" height="13" forecolor="#999999" uuid="10895a06-25ab-43a4-8dea-fc92f18e6c28"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Emissão em " + new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date())
++ ". Página " + $V{PAGE_NUMBER} + "."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="#,##0.00">
+				<reportElement x="268" y="0" width="222" height="15" uuid="e96b607c-c0af-44bd-b9f8-ccc2366e0f3c"/>
+				<textElement>
+					<font fontName="Calibri" isBold="false" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Conhecimentos não processados: " + $V{REPORT_COUNT} + "."]]></textFieldExpression>
+			</textField>
+		</band>
+	</lastPageFooter>
+</jasperReport>

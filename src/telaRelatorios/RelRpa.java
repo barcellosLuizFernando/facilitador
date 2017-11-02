@@ -3,13 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package telaCadastros;
+package telaRelatorios;
 
 import conexoes.ConexaoMySQL;
 import ferramentas.ImprimeRelatorio;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JOptionPane;
+import javax.swing.text.MaskFormatter;
 
 /**
  *
@@ -17,15 +19,24 @@ import javax.swing.JOptionPane;
  */
 public class RelRpa extends javax.swing.JInternalFrame {
 
-    private ConexaoMySQL cn = new ConexaoMySQL();
-    private SimpleDateFormat dfOut = new SimpleDateFormat("yyyy-MM-dd");
-    private ImprimeRelatorio rel = new ImprimeRelatorio();
+    private ConexaoMySQL cn;
+    private DateFormat dfOut = new SimpleDateFormat("yyyy/MM/dd");
+    private DateFormat dateIn = new SimpleDateFormat("dd/MM/yyyy");
+    private ImprimeRelatorio rel;
+    private MaskFormatter data;
 
     /**
      * Creates new form RelRpa
      */
-    public RelRpa() {
+    public RelRpa(ConexaoMySQL conn) {
+        try {
+            data = new javax.swing.text.MaskFormatter("##/##/####");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
         initComponents();
+        this.cn = conn;
+        rel = new ImprimeRelatorio(conn);
         listaPessoas();
 
     }
@@ -42,12 +53,12 @@ public class RelRpa extends javax.swing.JInternalFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jSpinner1 = new javax.swing.JSpinner();
         jLabel3 = new javax.swing.JLabel();
-        jSpinner2 = new javax.swing.JSpinner();
         jComboBox1 = new javax.swing.JComboBox<>();
         jCheckBox1 = new javax.swing.JCheckBox();
         jCheckBox2 = new javax.swing.JCheckBox();
+        jTxtDti = new javax.swing.JFormattedTextField(data);
+        jTxtDtf = new javax.swing.JFormattedTextField(data);
         jPanel2 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -59,13 +70,7 @@ public class RelRpa extends javax.swing.JInternalFrame {
 
         jLabel2.setText("Data Inicial");
 
-        jSpinner1.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(), null, new java.util.Date(), java.util.Calendar.DAY_OF_MONTH));
-        jSpinner1.setEditor(new javax.swing.JSpinner.DateEditor(jSpinner1, "dd/MM/yyyy"));
-
         jLabel3.setText("Data Final");
-
-        jSpinner2.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(), null, new java.util.Date(), java.util.Calendar.DAY_OF_MONTH));
-        jSpinner2.setEditor(new javax.swing.JSpinner.DateEditor(jSpinner2, "dd/MM/yyyy"));
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -81,25 +86,23 @@ public class RelRpa extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(29, 29, 29)
-                        .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jCheckBox1)
+                        .addGap(18, 18, 18)
+                        .addComponent(jCheckBox2))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jTxtDti, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabel3)
-                                .addGap(10, 10, 10)
-                                .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jCheckBox1)
-                                .addGap(18, 18, 18)
-                                .addComponent(jCheckBox2)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTxtDtf, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -111,9 +114,9 @@ public class RelRpa extends javax.swing.JInternalFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
+                    .addComponent(jLabel3)
+                    .addComponent(jTxtDti, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTxtDtf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jCheckBox1)
@@ -155,7 +158,7 @@ public class RelRpa extends javax.swing.JInternalFrame {
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(54, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -163,17 +166,19 @@ public class RelRpa extends javax.swing.JInternalFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -192,17 +197,16 @@ public class RelRpa extends javax.swing.JInternalFrame {
         String condicao;
         Date dtInicial = null;
         Date dtFinal = null;
-        
-        if(!"TODOS".equals(pessoa)){
+
+        if (!"TODOS".equals(pessoa)) {
             condicao = " AND a.pessoa = '" + pessoa + "' ";
         } else {
             condicao = " ";
         }
-        
 
         try {
-            dtInicial = dfOut.parse(dfOut.format(jSpinner1.getValue()));
-            dtFinal = dfOut.parse(dfOut.format(jSpinner2.getValue()));
+            dtInicial = dateIn.parse(jTxtDti.getText());
+            dtFinal = dateIn.parse(jTxtDtf.getText());
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Não foi possível converter as datas.");
         }
@@ -218,18 +222,18 @@ public class RelRpa extends javax.swing.JInternalFrame {
         } else {
             detalhe = "N";
         }
-        
+
         sql = "SELECT * FROM rel_rpa a "
                 + "WHERE data between '" + dfOut.format(dtInicial) + "' and '" + dfOut.format(dtFinal) + "' "
                 + condicao
-                + "ORDER BY a.cod_emp ASC,a.cod_est ASC,a.cod_pessoa ASC,a.numero ASC";
+                + "ORDER BY a.pessoa, a.cod_emp ASC,a.cod_est ASC,a.cod_pessoa ASC,a.numero ASC";
 
         System.out.print("Emite Resumo: " + resumo);
         System.out.println(". Emite detalhe: " + detalhe);
         System.out.print("Data inicial: " + dtInicial);
         System.out.println(". Data final: " + dtFinal);
-        
-        rel.imprimir(sql, "conhecimentosRpa.jasper", "Acompanhamento de Recibos",dtInicial,dtFinal,detalhe,resumo);
+
+        rel.imprimir(sql, "conhecimentosRpa.jasper", "Acompanhamento de Recibos", dtInicial, dtFinal, detalhe, resumo);
 
 
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -246,8 +250,8 @@ public class RelRpa extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JSpinner jSpinner1;
-    private javax.swing.JSpinner jSpinner2;
+    private javax.swing.JFormattedTextField jTxtDtf;
+    private javax.swing.JFormattedTextField jTxtDti;
     // End of variables declaration//GEN-END:variables
 
     private void listaPessoas() {
@@ -256,7 +260,7 @@ public class RelRpa extends javax.swing.JInternalFrame {
 
         String sql = "SELECT DISTINCT pessoa from rel_rpa order by pessoa;";
 
-        if (cn.conecta()) {
+        if (cn.iniciarTransacao()) {
             try {
                 cn.executeConsulta(sql);
                 while (cn.rs.next()) {
@@ -265,7 +269,7 @@ public class RelRpa extends javax.swing.JInternalFrame {
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Não foi possível preencher o campo de pessoas.");
             } finally {
-                cn.desconecta();
+                cn.finalizarTransacao();
             }
         }
     }

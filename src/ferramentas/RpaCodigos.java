@@ -14,8 +14,12 @@ import javax.swing.JOptionPane;
  */
 public class RpaCodigos {
 
-    private ConexaoMySQL cn = new ConexaoMySQL();
+    private ConexaoMySQL cn;
     private String sql;
+    
+    public RpaCodigos(ConexaoMySQL conn){
+        this.cn = conn;
+    }
 
     public int getSequencia(String competencia, String transportador, String estabelecimento, int seq_inicial) {
 
@@ -26,7 +30,7 @@ public class RpaCodigos {
                 + "AND transportador = '" + transportador + "' "
                 + "AND estabelecimento = '" + estabelecimento + "';";
 
-        if (cn.conecta()) {
+        if (cn.iniciarTransacao()) {
             try {
                 cn.executeConsulta(sql);
 
@@ -39,7 +43,7 @@ public class RpaCodigos {
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Não foi possível capturar o número da sequencia.");
             } finally {
-                cn.desconecta();
+                cn.finalizarTransacao();
             }
         }
         return sequencia;
@@ -50,7 +54,7 @@ public class RpaCodigos {
 
         String sql;
 
-        if (cn.conecta()) {
+        if (cn.iniciarTransacao()) {
             sql = "SELECT MAX(numero) as codigo FROM rpa WHERE estabelecimento = '" + estabelecimento + "'";
             try {
                 cn.executeConsulta(sql);
@@ -61,7 +65,7 @@ public class RpaCodigos {
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Não foi possível recuperar o último número de recibo.");
             } finally {
-                cn.desconecta();
+                cn.finalizarTransacao();
             }
         }
 
@@ -74,7 +78,7 @@ public class RpaCodigos {
 
         sql = "SHOW TABLE STATUS like '" + tabela + "';";
 
-        if (cn.conecta()) {
+        if (cn.iniciarTransacao()) {
             try {
                 cn.executeConsulta(sql);
                 while (cn.rs.next()) {
@@ -84,19 +88,19 @@ public class RpaCodigos {
                 JOptionPane.showMessageDialog(null, "Não foi possível definir a próxima id no MySQL.");
 
             } finally {
-                cn.desconecta();
+                cn.finalizarTransacao();
             }
         }
         return id;
     }
 
-    public static void main(String[] args) {
-        RpaCodigos rpa = new RpaCodigos();
-
-        int squencia = rpa.getSequencia("04", "1633", "2", 1);
-
-        System.out.println("Sequencia: " + squencia);
-
-    }
+//    public static void main(String[] args) {
+//        RpaCodigos rpa = new RpaCodigos();
+//
+//        int squencia = rpa.getSequencia("04", "1633", "2", 1);
+//
+//        System.out.println("Sequencia: " + squencia);
+//
+//    }
 
 }

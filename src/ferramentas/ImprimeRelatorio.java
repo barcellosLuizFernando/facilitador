@@ -25,14 +25,18 @@ import net.sf.jasperreports.view.JasperViewer;
  */
 public class ImprimeRelatorio {
 
-    private ConexaoMySQL cn = new ConexaoMySQL();
+    private ConexaoMySQL cn;
     private SimpleDateFormat dateIn = new SimpleDateFormat("dd/MM/yyyy");
+
+    public ImprimeRelatorio(ConexaoMySQL conn) {
+        this.cn = conn;
+    }
 
     public void imprimir(String sql, String relatorio, String titulo) {
 
         String rel = "./src/reports/" + relatorio;//"reports/Capa.jasper";
 
-        if (cn.conecta()) {
+        if (cn.iniciarTransacao()) {
             try {
                 cn.executeConsulta(sql);
 
@@ -50,7 +54,7 @@ public class ImprimeRelatorio {
             } catch (JRException | NullPointerException je) {
                 JOptionPane.showMessageDialog(null, je);
             } finally {
-                cn.desconecta();
+                cn.finalizarTransacao();
             }
         }
     }
@@ -60,7 +64,7 @@ public class ImprimeRelatorio {
         String rel = "./src/reports/" + relatorio;//"reports/Capa.jasper";
         //String rel_sub = "./src/reports/conhecimentosRpa_detalhe.jasper";//"reports/Capa.jasper";
 
-        if (cn.conecta()) {
+        if (cn.iniciarTransacao()) {
             try {
                 cn.executeConsulta(sql);
 
@@ -88,15 +92,51 @@ public class ImprimeRelatorio {
             } catch (Exception je) {
                 JOptionPane.showMessageDialog(null, je);
             } finally {
-                cn.desconecta();
+                cn.finalizarTransacao();
+            }
+        }
+    }
+    
+    public void imprimir(String sql, String relatorio, String titulo, Date dti, Date dtf) {
+
+        String rel = "./src/reports/" + relatorio;//"reports/Capa.jasper";
+        //String rel_sub = "./src/reports/conhecimentosRpa_detalhe.jasper";//"reports/Capa.jasper";
+
+        if (cn.iniciarTransacao()) {
+            try {
+                cn.executeConsulta(sql);
+
+                JRResultSetDataSource relatResult = new JRResultSetDataSource(cn.rs);
+                Map<String, Object> parametros = new HashMap<String, Object>();
+                parametros.put("dataInicio", dti);
+                parametros.put("dataFim", dtf);
+                parametros.put("SUBREPORT_DIR", "./src/reports/");
+                parametros.put("REPORT_CONNECTION", cn.getConexao());
+                System.out.println("Parametros definidos: " + parametros);
+
+                JasperPrint jasperprint;
+                jasperprint = JasperFillManager.fillReport(rel, parametros, relatResult);
+                System.out.println("JasperPrint: " + jasperprint);
+                JasperViewer jv = new JasperViewer(jasperprint, false);
+                System.out.println("JasperViewer: " + jv);
+
+                jv.setTitle(titulo);
+                jv.setVisible(true);
+
+                System.out.println("Relatório emitido.");
+
+            } catch (Exception je) {
+                JOptionPane.showMessageDialog(null, je);
+            } finally {
+                cn.finalizarTransacao();
             }
         }
     }
 
     public static void main(String[] args) {
-        ImprimeRelatorio print = new ImprimeRelatorio();
+        //ImprimeRelatorio print = new ImprimeRelatorio();
 
-        print.imprimir("SELECT * FROM rel_rpa a order by a.cod_emp ASC,a.cod_est ASC,a.cod_pessoa ASC,a.numero ASC", "conhecimentosRpa.jasper", "Acompanhamento de Recibos", new Date("2017/04/01"), new Date("2017/04/30"), "N", "S");
+        //   print.imprimir("SELECT * FROM rel_rpa a order by a.cod_emp ASC,a.cod_est ASC,a.cod_pessoa ASC,a.numero ASC", "conhecimentosRpa.jasper", "Acompanhamento de Recibos", new Date("2017/04/01"), new Date("2017/04/30"), "N", "S");
         //String rel = "SELECT * FROM rel_rpa WHERE codigo = 1"
         //        + " union all "
         //        + "SELECT * FROM rel_rpa WHERE codigo = 1";

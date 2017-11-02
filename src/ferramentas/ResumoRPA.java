@@ -24,7 +24,7 @@ import javax.swing.JOptionPane;
  */
 public class ResumoRPA {
 
-    private ConexaoMySQL cn = new ConexaoMySQL();
+    private ConexaoMySQL cn;
 
     private DateFormat dateOut = new SimpleDateFormat("yyyy/MM/dd");
     private DateFormat mes = new SimpleDateFormat("MM");
@@ -38,6 +38,10 @@ public class ResumoRPA {
     private String terceiros;
     private String fretes;
     private int qtdApos;
+    
+    public ResumoRPA(ConexaoMySQL conn){
+        this.cn = conn;
+    }
 
     public void calculaResumo(Date data, String transportador, String rpa) {
 
@@ -49,7 +53,7 @@ public class ResumoRPA {
         String ano = this.ano.format(data);
         System.out.println("Mês formatado: " + mes + ". Ano: " + ano);
 
-        if (cn.conecta()) {
+        if (cn.iniciarTransacao()) {
             sql = "SELECT round(sum(a.vlr_bruto),2) as acumulado, "
                     + "round(sum(a.inss),2) as inss, round(sum(a.terceiros),2) as terceiros, "
                     + "round(sum(a.irrf),2) as irrf, (select count(b.codigo) "
@@ -113,7 +117,7 @@ public class ResumoRPA {
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Não foi possível consultar o resumo.");
             } finally {
-                cn.desconecta();
+                cn.finalizarTransacao();
             }
         }
     }
@@ -142,10 +146,10 @@ public class ResumoRPA {
         return qtdApos;
     }
 
-    public static void main(String[] args) {
-        ResumoRPA rRpa = new ResumoRPA();
-        rRpa.calculaResumo(new Date("2017/04/13"), "605", "105");
-        System.out.println("Acumulado calculado: " + rRpa.getAcumulado());
-    }
+//    public static void main(String[] args) {
+//        ResumoRPA rRpa = new ResumoRPA();
+//        rRpa.calculaResumo(new Date("2017/04/13"), "605", "105");
+//        System.out.println("Acumulado calculado: " + rRpa.getAcumulado());
+//    }
 
 }

@@ -20,7 +20,7 @@ import javax.swing.JOptionPane;
  */
 public class Conhecimentos {
 
-    private final conexoes.ConexaoMySQL cn = new ConexaoMySQL();
+    private final conexoes.ConexaoMySQL cn;
     private final DateFormat dateIn = new SimpleDateFormat("dd/MM/yyyy");
     private final DecimalFormat df = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(new Locale("pt", "BR")));
 
@@ -29,6 +29,10 @@ public class Conhecimentos {
             nomeTransportador, origem, destino, peso, cod_rpa, tarifa, nro_rpa;
 
     private String sql;
+    
+    public Conhecimentos(ConexaoMySQL conn){
+        this.cn = conn;
+    }
 
     public boolean buscaConhecimento(String chave) {
 
@@ -45,7 +49,7 @@ public class Conhecimentos {
                 + "LEFT JOIN rpa c ON (c.codigo = b.codigo) "
                 + "WHERE a.chave = '" + chave + "' ;";
 
-        if (cn.conecta()) {
+        if (cn.iniciarTransacao()) {
             try {
                 cn.executeConsulta(sql);
                 while (cn.rs.next()) {
@@ -77,7 +81,7 @@ public class Conhecimentos {
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Não foi possível consultar os conhecimentos.");
             } finally {
-                cn.desconecta();
+                cn.finalizarTransacao();
             }
         }
 
@@ -172,18 +176,18 @@ public class Conhecimentos {
         return nro_rpa;
     }
     
-    public static void main(String[] args) {
-        Conhecimentos cte = new Conhecimentos();
-
-        if (cte.buscaConhecimento("CTe42170415278561000205570000000065871635582514")) {
-
-            System.out.println("Transportador do conhecimento é: " + cte.getNomeTransportador());
-            System.out.println("Data de Emissão é: " + cte.getData());
-            System.out.println("Valor do conhecimento é: " + cte.getValor());
-            System.out.println("Valor da tarifa é: " + cte.getTarifa());
-            
-        } else {
-            JOptionPane.showMessageDialog(null, "Não foram encontrados conhecimentos com esta chave.");
-        }
-    }
+//    public static void main(String[] args) {
+//        Conhecimentos cte = new Conhecimentos();
+//
+//        if (cte.buscaConhecimento("CTe42170415278561000205570000000065871635582514")) {
+//
+//            System.out.println("Transportador do conhecimento é: " + cte.getNomeTransportador());
+//            System.out.println("Data de Emissão é: " + cte.getData());
+//            System.out.println("Valor do conhecimento é: " + cte.getValor());
+//            System.out.println("Valor da tarifa é: " + cte.getTarifa());
+//            
+//        } else {
+//            JOptionPane.showMessageDialog(null, "Não foram encontrados conhecimentos com esta chave.");
+//        }
+//    }
 }

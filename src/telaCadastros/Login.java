@@ -245,8 +245,11 @@ public class Login extends javax.swing.JFrame {
 
         System.out.println("Resposta da tentativa de conexao com o Banco de dados: ");
 
-        if (cn.conecta()) {
-            //JOptionPane.showMessageDialog(this, "Conectado. Agora, vamos validar seu login.");
+        if (jTxtUsuario.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Informe o Usuário!");
+            jTxtUsuario.grabFocus();
+        } else if (cn.conecta(user, pwd)) {
+
             try {
                 cn.executeConsulta("SELECT nome,pwd,id,login from cad_usuarios where login = '" + user + "';");
                 while (cn.rs.next()) {
@@ -255,60 +258,33 @@ public class Login extends javax.swing.JFrame {
                     id = cn.rs.getInt(3);
                     login = cn.rs.getString("login");
                 }
+                cn.rs.close();
 
-                try {
-                    cd.setUlt_user(login);
-                    cd.salvaProp();
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "Não foi possível gravar o último usuário.");
+                if (id != 0) {
+                    if (enviausuario == null) {
+                        System.out.println("Abrindo tela.");
+                        enviausuario = new TelaInicial(cn);
+                        enviausuario.setVisible(true);
+                        enviausuario.recebendo(user, id);
+                    } else {
+                        enviausuario.setVisible(true);
+                        enviausuario.setState(TelaInicial.NORMAL);
+                        enviausuario.recebendo(user, id);
+                    }
+
+                    System.out.println("Id do usuário: " + id);
+
+                    this.dispose();
+                } else {
+                    jTxtUsuario.grabFocus();
+                    throw new UnsupportedOperationException("Usuário não cadastrado!");
                 }
 
-            } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(this, "Não foi possível verificar o login e a senha!");
-            } finally {
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e.getMessage());
                 cn.desconecta();
             }
-
-            if (pwd.equals(pwdbd)) {
-                result = 1;
-            }
-
-            switch (result) {
-
-                default:
-
-                    if (jTxtUsuario.getText().isEmpty()) {
-                        JOptionPane.showMessageDialog(null, "Informe o Usuário!");
-                        jTxtUsuario.grabFocus();
-                    } else if (pwd.equals(pwdbd)) {
-                        if (enviausuario == null) {
-                            System.out.println("Abrindo tela.");
-                            enviausuario = new TelaInicial();
-                            enviausuario.setVisible(true);
-                            enviausuario.recebendo(user, id);
-                        } else {
-                            enviausuario.setVisible(true);
-                            enviausuario.setState(TelaInicial.NORMAL);
-                            enviausuario.recebendo(user, id);
-                        }
-
-                        System.out.println("Id do usuário: " + id);
-
-                        this.dispose();
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Usuário incorreto!!!");
-                        jTxtUsuario.grabFocus();
-                    }
-                    
-                    break;
-                case 0:
-                    JOptionPane.showMessageDialog(rootPane, "Usuário ou senha não conferem!");
-                    break;
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Não foi possível acessar o banco de dados.");
         }
-
     }//GEN-LAST:event_jBtnAcessarActionPerformed
 
     private void jTxtUsuarioKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTxtUsuarioKeyPressed

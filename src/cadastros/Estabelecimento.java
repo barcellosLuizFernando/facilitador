@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
  */
 public class Estabelecimento {
 
-    conexoes.ConexaoMySQL cn = new ConexaoMySQL();
+    conexoes.ConexaoMySQL cn;
 
     String id;
     String razao_social;
@@ -22,6 +22,10 @@ public class Estabelecimento {
     String cad_icms;
     String cidade;
     String uf;
+    
+    public Estabelecimento(ConexaoMySQL conn){
+        this.cn = conn;
+    }
 
     public String getId() {
         return id;
@@ -57,7 +61,7 @@ public class Estabelecimento {
         uf = "";
 
         String sql = "SELECT * FROM cad_estabelecimentos WHERE id = '" + estab + "';";
-        if (cn.conecta()) {
+        if (cn.iniciarTransacao()) {
             try {
                 cn.executeConsulta(sql);
                 while (cn.rs.next()) {
@@ -71,7 +75,7 @@ public class Estabelecimento {
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Não foi possível consultar os dados do estabelecimento");
             } finally {
-                cn.desconecta();
+                cn.finalizarTransacao();
             }
         }
     }

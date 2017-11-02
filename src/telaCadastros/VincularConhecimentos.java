@@ -22,7 +22,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class VincularConhecimentos extends javax.swing.JInternalFrame {
 
-    private conexoes.ConexaoMySQL cn = new ConexaoMySQL();
+    private conexoes.ConexaoMySQL cn;
     private DateFormat dateIn = new SimpleDateFormat("dd/MM/yyyy");
     private DateFormat dateOut = new SimpleDateFormat("yyyy/MM/dd");
     private JFrame framePai;
@@ -33,8 +33,9 @@ public class VincularConhecimentos extends javax.swing.JInternalFrame {
     /**
      * Creates new form VincularConhecimentos
      */
-    public VincularConhecimentos(int user) {
+    public VincularConhecimentos(int user, ConexaoMySQL conn) {
         initComponents();
+        this.cn = conn;
         montaTabela(jTblCancelados);
         montaLista(null, false, false, jTblCancelados, null);
         montaTabela(jTblDisponiveis);
@@ -224,7 +225,7 @@ public class VincularConhecimentos extends javax.swing.JInternalFrame {
         if (jTblCancelados.getSelectedRowCount() == 1
                 && jTblDisponiveis.getSelectedRowCount() == 1) {
 
-            CteVinculacao vin = new CteVinculacao();
+            CteVinculacao vin = new CteVinculacao(cn);
             int linha_ca = jTblCancelados.getSelectedRow();
             int linha_au = jTblDisponiveis.getSelectedRow();
 
@@ -351,7 +352,7 @@ public class VincularConhecimentos extends javax.swing.JInternalFrame {
                 + condicao
                 + "ORDER BY numero, serie;";
 
-        if (cn.conecta()) {
+        if (cn.iniciarTransacao()) {
             try {
                 cn.executeConsulta(sql);
                 while (cn.rs.next()) {
@@ -366,7 +367,7 @@ public class VincularConhecimentos extends javax.swing.JInternalFrame {
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Não foi possível consultar os conhecimentos.");
             } finally {
-                cn.desconecta();
+                cn.finalizarTransacao();
             }
         }
 
@@ -403,7 +404,7 @@ public class VincularConhecimentos extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(this, "Não foi possível converter a data selecionada.");
         }
 
-        Transportador transp = new Transportador(usu_inc);
+        Transportador transp = new Transportador(usu_inc,cn);
 
         transp.buscaPessoa(Integer.parseInt(idTransportador));
 

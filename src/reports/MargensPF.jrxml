@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MargensPF" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="163ea2e2-7acf-469d-84cd-1611eb4fb320">
+	<property name="ireport.zoom" value="7.400249944258181"/>
+	<property name="ireport.x" value="3009"/>
+	<property name="ireport.y" value="967"/>
+	<parameter name="dataInicio" class="java.util.Date">
+		<defaultValueExpression><![CDATA[new Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="dataFim" class="java.util.Date">
+		<defaultValueExpression><![CDATA[new Date()]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[call bsctranscooper.rel_rpa_resumo($P{dataInicio}, $P{dataFim});]]>
+	</queryString>
+	<field name="codigo" class="java.lang.Integer"/>
+	<field name="cod_emp" class="java.lang.Integer"/>
+	<field name="cod_est" class="java.lang.Integer"/>
+	<field name="empresa" class="java.lang.String"/>
+	<field name="inscricao_federal" class="java.lang.String"/>
+	<field name="localidade" class="java.lang.String"/>
+	<field name="data" class="java.sql.Date"/>
+	<field name="numero" class="java.lang.Integer"/>
+	<field name="cod_pessoa" class="java.lang.Integer"/>
+	<field name="pessoa" class="java.lang.String"/>
+	<field name="pis" class="java.lang.Long"/>
+	<field name="cpf" class="java.lang.String"/>
+	<field name="rg" class="java.lang.String"/>
+	<field name="rg_emissor" class="java.lang.String"/>
+	<field name="categoria" class="java.lang.String"/>
+	<field name="vlr_bruto" class="java.lang.Double"/>
+	<field name="inss" class="java.lang.Double"/>
+	<field name="irrf" class="java.lang.Double"/>
+	<field name="terceiros" class="java.lang.Double"/>
+	<field name="liquido" class="java.lang.Double"/>
+	<field name="servico" class="java.lang.String"/>
+	<field name="conhecimentos" class="java.lang.String"/>
+	<field name="inss_bc" class="java.lang.Double"/>
+	<field name="inss_aliq" class="java.lang.Double"/>
+	<field name="irrf_bc" class="java.lang.Double"/>
+	<field name="irrf_aliq" class="java.lang.Double"/>
+	<field name="codigo_fin" class="java.lang.Integer"/>
+	<field name="cod_folha" class="java.lang.Integer"/>
+	<field name="tipo_rpa" class="java.lang.String"/>
+	<field name="faturamento" class="java.lang.Double"/>
+	<field name="margem" class="java.lang.Double"/>
+	<sortField name="categoria"/>
+	<sortField name="pessoa"/>
+	<variable name="sumFaturamento" class="java.lang.Double" resetType="Group" resetGroup="Transportador" calculation="Sum">
+		<variableExpression><![CDATA[$F{faturamento}]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="sumCusto" class="java.lang.Double" resetType="Group" resetGroup="Transportador" calculation="Sum">
+		<variableExpression><![CDATA[$F{vlr_bruto}]]></variableExpression>
+	</variable>
+	<variable name="sumPatronal" class="java.lang.Double" resetType="Group" resetGroup="Transportador" calculation="Sum">
+		<variableExpression><![CDATA[($F{categoria} == "Terceiro" ? $F{vlr_bruto} * 0.20 * 0.20 : 0.00)]]></variableExpression>
+	</variable>
+	<variable name="sumFaturamentoT" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{faturamento}]]></variableExpression>
+	</variable>
+	<variable name="sumPatronalT" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$V{sumPatronal}]]></variableExpression>
+	</variable>
+	<variable name="sumCustoT" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{vlr_bruto}]]></variableExpression>
+	</variable>
+	<variable name="sumFaturamentoCat" class="java.lang.Double" resetType="Group" resetGroup="Categoria" calculation="Sum">
+		<variableExpression><![CDATA[$F{faturamento}]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="sumCustoCat" class="java.lang.Double" resetType="Group" resetGroup="Categoria" calculation="Sum">
+		<variableExpression><![CDATA[$F{vlr_bruto}]]></variableExpression>
+	</variable>
+	<variable name="sumPatronalCat" class="java.lang.Double" resetType="Group" resetGroup="Categoria" calculation="Sum">
+		<variableExpression><![CDATA[($F{categoria} == "Terceiro" ? $F{vlr_bruto} * 0.20 * 0.20 : 0.00)]]></variableExpression>
+	</variable>
+	<variable name="linha" class="java.lang.Integer" resetType="Group" resetGroup="Categoria" incrementType="Group" incrementGroup="Transportador" calculation="Count">
+		<variableExpression><![CDATA[1]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<group name="Categoria">
+		<groupExpression><![CDATA[$F{categoria}]]></groupExpression>
+		<groupHeader>
+			<band height="3">
+				<line>
+					<reportElement x="0" y="0" width="555" height="1" forecolor="#999999" uuid="bec793a0-e759-475d-b43d-0c6a2981ecd9"/>
+					<graphicElement>
+						<pen lineWidth="2.0"/>
+					</graphicElement>
+				</line>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="19">
+				<textField>
+					<reportElement x="0" y="0" width="159" height="16" uuid="472b5f5b-9719-4e55-8c8d-212198ec7489"/>
+					<textElement>
+						<font fontName="Calibri" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Total "+$F{categoria}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00 %">
+					<reportElement x="501" y="0" width="54" height="16" uuid="86364736-8da9-4775-8708-250ecf529149"/>
+					<textElement textAlignment="Right">
+						<font fontName="Calibri" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[1.00-($V{sumPatronalCat} + $V{sumCustoCat})/$V{sumFaturamentoCat}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="377" y="0" width="62" height="16" uuid="38f6f4ba-db39-4723-bba0-6ca48b86034d"/>
+					<textElement textAlignment="Right">
+						<font fontName="Calibri" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{sumCustoCat}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="315" y="0" width="62" height="16" uuid="1d7b37a2-db1a-4a40-a8f1-2b6be2a4f78e"/>
+					<textElement textAlignment="Right">
+						<font fontName="Calibri" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{sumFaturamentoCat}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="439" y="0" width="62" height="16" uuid="86b437a8-ae73-4dea-86ae-d62117ab09c3"/>
+					<textElement textAlignment="Right">
+						<font fontName="Calibri" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{sumPatronalCat}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="242" y="0" width="73" height="16" uuid="3f1a3d53-3b7a-4ee2-9c65-1c956eaed27f"/>
+					<textElement>
+						<font fontName="Calibri" isBold="true" isItalic="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{linha} + " Pessoas"]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="0" width="555" height="1" forecolor="#999999" uuid="162a7515-4f06-43c6-bc4f-437e9658feb8"/>
+					<graphicElement>
+						<pen lineWidth="2.0"/>
+					</graphicElement>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Transportador">
+		<groupExpression><![CDATA[$F{pessoa}]]></groupExpression>
+		<groupFooter>
+			<band height="16">
+				<rectangle>
+					<reportElement mode="Opaque" x="0" y="0" width="555" height="16" backcolor="#F5F5F5" uuid="86f423a8-033d-4860-be59-2ce264ab6dd6">
+						<printWhenExpression><![CDATA[new Boolean(($V{linha}.intValue()%2==0))]]></printWhenExpression>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.0"/>
+					</graphicElement>
+				</rectangle>
+				<textField>
+					<reportElement x="0" y="0" width="242" height="16" uuid="98585286-d6f4-4423-9c8c-569078a3c5aa"/>
+					<textElement>
+						<font fontName="Calibri"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{pessoa}.toUpperCase()]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="315" y="0" width="62" height="16" uuid="7fdc3523-d7c7-4a46-b755-040ab6000d38"/>
+					<textElement textAlignment="Right">
+						<font fontName="Calibri"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{sumFaturamento}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="377" y="0" width="62" height="16" uuid="d12cefa0-4db1-4a80-a857-8bb7c8037fb3"/>
+					<textElement textAlignment="Right">
+						<font fontName="Calibri"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{sumCusto}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="439" y="0" width="62" height="16" uuid="e23678a7-d1a3-4831-9e35-d4c358195343"/>
+					<textElement textAlignment="Right">
+						<font fontName="Calibri"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{sumPatronal}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="242" y="0" width="73" height="16" uuid="3479ffc9-047b-41c4-93c3-76ecd91cc693"/>
+					<textElement>
+						<font fontName="Calibri"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{categoria}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00 %">
+					<reportElement x="501" y="0" width="54" height="16" uuid="a26d9288-fa9b-439a-8a9c-f8c65d7a6906"/>
+					<textElement textAlignment="Right">
+						<font fontName="Calibri"/>
+					</textElement>
+					<textFieldExpression><![CDATA[1.00-($V{sumPatronal} + $V{sumCusto})/$V{sumFaturamento}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<pageHeader>
+		<band height="84">
+			<image>
+				<reportElement x="0" y="7" width="88" height="52" uuid="229a7dc7-4bb7-4ccf-b3a5-545710519aff"/>
+				<imageExpression><![CDATA["\\LogoTranscooper.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="99" y="0" width="193" height="21" uuid="ee07940a-7a23-4e6e-a5b6-dca1591a4e25"/>
+				<textElement>
+					<font fontName="Calibri" size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MARGENS PESSOA FÍSICA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="99" y="21" width="193" height="21" uuid="da78ce27-53e9-448e-8db0-aab46ed6b2ea"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[COOPERATIVA DE TRANSPORTES BOM RETIRO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="99" y="42" width="364" height="16" uuid="4d766dd1-2222-41e8-8dff-fc33c3e3b4d2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Período: " + new SimpleDateFormat("dd/MM/yyyy").format($P{dataInicio}) + " até " + new SimpleDateFormat("dd/MM/yyyy").format($P{dataFim})]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="58" width="555" height="1" forecolor="#999999" uuid="3e3e4477-1e80-43f0-8768-e285dbd5a7ed"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="69" width="242" height="15" uuid="30d712b3-578d-44db-9db9-504d79922f61"/>
+				<textElement textAlignment="Center">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Transportador]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="315" y="69" width="62" height="15" uuid="2acf996a-bf74-47f6-b460-8d9fa267faca"/>
+				<textElement textAlignment="Center">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Faturamento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="377" y="69" width="62" height="15" uuid="d4e80039-3d58-429f-b95d-1a5a08b5a54b"/>
+				<textElement textAlignment="Center">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Custo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="439" y="69" width="62" height="15" uuid="17d6e7f8-4e36-4d12-a0ef-f9c8f859b2e1"/>
+				<textElement textAlignment="Center">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INSS Patronal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="242" y="69" width="73" height="15" uuid="6f06d6ac-0ebb-43bd-bee6-db26739b5f58"/>
+				<textElement textAlignment="Center">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Categoria]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="501" y="69" width="54" height="15" uuid="bb129aca-cf06-4692-8461-7dde73a536c1"/>
+				<textElement textAlignment="Center">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Margem]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="463" y="42" width="92" height="16" uuid="38100a76-b617-4ba7-98e2-ee969ebc22b4"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Valores expressos em R$]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<pageFooter>
+		<band height="17">
+			<textField>
+				<reportElement x="251" y="1" width="304" height="13" forecolor="#999999" uuid="24352ccb-1820-4443-bc5f-0c4f916cb6e0"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Emissão em " + new SimpleDateFormat("dd/MM/yyyy, ' às ' HH:mm:ss").format(new Date())
++ ". Página " + $V{PAGE_NUMBER} + "."]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="0" width="555" height="1" forecolor="#999999" uuid="449928a3-4019-4048-8202-de5614fe5b92"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+		</band>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="29">
+			<line>
+				<reportElement x="0" y="0" width="555" height="1" forecolor="#999999" uuid="3a499390-ac6c-4571-91d3-677301f91734"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="0" width="50" height="16" uuid="1c8e51b2-b9ef-4f56-a313-67f8859ab1dc"/>
+				<textElement>
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total:]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="315" y="0" width="62" height="16" uuid="285f6afc-a19f-4af2-aa00-e2f0d2231a80"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumFaturamentoT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="377" y="0" width="62" height="16" uuid="7702548b-aa50-4103-9455-0f15c97ca7fc"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumCustoT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="439" y="0" width="62" height="16" uuid="aaa4dd66-0595-45fd-b3a8-29ef2be36240"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumPatronalT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00 %">
+				<reportElement x="501" y="0" width="54" height="16" uuid="db2dbace-de2a-4a27-a2da-d28a70d15ec6"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[1.00-($V{sumPatronalT} + $V{sumCustoT})/$V{sumFaturamentoT}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="15" width="555" height="1" forecolor="#999999" uuid="d36b46e7-bf5c-4987-9845-2a758e8f042f"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="251" y="16" width="304" height="13" forecolor="#999999" uuid="5510d9d8-fc9f-48f7-b323-94e97d884668"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Emissão em " + new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date())
++ ". Página " + $V{PAGE_NUMBER} + "."]]></textFieldExpression>
+			</textField>
+		</band>
+	</lastPageFooter>
+</jasperReport>

@@ -9,9 +9,11 @@ import cadastros.ConfigDefault;
 import cadastros.Transportador;
 import conexoes.*;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,6 +35,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
@@ -43,6 +46,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import telaCadastros.TelaInicial;
 import wsTerceiros.ObjectFactory;
+import wsTerceiros.G5SeniorServices;
+import wsTerceiros.TerceirosPagtosFisica2In;
 
 /**
  *
@@ -51,8 +56,8 @@ import wsTerceiros.ObjectFactory;
 public class RpaIntegrador {
 
     private int usu_inc;
-    private final conexoes.ConexaoMySQL cn = new ConexaoMySQL();
-    private final conexoes.ConexaoFB cnfb;
+    private  conexoes.ConexaoMySQL cn;
+    private conexoes.ConexaoFB cnfb;
     private final conexoes.ConexaoORCL cnSen = new ConexaoORCL();
     private ferramentas.FbGenerators gen;
     private cadastros.ConfigDefault cd = new ConfigDefault();
@@ -108,7 +113,7 @@ public class RpaIntegrador {
     private String cmpPte;
     private int numCad;
     private int seqPte;
-    private String tipOpe = "I";
+    private String tipOpe;
     private String datPag;
     private Double renBru;
     private Integer codIse = 20;
@@ -117,11 +122,18 @@ public class RpaIntegrador {
     private Integer codSer = 1;
     private Double valIse;
     
-    public RpaIntegrador(int user){
+    public RpaIntegrador(ConexaoMySQL conn){
+        this.cn = conn;
+        cnfb = new ConexaoFB(usu_inc);
+    }
+
+    public RpaIntegrador(int user, ConexaoMySQL conn) {
         this.usu_inc = user;
         cnfb = new ConexaoFB(usu_inc);
         gen = new FbGenerators(usu_inc);
-        transp = new Transportador(usu_inc);
+        transp = new Transportador(usu_inc, conn);
+        
+        this.cn = conn;
     }
 
     public boolean buscaRpa(String nroRpa) {
@@ -131,7 +143,7 @@ public class RpaIntegrador {
 
         String sql = "SELECT * FROM rpa WHERE codigo = " + nroRpa + ";";
 
-        if (cn.conecta()) {
+        if (cn.iniciarTransacao()) {
             try {
                 cn.executeConsulta(sql);
                 while (cn.rs.next()) {
@@ -223,7 +235,7 @@ public class RpaIntegrador {
                 resposta = false;
                 JOptionPane.showMessageDialog(null, "Não foi possível recuperar os dados do RPA: " + e);
             } finally {
-                cn.desconecta();
+                cn.finalizarTransacao();
             }
         }
 
@@ -304,7 +316,7 @@ public class RpaIntegrador {
         }
         System.out.println("Resposta da integração: " + resposta);
         if (resposta) {
-            if (cn.conecta()) {
+            if (cn.iniciarTransacao()) {
                 try {
                     cn.executeAtualizacao("UPDATE rpa SET codigo_fin = '" + codigo + "' WHERE codigo = '" + rpa + "' ;");
                     System.out.println("Atualização da tabela local realizada com sucesso.");
@@ -314,7 +326,7 @@ public class RpaIntegrador {
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Não foi possível atualizar a tabela de RPAs.");
                 } finally {
-                    cn.desconecta();
+                    cn.finalizarTransacao();
                 }
             }
         }
@@ -334,7 +346,7 @@ public class RpaIntegrador {
         ArrayList codigos = new ArrayList();
 
         if (nroInicio == 0) {
-            if (cn.conecta()) {
+            if (cn.iniciarTransacao()) {
                 cn.executeConsulta("SELECT codigo as codigo FROM rpa WHERE codigo >='" + ultRpa++ + "' AND codigo_fin IS NULL;");
                 try {
                     while (cn.rs.next()) {
@@ -345,7 +357,7 @@ public class RpaIntegrador {
                     System.out.println("Códigos: " + codigos);
                 } catch (Exception e) {
                 } finally {
-                    cn.desconecta();
+                    cn.finalizarTransacao();
                 }
                 System.out.println("Tamanho da lista: " + codigos.size());
 
@@ -361,12 +373,12 @@ public class RpaIntegrador {
         return qtdLcto;
     }
 
-    public boolean sincronizaPessoa() {
+    private boolean sincronizaPessoa() {
         boolean resposta = true;
 
         ArrayList codigos = new ArrayList();
 
-        if (cn.conecta()) {
+        if (cn.iniciarTransacao()) {
             try {
                 cn.executeConsulta("SELECT codigo FROM cad_pessoas WHERE id_folha IS NULL;");
                 while (cn.rs.next()) {
@@ -375,21 +387,21 @@ public class RpaIntegrador {
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Não foi possivel sincronizar todas as pessoas.");
             } finally {
-                cn.desconecta();
+                cn.finalizarTransacao();
             }
 
             System.out.println("Códigos selecionados para sincronização: " + codigos);
 
             for (int x = 0; x < codigos.size(); x++) {
                 System.out.println("Código capturado: " + codigos.get(x) + ". Número da linha: " + x);
-                resposta = sincronizaPessoa(Integer.parseInt(codigos.get(x).toString()));
+                //resposta = sincronizaPessoa(Integer.parseInt(codigos.get(x).toString()));
             }
         }
 
         return resposta;
     }
 
-    public boolean sincronizaPessoa(int codigo) {
+    private boolean sincronizaPessoa(int codigo) {
         boolean resposta = true;
 
         transp.buscaPessoa(codigo);
@@ -414,7 +426,7 @@ public class RpaIntegrador {
 
                 //ATUALIZA O CADASTRO DO MYSQL SE A FOLHA DE PAGAMENTOS RETORNAR COM UM CÓDIGO
                 if (numCad > 0) {
-                    if (cn.conecta()) {
+                    if (cn.iniciarTransacao()) {
                         try {
                             sql = "UPDATE cad_pessoas SET id_folha = '" + numCad + "' "
                                     + "WHERE codigo = '" + codigo + "';";
@@ -425,7 +437,7 @@ public class RpaIntegrador {
                             JOptionPane.showMessageDialog(null, "Não foi possível atualizar o número do cadastro da pessoa.");
                             resposta = false;
                         } finally {
-                            cn.desconecta();
+                            cn.finalizarTransacao();
                         }
                     }
                 } else {
@@ -439,33 +451,36 @@ public class RpaIntegrador {
             } finally {
                 cnSen.desconecta();
             }
+        } else {
+            resposta = false;
+            throw new UnsupportedOperationException("Não foi possível conectar com o Banco de Dados.");
         }
         return resposta;
     }
 
     private String escreveXML(String rpa) {
 
-        wsTerceiros.TerceirosPagtosFisicaIn terc = new wsTerceiros.TerceirosPagtosFisicaIn();
+        TerceirosPagtosFisica2In terc = new TerceirosPagtosFisica2In();
         ObjectFactory objectFactory = new ObjectFactory();
         final StringWriter out = new StringWriter();
         buscaRpa(rpa);
-        terc.setNumEmp(objectFactory.createTerceirosPagtosFisicaInNumEmp(numEmp));
-        terc.setCodFil(objectFactory.createTerceirosPagtosFisicaInCodFil(codFil));
-        terc.setNumCad(objectFactory.createTerceirosPagtosFisicaInNumCad(numCad));
-        terc.setSeqPte(objectFactory.createTerceirosPagtosFisicaInSeqPte(seqPte));
-        terc.setTipOpe(objectFactory.createTerceirosPagtosFisicaInTipOpe(tipOpe));
-        terc.setDatPag(objectFactory.createTerceirosPagtosFisicaInDatPag(datPag));
-        terc.setRenBru(objectFactory.createTerceirosPagtosFisicaInRenBru(renBru));
-        terc.setCmpPte(objectFactory.createTerceirosPagtosFisicaInCmpPte(cmpPte));
-        terc.setCodIse(objectFactory.createTerceirosPagtosFisicaInCodIse(codIse));
-        terc.setCodRet(objectFactory.createTerceirosPagtosFisicaInCodRet(codRet));
-        terc.setNroRpa(objectFactory.createTerceirosPagtosFisicaInNroRpa(Integer.parseInt(doc)));
-        terc.setPerGrp(objectFactory.createTerceirosPagtosFisicaInPerGrp(perGrp));
-        terc.setCodSer(objectFactory.createTerceirosPagtosFisicaInCodSer(codSer));
-        terc.setValIse(objectFactory.createTerceirosPagtosFisicaInValIse(valIse));
-        terc.setInsTrp(objectFactory.createTerceirosPagtosFisicaInInsTrp(terceiros));
-        terc.setIrfRet(objectFactory.createTerceirosPagtosFisicaInIrfRet(irrf));
-        terc.setConIns(objectFactory.createTerceirosPagtosFisicaInConIns(inss));
+        terc.setNumEmp(objectFactory.createTerceirosPagtosFisica2InNumEmp(numEmp));
+        terc.setCodFil(objectFactory.createTerceirosPagtosFisica2InCodFil(codFil));
+        terc.setNumCad(objectFactory.createTerceirosPagtosFisica2InNumCad(numCad));
+        terc.setSeqPte(objectFactory.createTerceirosPagtosFisica2InSeqPte(seqPte));
+        terc.setTipOpe(objectFactory.createTerceirosPagtosFisica2InTipOpe(tipOpe));
+        terc.setDatPag(objectFactory.createTerceirosPagtosFisica2InDatPag(datPag));
+        terc.setRenBru(objectFactory.createTerceirosPagtosFisica2InRenBru(renBru));
+        terc.setCmpPte(objectFactory.createTerceirosPagtosFisica2InCmpPte(cmpPte));
+        terc.setCodIse(objectFactory.createTerceirosPagtosFisica2InCodIse(codIse));
+        terc.setCodRet(objectFactory.createTerceirosPagtosFisica2InCodRet(codRet));
+        terc.setNroRpa(objectFactory.createTerceirosPagtosFisica2InNroRpa(Integer.parseInt(doc)));
+        terc.setPerGrp(objectFactory.createTerceirosPagtosFisica2InPerGrp(perGrp));
+        terc.setCodSer(objectFactory.createTerceirosPagtosFisica2InCodSer(codSer));
+        terc.setValIse(objectFactory.createTerceirosPagtosFisica2InValIse(valIse));
+        terc.setInsTrp(objectFactory.createTerceirosPagtosFisica2InInsTrp(terceiros));
+        terc.setIrfRet(objectFactory.createTerceirosPagtosFisica2InIrfRet(irrf));
+        terc.setConIns(objectFactory.createTerceirosPagtosFisica2InConIns(inss));
 
         JAXBContext context = null;
 
@@ -485,18 +500,19 @@ public class RpaIntegrador {
 
     }
 
-    public boolean integraFolha(String rpa) {
+    private boolean integraFolha(String rpa) {
         boolean resposta = false;
 
         System.out.println("\nCriando objeto 'Service'.");
-        wsTerceiros.G5SeniorServices service = new wsTerceiros.G5SeniorServices();
+        G5SeniorServices service = new G5SeniorServices();
         System.out.println("\nObjeto 'Service' criado com sucesso.");
 
         QName portQName = new QName("http://services.senior.com.br", "rubi_Asynccom_senior_g5_rh_fp_terceirosPort");
-        String req = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ser=\"http://services.senior.com.br\"><soapenv:Header/><soapenv:Body><ser:PagtosFisica><user>luiz.barcellos</user><password>Lu!z12345</password><encryption>0</encryption>"
+        String req = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ser=\"http://services.senior.com.br\"><soapenv:Header/><soapenv:Body><ser:PagtosFisica_2><user>luiz.barcellos</user><password>Lu!z12345</password><encryption>0</encryption>"
                 + escreveXML(rpa)
-                + "</ser:PagtosFisica></soapenv:Body></soapenv:Envelope>";
+                + "</ser:PagtosFisica_2></soapenv:Body></soapenv:Envelope>";
 
+        //String req = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ser=\"http://services.senior.com.br\"><soapenv:Header/><soapenv:Body><ser:PagtosFisica><user>luiz.barcellos</user><password>Lu!z12345</password><encryption>0</encryption><parameters><cmpPte>09/2017</cmpPte><codFil>1</codFil><codIse>20</codIse><codRet>588</codRet><codSer>1</codSer><conIns>33.88</conIns><datPag>06/10/2017</datPag><insTrp>7.7</insTrp><irfRet>0.0</irfRet><nroRpa>2942</nroRpa><numCad>0</numCad><numEmp>7</numEmp><perGrp>20.0</perGrp><renBru>1540.0</renBru><seqPte>3</seqPte><tipOpe>I</tipOpe><valIse>1386.0</valIse></parameters></ser:PagtosFisica></soapenv:Body></soapenv:Envelope>";
         try { // Call Web Service Operation
 
             Dispatch<Source> sourceDispatch = null;
@@ -505,7 +521,8 @@ public class RpaIntegrador {
             System.out.println("\nEnviando requisição: " + req);
 
             Source result = sourceDispatch.invoke(new StreamSource(new StringReader(req)));
-
+            System.out.println("Requisição Enviada: " + result);
+            
             //LEITURA DA RESPOSTA DO XML
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
@@ -514,6 +531,7 @@ public class RpaIntegrador {
             transformer.transform(result, xmlOut);
             System.out.println("Resposta: " + xmlOut.getWriter().toString());
 
+            
             //CAPTURA DO NODELIST 'result'
             DocumentBuilder docb = null;
             DocumentBuilderFactory docf = DocumentBuilderFactory.newInstance();
@@ -555,7 +573,7 @@ public class RpaIntegrador {
                     }
                 }
             }
-
+             
         } catch (Exception ex) {
             // TODO handle custom exceptions here
             JOptionPane.showMessageDialog(null, "Não foi possível integrar com Folha de Pagamentos automaticamente: " + ex);
@@ -564,8 +582,47 @@ public class RpaIntegrador {
         return resposta;
     }
 
-    public boolean integraFolha() {
+    //LEITURA DO XML, original em https://docs.oracle.com/cd/E17904_01/web.1111/e13734/provider.htm#WSADV582
+    private String sourceToXMLString(Source result) {
+        String xmlResult = null;
+        try {
+            TransformerFactory factory = TransformerFactory.newInstance();
+            Transformer transformer = factory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+            OutputStream out = new ByteArrayOutputStream();
+            StreamResult streamResult = new StreamResult();
+            streamResult.setOutputStream(out);
+            transformer.transform(result, streamResult);
+            xmlResult = streamResult.getOutputStream().toString();
+        } catch (TransformerException e) {
+            e.printStackTrace();
+        }
+        return xmlResult;
+    }
+
+    /**
+     * Executa o comando de integração com a Folha de Pagamentos. Se quiser
+     * integrar todos, parametros devem ser null.
+     *
+     * @param competencia mm/aaaa
+     * @param numeroLcto ID do recibo. Não confundir com número do recibo.
+     * @param tipo I - Incluir; E - Excluir; A - Alterar
+     * @return
+     */
+    public boolean integraFolha(String competencia, String numeroLcto, String tipo) {
         boolean resposta = false;
+
+        this.tipOpe = tipo;
+        String sql = "SELECT * FROM rpa WHERE integ_folha IS NULL ";
+
+        if (competencia != null) {
+            sql += "and competencia = '" + competencia + "' ";
+        }
+
+        if (numeroLcto != null) {
+            sql += "and codigo = '" + numeroLcto + "' ";
+        }
 
         if (sincronizaPessoa()) {
 
@@ -573,16 +630,16 @@ public class RpaIntegrador {
 
             ArrayList codigos = new ArrayList();
 
-            if (cn.conecta()) {
+            if (cn.iniciarTransacao()) {
                 try {
-                    cn.executeConsulta("SELECT * FROM rpa WHERE integ_folha IS NULL and codigo = 1567;");
+                    cn.executeConsulta(sql);
                     while (cn.rs.next()) {
                         codigos.add(cn.rs.getString("codigo"));
                     }
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Não foi possível recuperar os códigos dos RPAS.");
                 } finally {
-                    cn.desconecta();
+                    cn.finalizarTransacao();
                 }
 
                 System.out.println("Códigos selecionados para sincronização: " + codigos);
@@ -598,24 +655,51 @@ public class RpaIntegrador {
         return resposta;
     }
 
-    public void fechaFolha(boolean x, String competencia) {
-        String sql;
+    /**
+     * Altera o status Integ_Folha no banco de dados.
+     *
+     * @param x True = Integrado; False = Não integrado;
+     * @param competencia
+     * @param codigo
+     */
+    public boolean fechaFolha(boolean x, String competencia, String codigo) {
+        boolean resposta = false;
 
-        if (x) {
-            sql = "UPDATE rpa SET integ_folha = 'S' WHERE competencia = '" + competencia + "';";
-        } else {
-            sql = "UPDATE rpa SET integ_folha = null WHERE competencia = '" + competencia + "';";
-        }
+        try {
 
-        if (cn.conecta()) {
-            try {
-                cn.executeAtualizacao(sql);
-
-            } catch (Exception e) {
-            } finally {
-                cn.desconecta();
+            if (competencia == null | "  /    ".equals(competencia)) {
+                throw new UnsupportedOperationException("Competência não foi informada.");
             }
+
+            String sql = "UPDATE rpa SET integ_folha = ";
+
+            if (x) {
+                sql += " 'S' ";
+            } else {
+                sql += " null ";
+            }
+
+            sql += "WHERE competencia = '" + competencia + "' ";
+
+            if (codigo != null && !"".equals(codigo)) {
+                sql += "AND codigo = '" + codigo + "' ";
+            }
+
+            if (cn.iniciarTransacao()) {
+                try {
+                    resposta = cn.executeAtualizacao(sql);
+
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage());
+                } finally {
+                    cn.finalizarTransacao();
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
         }
+
+        return resposta;
     }
 
     public int getCodigo() {
@@ -687,10 +771,15 @@ public class RpaIntegrador {
     }
 
     public static void main(String[] args) {
-        RpaIntegrador x = new RpaIntegrador(131);
+        
+        ConexaoMySQL cn = new ConexaoMySQL();
+        cn.conecta("luiz.barcellos", "Lu!z12345");
+        
+        RpaIntegrador x = new RpaIntegrador(131, cn);
 
-        //x.fechaFolha(true, "06/2017");
-        x.integraFolha();
+        //x.escreveXML("1818");
+        //x.fechaFolha(true, "10/2017", "");
+        x.integraFolha("10/2017", null, "I");
         //System.out.println(x.escreveXML(null));
         //x.integraFinanceiro("678");
         //System.out.println("Resultado final: " + x.buscaRpa("500"));

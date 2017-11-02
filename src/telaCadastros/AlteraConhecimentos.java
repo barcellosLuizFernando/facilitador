@@ -22,9 +22,9 @@ import javax.swing.table.DefaultTableModel;
  */
 public class AlteraConhecimentos extends javax.swing.JInternalFrame {
 
-    private Conhecimentos cte = new Conhecimentos();
+    private Conhecimentos cte;
     private conexoes.ConexaoFB cnfb;
-    private conexoes.ConexaoMySQL cn = new ConexaoMySQL();
+    private conexoes.ConexaoMySQL cn;
     private int var_consulta;
     private Transportador transp;
     private DateFormat dateIn = new SimpleDateFormat("dd/MM/yyyy");
@@ -33,11 +33,13 @@ public class AlteraConhecimentos extends javax.swing.JInternalFrame {
     /**
      * Creates new form AlteraConhecimentos
      */
-    public AlteraConhecimentos(int user) {
+    public AlteraConhecimentos(int user, ConexaoMySQL conn) {
         initComponents();
+        this.cn = conn;
+        cte = new Conhecimentos(conn);
         this.usu_inc = user;
         cnfb = new ConexaoFB(usu_inc);
-        transp = new Transportador(usu_inc);
+        transp = new Transportador(usu_inc, conn);
     }
 
     /**
@@ -592,7 +594,7 @@ public class AlteraConhecimentos extends javax.swing.JInternalFrame {
 
             String sql;
 
-            if (cn.conecta()) {
+            if (cn.iniciarTransacao()) {
                 try {
                     sql = "UPDATE conhecimentos "
                             + "SET cod_transportador = '" + idTransportador + "', "
@@ -607,7 +609,7 @@ public class AlteraConhecimentos extends javax.swing.JInternalFrame {
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(this, e);
                 } finally {
-                    cn.desconecta();
+                    cn.finalizarTransacao();
                 }
             }
         } else {

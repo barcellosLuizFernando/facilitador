@@ -36,16 +36,16 @@ public class RpaAnterior extends javax.swing.JInternalFrame {
     //private TelaInicial ti;
     private int usu_inc;
 
-    private conexoes.ConexaoMySQL cn = new ConexaoMySQL();
+    private conexoes.ConexaoMySQL cn;
     private conexoes.ConexaoFB cnfb;
-    private cadastros.Estabelecimento estab = new Estabelecimento();
+    private cadastros.Estabelecimento estab;
     private cadastros.Transportador transp;
     private cadastros.ConfigDefault cd = new ConfigDefault();
-    private ferramentas.ResumoRPA res = new ResumoRPA();
-    private ferramentas.RpaCodigos rpa = new RpaCodigos();
+    private ferramentas.ResumoRPA res;
+    private ferramentas.RpaCodigos rpa;
     private ferramentas.RpaIntegrador integ;
-    private ferramentas.CalculadoraRPA cRpa = new CalculadoraRPA();
-    private ferramentas.ImprimeRelatorio print = new ImprimeRelatorio();
+    private ferramentas.CalculadoraRPA cRpa;
+    private ferramentas.ImprimeRelatorio print;
 
     private DateFormat dateOut = new SimpleDateFormat("yyyy/MM/dd");
     private DateFormat dateIn = new SimpleDateFormat("dd/MM/yyyy");
@@ -57,13 +57,19 @@ public class RpaAnterior extends javax.swing.JInternalFrame {
     /**
      * Creates new form emitirRpa
      */
-    public RpaAnterior(int user) {
+    public RpaAnterior(int user, ConexaoMySQL conn) {
         initComponents();
+        this.cn = conn;
+        this.cRpa = new CalculadoraRPA(conn);
+        this.estab = new Estabelecimento(conn);
+        this.res = new ResumoRPA(conn);
+        this.rpa = new RpaCodigos(conn);
+        this.print = new ImprimeRelatorio(conn);
         montaTabela();
         this.usu_inc = user;
         cnfb = new ConexaoFB(usu_inc);
-        transp = new Transportador(usu_inc);
-        integ = new RpaIntegrador(usu_inc);
+        transp = new Transportador(usu_inc, conn);
+        integ = new RpaIntegrador(usu_inc, cn);
     }
 
     /**
@@ -841,14 +847,14 @@ public class RpaAnterior extends javax.swing.JInternalFrame {
             habilitarEdicao();
             jLblStatus.setText("INCLUINDO");
 
-            if (cn.conecta()) {
+            if (cn.iniciarTransacao()) {
                 try {
                     cn.executeAtualizacao("DELETE FROM tmp_cte_rpa WHERE usu_inc = '" + usu_inc + "';");
 
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(this, "Não foi possível limpar a tabela temporária.");
                 } finally {
-                    cn.desconecta();
+                    cn.finalizarTransacao();
                 }
             }
 
@@ -983,7 +989,7 @@ public class RpaAnterior extends javax.swing.JInternalFrame {
         String sql;
 
         if (qtdeLinhas > 0) {
-            if (cn.conecta()) {
+            if (cn.iniciarTransacao()) {
                 try {
                     for (int x = qtdeLinhas; x != 0; x--) {
                         linha = jTable1.getSelectedRow();
@@ -999,7 +1005,7 @@ public class RpaAnterior extends javax.swing.JInternalFrame {
                 } catch (Exception e) {
                     System.out.println(e);
                 } finally {
-                    cn.desconecta();
+                    cn.finalizarTransacao();
                 }
             }
 
@@ -1057,7 +1063,7 @@ public class RpaAnterior extends javax.swing.JInternalFrame {
 
                         if (numero > 0) {
 
-                            if (cn.conecta()) {
+                            if (cn.iniciarTransacao()) {
                                 try {
                                     competencia = this.competencia.format(jSpEmissao.getValue());
                                     sequencia = rpa.getSequencia(competencia, transportador, estabelecimento, 1);
@@ -1114,7 +1120,7 @@ public class RpaAnterior extends javax.swing.JInternalFrame {
                                 } catch (Exception e) {
                                     JOptionPane.showMessageDialog(this, "Não foi possível gravar o RPA.");
                                 } finally {
-                                    cn.desconecta();
+                                    cn.finalizarTransacao();
                                 }
                             }
                         } else {
@@ -1125,7 +1131,7 @@ public class RpaAnterior extends javax.swing.JInternalFrame {
                         JOptionPane.showMessageDialog(this, "Não foi possível gravar o RPA.");
                     }
                 } // FIM DO COMANDO CONFERE PESSOA
-            } else if (cn.conecta()) {
+            } else if (cn.iniciarTransacao()) {
                 try {
                     sql = "DELETE FROM rpa_detalhe WHERE codigo = '" + id + "';";
                     cn.executeAtualizacao(sql);
@@ -1150,7 +1156,7 @@ public class RpaAnterior extends javax.swing.JInternalFrame {
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(this, "Não foi possível atualizar o RPA.");
                 } finally {
-                    cn.desconecta();
+                    cn.finalizarTransacao();
                 }
             }
 
@@ -1408,7 +1414,7 @@ public class RpaAnterior extends javax.swing.JInternalFrame {
                         + condicao
                         + "ORDER BY b.nome, a.numero";
 
-                if (cn.conecta()) {
+                if (cn.iniciarTransacao()) {
                     try {
                         cn.executeConsulta(sql);
                         while (cn.rs.next()) {
@@ -1424,7 +1430,7 @@ public class RpaAnterior extends javax.swing.JInternalFrame {
                     } catch (Exception e) {
                         JOptionPane.showMessageDialog(this, "Não foi possível montar a lista de RPAs.");
                     } finally {
-                        cn.desconecta();
+                        cn.finalizarTransacao();
                     }
                 }
 
@@ -1441,7 +1447,7 @@ public class RpaAnterior extends javax.swing.JInternalFrame {
 
                 sql = "SELECT * FROM cad_estabelecimentos ORDER BY razao_social;";
 
-                cn.conecta();
+                cn.iniciarTransacao();
                 cn.executeConsulta(sql);
                 try {
                     while (cn.rs.next()) {
@@ -1453,7 +1459,7 @@ public class RpaAnterior extends javax.swing.JInternalFrame {
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(this, "Não foi possível consultar o banco de dados.");
                 } finally {
-                    cn.desconecta();
+                    cn.finalizarTransacao();
                 }
 
                 break;
@@ -1547,7 +1553,7 @@ public class RpaAnterior extends javax.swing.JInternalFrame {
                         + " AND chave NOT IN (SELECT chave FROM rpa_detalhe WHERE codigo != '" + jTxtId.getText() + "') "
                         + " ORDER BY numero, emissao";
 
-                if (cn.conecta()) {
+                if (cn.iniciarTransacao()) {
                     try {
                         cn.executeConsulta(sql);
                         while (cn.rs.next()) {
@@ -1564,7 +1570,7 @@ public class RpaAnterior extends javax.swing.JInternalFrame {
                     } catch (Exception e) {
                         JOptionPane.showMessageDialog(this, "Não foi possível consultar os conhecimentos.");
                     } finally {
-                        cn.desconecta();
+                        cn.finalizarTransacao();
                     }
                 }
 
@@ -1591,7 +1597,7 @@ public class RpaAnterior extends javax.swing.JInternalFrame {
 
                 if (integ.buscaRpa(jTxtId.getText())) {
                     System.out.println("\n\nExecutando preenchimento de RPA.\n");
-                    if (cn.conecta()) {
+                    if (cn.iniciarTransacao()) {
                         try {
                             cn.executeAtualizacao("DELETE FROM tmp_cte_rpa WHERE usu_inc = '" + usu_inc + "';");
                             cn.executeAtualizacao("INSERT INTO tmp_cte_rpa (chave,numero,data,valor,peso,tarifa,pedagio,usu_inc) "
@@ -1602,7 +1608,7 @@ public class RpaAnterior extends javax.swing.JInternalFrame {
                             JOptionPane.showMessageDialog(this, "Não foi possível limpar a tabela temporária.");
                         } finally {
                             System.out.println("Tabela temporária está limpa.");
-                            cn.desconecta();
+                            cn.finalizarTransacao();
                         }
                     }
 
@@ -1627,7 +1633,7 @@ public class RpaAnterior extends javax.swing.JInternalFrame {
 
                     sql = "SELECT * FROM tmp_cte_rpa WHERE usu_inc = '" + usu_inc + "';";
 
-                    if (cn.conecta()) {
+                    if (cn.iniciarTransacao()) {
                         try {
                             cn.executeConsulta(sql);
                             while (cn.rs.next()) {
@@ -1641,7 +1647,7 @@ public class RpaAnterior extends javax.swing.JInternalFrame {
                         } catch (Exception e) {
                             JOptionPane.showMessageDialog(this, "Não foi possível recuperar os CTEs.");
                         } finally {
-                            cn.desconecta();
+                            cn.finalizarTransacao();
                         }
                     }
 
@@ -1701,7 +1707,7 @@ public class RpaAnterior extends javax.swing.JInternalFrame {
                 Double tarifa;
                 Double pedagio;
 
-                if (cn.conecta()) {
+                if (cn.iniciarTransacao()) {
                     try {
                         for (int x = jTblConsulta_Multi.getSelectedRowCount(); x != 0; x--) {
 
@@ -1736,7 +1742,7 @@ public class RpaAnterior extends javax.swing.JInternalFrame {
                         }
                     } catch (Exception e) {
                     } finally {
-                        cn.desconecta();
+                        cn.finalizarTransacao();
                     }
                 }
 
@@ -1746,7 +1752,7 @@ public class RpaAnterior extends javax.swing.JInternalFrame {
 
                 sql = "SELECT * FROM tmp_cte_rpa WHERE usu_inc = '" + usu_inc + "';";
 
-                if (cn.conecta()) {
+                if (cn.iniciarTransacao()) {
                     try {
                         cn.executeConsulta(sql);
                         while (cn.rs.next()) {
@@ -1763,7 +1769,7 @@ public class RpaAnterior extends javax.swing.JInternalFrame {
                     } catch (Exception e) {
                         JOptionPane.showMessageDialog(this, "Não foi possível recuperar os CTEs.");
                     } finally {
-                        cn.desconecta();
+                        cn.finalizarTransacao();
                     }
                 }
 

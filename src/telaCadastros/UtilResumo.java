@@ -25,7 +25,7 @@ import javax.swing.JOptionPane;
 public class UtilResumo extends javax.swing.JInternalFrame {
 
     private int usu_inc;
-    private final conexoes.ConexaoMySQL cn = new ConexaoMySQL();
+    private final conexoes.ConexaoMySQL cn;
     private final conexoes.ConexaoORCL cnor = new ConexaoORCL();
     private final DateFormat dateOut = new SimpleDateFormat("yyyy/MM/dd");
     private final DateFormat dateIn = new SimpleDateFormat("dd/MM/yyyy");
@@ -37,8 +37,9 @@ public class UtilResumo extends javax.swing.JInternalFrame {
     /**
      * Creates new form UtilResumo
      */
-    public UtilResumo(int user) {
+    public UtilResumo(int user, ConexaoMySQL conn) {
         initComponents();
+        this.cn = conn;
         System.out.println("Usuário recebido pelo UtilResumo: " + user);
         this.usu_inc = user;
         this.cnfb = new ConexaoFB(usu_inc);
@@ -575,7 +576,7 @@ public class UtilResumo extends javax.swing.JInternalFrame {
             //PESQUISA O STATUS DOS CONHECIMENTOS LOCAIS
             if (jCheckBox1.isSelected()) {
 
-                DataFechamento fechamento = new DataFechamento();
+                DataFechamento fechamento = new DataFechamento(cn);
                 resposta = fechamento.verificaFechamento(jTxtCompetencia.getText());
 
                 //DEFINE A MENSAGEM DO STATUS
@@ -593,7 +594,7 @@ public class UtilResumo extends javax.swing.JInternalFrame {
                         + "WHERE month(emissao) = month('" + dateOut.format(competencia) + "')"
                         + "AND year(emissao) = year('" + dateOut.format(competencia) + "');";
 
-                if (cn.conecta()) {
+                if (cn.iniciarTransacao()) {
                     try {
                         if (cn.executeConsulta(sql)) {
                             while (cn.rs.next()) {
@@ -610,7 +611,7 @@ public class UtilResumo extends javax.swing.JInternalFrame {
                     } catch (Exception e) {
                         JOptionPane.showMessageDialog(null, "Não foi possível verificar o resumo local.\n" + e, "Resumo", JOptionPane.ERROR_MESSAGE);
                     } finally {
-                        cn.desconecta();
+                        cn.finalizarTransacao();
                     }
                 }
             }

@@ -18,8 +18,8 @@
     </target>
     <target name="wsimport-client-rubi_Asynccom_senior_g5_rh_fp_terceiros" depends="wsimport-init">
         <mkdir dir="${build.generated.dir}/jax-wsCache/rubi_Asynccom_senior_g5_rh_fp_terceiros"/>
-        <property name="wsdl-rubi_Asynccom_senior_g5_rh_fp_terceiros" location="xml-resources/web-service-references/rubi_Asynccom_senior_g5_rh_fp_terceiros/wsdl/rubi_Asynccom_senior_g5_rh_fp_terceiros.wsdl"/>
-        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/rubi_Asynccom_senior_g5_rh_fp_terceiros" destdir="${build.generated.dir}/jax-wsCache/rubi_Asynccom_senior_g5_rh_fp_terceiros" wsdl="${wsdl-rubi_Asynccom_senior_g5_rh_fp_terceiros}" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="file:/C:/Users/luiz.barcellos/AppData/Roaming/NetBeans/8.1/config/WebServices/rubi_Asynccom_senior_g5_rh_fp_terceiros/catalog/DANNU_8080/g5-senior-services/rubi_Asynccom_senior_g5_rh_fp_terceiros.wsdl" xnocompile="true" xendorsed="true" package="ws">
+        <property name="wsdl-rubi_Asynccom_senior_g5_rh_fp_terceiros" location="xml-resources/web-service-references/rubi_Asynccom_senior_g5_rh_fp_terceiros/wsdl/192.168.1.93_8080/g5-senior-services/rubi_Asynccom_senior_g5_rh_fp_terceiros.wsdl"/>
+        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/rubi_Asynccom_senior_g5_rh_fp_terceiros" destdir="${build.generated.dir}/jax-wsCache/rubi_Asynccom_senior_g5_rh_fp_terceiros" wsdl="${wsdl-rubi_Asynccom_senior_g5_rh_fp_terceiros}" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://192.168.1.93:8080/g5-senior-services/rubi_Asynccom_senior_g5_rh_fp_terceiros?wsdl" xnocompile="true" xendorsed="true" package="wsTerceiros_Original">
             <depends file="${wsdl-rubi_Asynccom_senior_g5_rh_fp_terceiros}"/>
             <produces dir="${build.generated.dir}/jax-wsCache/rubi_Asynccom_senior_g5_rh_fp_terceiros"/>
         </wsimport>
@@ -31,7 +31,7 @@
     </target>
     <target name="wsimport-client-clean-rubi_Asynccom_senior_g5_rh_fp_terceiros" depends="-init-project">
         <delete dir="${build.generated.dir}/jax-wsCache/rubi_Asynccom_senior_g5_rh_fp_terceiros"/>
-        <delete dir="${build.generated.sources.dir}/jax-ws/ws"/>
+        <delete dir="${build.generated.sources.dir}/jax-ws/wsTerceiros_Original"/>
     </target>
     <target name="wsimport-client-generate" depends="wsimport-client-rubi_Asynccom_senior_g5_rh_fp_terceiros"/>
 </project>

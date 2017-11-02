@@ -33,6 +33,94 @@ public interface RubiAsynccomSeniorG5RhFpTerceiros {
      * @return
      *     returns java.lang.String
      */
+    @WebMethod(operationName = "ServicosTomados")
+    @WebResult(name = "result", partName = "result")
+    @Action(input = "http://services.senior.com.br/rubi_Asynccom_senior_g5_rh_fp_terceiros/ServicosTomadosRequest", output = "http://services.senior.com.br/rubi_Asynccom_senior_g5_rh_fp_terceiros/ServicosTomadosResponse")
+    public String servicosTomados(
+        @WebParam(name = "user", partName = "user")
+        String user,
+        @WebParam(name = "password", partName = "password")
+        String password,
+        @WebParam(name = "encryption", partName = "encryption")
+        int encryption,
+        @WebParam(name = "parameters", partName = "parameters")
+        TerceirosServicosTomadosIn parameters);
+
+    /**
+     * 
+     * @param password
+     * @param encryption
+     * @param user
+     * @param parameters
+     * @return
+     *     returns java.lang.String
+     */
+    @WebMethod(operationName = "PagtosFisica_2")
+    @WebResult(name = "result", partName = "result")
+    @Action(input = "http://services.senior.com.br/rubi_Asynccom_senior_g5_rh_fp_terceiros/PagtosFisica_2Request", output = "http://services.senior.com.br/rubi_Asynccom_senior_g5_rh_fp_terceiros/PagtosFisica_2Response")
+    public String pagtosFisica2(
+        @WebParam(name = "user", partName = "user")
+        String user,
+        @WebParam(name = "password", partName = "password")
+        String password,
+        @WebParam(name = "encryption", partName = "encryption")
+        int encryption,
+        @WebParam(name = "parameters", partName = "parameters")
+        TerceirosPagtosFisica2In parameters);
+
+    /**
+     * 
+     * @param password
+     * @param encryption
+     * @param user
+     * @param parameters
+     * @return
+     *     returns java.lang.String
+     */
+    @WebMethod(operationName = "PagtosFisica")
+    @WebResult(name = "result", partName = "result")
+    @Action(input = "http://services.senior.com.br/rubi_Asynccom_senior_g5_rh_fp_terceiros/PagtosFisicaRequest", output = "http://services.senior.com.br/rubi_Asynccom_senior_g5_rh_fp_terceiros/PagtosFisicaResponse")
+    public String pagtosFisica(
+        @WebParam(name = "user", partName = "user")
+        String user,
+        @WebParam(name = "password", partName = "password")
+        String password,
+        @WebParam(name = "encryption", partName = "encryption")
+        int encryption,
+        @WebParam(name = "parameters", partName = "parameters")
+        TerceirosPagtosFisicaIn parameters);
+
+    /**
+     * 
+     * @param password
+     * @param encryption
+     * @param user
+     * @param parameters
+     * @return
+     *     returns java.lang.String
+     */
+    @WebMethod(operationName = "ServicoPrestado")
+    @WebResult(name = "result", partName = "result")
+    @Action(input = "http://services.senior.com.br/rubi_Asynccom_senior_g5_rh_fp_terceiros/ServicoPrestadoRequest", output = "http://services.senior.com.br/rubi_Asynccom_senior_g5_rh_fp_terceiros/ServicoPrestadoResponse")
+    public String servicoPrestado(
+        @WebParam(name = "user", partName = "user")
+        String user,
+        @WebParam(name = "password", partName = "password")
+        String password,
+        @WebParam(name = "encryption", partName = "encryption")
+        int encryption,
+        @WebParam(name = "parameters", partName = "parameters")
+        TerceirosServicoPrestadoIn parameters);
+
+    /**
+     * 
+     * @param password
+     * @param encryption
+     * @param user
+     * @param parameters
+     * @return
+     *     returns java.lang.String
+     */
     @WebMethod(operationName = "ReceitaExportacaoServicos")
     @WebResult(name = "result", partName = "result")
     @Action(input = "http://services.senior.com.br/rubi_Asynccom_senior_g5_rh_fp_terceiros/ReceitaExportacaoServicosRequest", output = "http://services.senior.com.br/rubi_Asynccom_senior_g5_rh_fp_terceiros/ReceitaExportacaoServicosResponse")
@@ -187,6 +275,28 @@ public interface RubiAsynccomSeniorG5RhFpTerceiros {
      * @return
      *     returns java.lang.String
      */
+    @WebMethod(operationName = "AquisicaoProducao_2")
+    @WebResult(name = "result", partName = "result")
+    @Action(input = "http://services.senior.com.br/rubi_Asynccom_senior_g5_rh_fp_terceiros/AquisicaoProducao_2Request", output = "http://services.senior.com.br/rubi_Asynccom_senior_g5_rh_fp_terceiros/AquisicaoProducao_2Response")
+    public String aquisicaoProducao2(
+        @WebParam(name = "user", partName = "user")
+        String user,
+        @WebParam(name = "password", partName = "password")
+        String password,
+        @WebParam(name = "encryption", partName = "encryption")
+        int encryption,
+        @WebParam(name = "parameters", partName = "parameters")
+        TerceirosAquisicaoProducao2In parameters);
+
+    /**
+     * 
+     * @param password
+     * @param encryption
+     * @param user
+     * @param parameters
+     * @return
+     *     returns java.lang.String
+     */
     @WebMethod(operationName = "ComercializacaoProducao")
     @WebResult(name = "result", partName = "result")
     @Action(input = "http://services.senior.com.br/rubi_Asynccom_senior_g5_rh_fp_terceiros/ComercializacaoProducaoRequest", output = "http://services.senior.com.br/rubi_Asynccom_senior_g5_rh_fp_terceiros/ComercializacaoProducaoResponse")
@@ -209,6 +319,28 @@ public interface RubiAsynccomSeniorG5RhFpTerceiros {
      * @return
      *     returns java.lang.String
      */
+    @WebMethod(operationName = "ComercializacaoProducao_2")
+    @WebResult(name = "result", partName = "result")
+    @Action(input = "http://services.senior.com.br/rubi_Asynccom_senior_g5_rh_fp_terceiros/ComercializacaoProducao_2Request", output = "http://services.senior.com.br/rubi_Asynccom_senior_g5_rh_fp_terceiros/ComercializacaoProducao_2Response")
+    public String comercializacaoProducao2(
+        @WebParam(name = "user", partName = "user")
+        String user,
+        @WebParam(name = "password", partName = "password")
+        String password,
+        @WebParam(name = "encryption", partName = "encryption")
+        int encryption,
+        @WebParam(name = "parameters", partName = "parameters")
+        TerceirosComercializacaoProducao2In parameters);
+
+    /**
+     * 
+     * @param password
+     * @param encryption
+     * @param user
+     * @param parameters
+     * @return
+     *     returns java.lang.String
+     */
     @WebMethod(operationName = "ReceitaDesoneracaoFolha")
     @WebResult(name = "result", partName = "result")
     @Action(input = "http://services.senior.com.br/rubi_Asynccom_senior_g5_rh_fp_terceiros/ReceitaDesoneracaoFolhaRequest", output = "http://services.senior.com.br/rubi_Asynccom_senior_g5_rh_fp_terceiros/ReceitaDesoneracaoFolhaResponse")
@@ -221,93 +353,5 @@ public interface RubiAsynccomSeniorG5RhFpTerceiros {
         int encryption,
         @WebParam(name = "parameters", partName = "parameters")
         TerceirosReceitaDesoneracaoFolhaIn parameters);
-
-    /**
-     * 
-     * @param password
-     * @param encryption
-     * @param user
-     * @param parameters
-     * @return
-     *     returns java.lang.String
-     */
-    @WebMethod(operationName = "ServicoPrestado")
-    @WebResult(name = "result", partName = "result")
-    @Action(input = "http://services.senior.com.br/rubi_Asynccom_senior_g5_rh_fp_terceiros/ServicoPrestadoRequest", output = "http://services.senior.com.br/rubi_Asynccom_senior_g5_rh_fp_terceiros/ServicoPrestadoResponse")
-    public String servicoPrestado(
-        @WebParam(name = "user", partName = "user")
-        String user,
-        @WebParam(name = "password", partName = "password")
-        String password,
-        @WebParam(name = "encryption", partName = "encryption")
-        int encryption,
-        @WebParam(name = "parameters", partName = "parameters")
-        TerceirosServicoPrestadoIn parameters);
-
-    /**
-     * 
-     * @param password
-     * @param encryption
-     * @param user
-     * @param parameters
-     * @return
-     *     returns java.lang.String
-     */
-    @WebMethod(operationName = "ServicosTomados")
-    @WebResult(name = "result", partName = "result")
-    @Action(input = "http://services.senior.com.br/rubi_Asynccom_senior_g5_rh_fp_terceiros/ServicosTomadosRequest", output = "http://services.senior.com.br/rubi_Asynccom_senior_g5_rh_fp_terceiros/ServicosTomadosResponse")
-    public String servicosTomados(
-        @WebParam(name = "user", partName = "user")
-        String user,
-        @WebParam(name = "password", partName = "password")
-        String password,
-        @WebParam(name = "encryption", partName = "encryption")
-        int encryption,
-        @WebParam(name = "parameters", partName = "parameters")
-        TerceirosServicosTomadosIn parameters);
-
-    /**
-     * 
-     * @param password
-     * @param encryption
-     * @param user
-     * @param parameters
-     * @return
-     *     returns java.lang.String
-     */
-    @WebMethod(operationName = "PagtosFisica")
-    @WebResult(name = "result", partName = "result")
-    @Action(input = "http://services.senior.com.br/rubi_Asynccom_senior_g5_rh_fp_terceiros/PagtosFisicaRequest", output = "http://services.senior.com.br/rubi_Asynccom_senior_g5_rh_fp_terceiros/PagtosFisicaResponse")
-    public String pagtosFisica(
-        @WebParam(name = "user", partName = "user")
-        String user,
-        @WebParam(name = "password", partName = "password")
-        String password,
-        @WebParam(name = "encryption", partName = "encryption")
-        int encryption,
-        @WebParam(name = "parameters", partName = "parameters")
-        TerceirosPagtosFisicaIn parameters);
-
-    /**
-     * 
-     * @param password
-     * @param encryption
-     * @param user
-     * @param parameters
-     * @return
-     *     returns java.lang.String
-     */
-    @WebMethod(operationName = "EspetaculoDesportivo")
-    @WebResult(name = "result", partName = "result")
-    @Action(input = "http://services.senior.com.br/rubi_Asynccom_senior_g5_rh_fp_terceiros/EspetaculoDesportivoRequest", output = "http://services.senior.com.br/rubi_Asynccom_senior_g5_rh_fp_terceiros/EspetaculoDesportivoResponse")
-    public String espetaculoDesportivo(
-        @WebParam(name = "user", partName = "user")
-        String user,
-        @WebParam(name = "password", partName = "password")
-        String password,
-        @WebParam(name = "encryption", partName = "encryption")
-        int encryption,
-        @WebParam(name = "parameters", partName = "parameters")
-        TerceirosEspetaculoDesportivoIn parameters);
 
 }
