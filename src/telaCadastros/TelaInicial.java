@@ -79,6 +79,7 @@ public final class TelaInicial extends javax.swing.JFrame {
         jMenuItem15 = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem17 = new javax.swing.JMenuItem();
         jSeparator4 = new javax.swing.JPopupMenu.Separator();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem13 = new javax.swing.JMenuItem();
@@ -251,6 +252,15 @@ public final class TelaInicial extends javax.swing.JFrame {
             }
         });
         jMenu5.add(jMenuItem1);
+
+        jMenuItem17.setText("Sincronizar Pessoas");
+        jMenuItem17.setToolTipText("Atualiza a base local. Informe \"0\" para buscar todos os conhecimentos.");
+        jMenuItem17.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem17ActionPerformed(evt);
+            }
+        });
+        jMenu5.add(jMenuItem17);
         jMenu5.add(jSeparator4);
 
         jMenuItem2.setText("Integração Financeira");
@@ -462,6 +472,10 @@ public final class TelaInicial extends javax.swing.JFrame {
         abreTelaInterna(new RelCteDisp(cn));        // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem16ActionPerformed
 
+    private void jMenuItem17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem17ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem17ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane jDPTelaPrincipal;
     private javax.swing.JMenu jMenu1;
@@ -477,6 +491,7 @@ public final class TelaInicial extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem14;
     private javax.swing.JMenuItem jMenuItem15;
     private javax.swing.JMenuItem jMenuItem16;
+    private javax.swing.JMenuItem jMenuItem17;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;

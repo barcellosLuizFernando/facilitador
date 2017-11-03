@@ -56,7 +56,7 @@ import wsTerceiros.TerceirosPagtosFisica2In;
 public class RpaIntegrador {
 
     private int usu_inc;
-    private  conexoes.ConexaoMySQL cn;
+    private conexoes.ConexaoMySQL cn;
     private conexoes.ConexaoFB cnfb;
     private final conexoes.ConexaoORCL cnSen = new ConexaoORCL();
     private ferramentas.FbGenerators gen;
@@ -121,8 +121,8 @@ public class RpaIntegrador {
     private Double perGrp;
     private Integer codSer = 1;
     private Double valIse;
-    
-    public RpaIntegrador(ConexaoMySQL conn){
+
+    public RpaIntegrador(ConexaoMySQL conn) {
         this.cn = conn;
         cnfb = new ConexaoFB(usu_inc);
     }
@@ -132,7 +132,7 @@ public class RpaIntegrador {
         cnfb = new ConexaoFB(usu_inc);
         gen = new FbGenerators(usu_inc);
         transp = new Transportador(usu_inc, conn);
-        
+
         this.cn = conn;
     }
 
@@ -141,7 +141,7 @@ public class RpaIntegrador {
         estabelec_cad = estabelecimento = null;
         fornecedor = null;
 
-        String sql = "SELECT * FROM rpa WHERE codigo = " + nroRpa + ";";
+        String sql = "SELECT * FROM bsctranscooper.rpa a WHERE a.codigo = '" + nroRpa + "';";
 
         if (cn.iniciarTransacao()) {
             try {
@@ -183,7 +183,7 @@ public class RpaIntegrador {
                     System.out.println("buscando nome do fornecedor: " + fornecedor);
 
                     try {
-                        cn.executeConsulta("SELECT nome,id_folha FROM cad_pessoas WHERE codigo = '" + fornecedor + "';");
+                        cn.executeConsulta("SELECT a.nome,a.id_folha FROM bsctranscooper.cad_pessoas a WHERE a.codigo = '" + fornecedor + "';");
                         while (cn.rs.next()) {
                             nome_fornecedor = cn.rs.getString("nome");
                             numCad = cn.rs.getInt("id_folha"); //CARREGA PARA SENIOR
@@ -194,7 +194,7 @@ public class RpaIntegrador {
                     cn.rs.close();
 
                     try {
-                        cn.executeConsulta("SELECT razao_social FROM cad_estabelecimentos WHERE id = '" + estabelecimento + "';");
+                        cn.executeConsulta("SELECT a.razao_social FROM bsctranscooper.cad_estabelecimentos a WHERE a.id = '" + estabelecimento + "';");
                         while (cn.rs.next()) {
                             nome_estabelecimento = cn.rs.getString("razao_social");
                         }
@@ -203,12 +203,12 @@ public class RpaIntegrador {
                     }
                     cn.rs.close();
 
-                    cn.executeConsulta("SELECT group_concat(numero) as documentos FROM rpa_detalhe WHERE codigo = '" + nroRpa + "';");
+                    cn.executeConsulta("SELECT group_concat(a.numero) as documentos FROM bsctranscooper.rpa_detalhe a WHERE a.codigo = '" + nroRpa + "';");
                     while (cn.rs.next()) {
                         historico = "Recibo de frete - CTe " + cn.rs.getString("documentos") + " " + nome_fornecedor;
                     }
 
-                    cn.executeConsulta("SELECT * FROM cad_estabelecimentos WHERE id = '" + estabelecimento + "';");
+                    cn.executeConsulta("SELECT * FROM bsctranscooper.cad_estabelecimentos a WHERE a.id = '" + estabelecimento + "';");
                     while (cn.rs.next()) {
                         if ("Cooperado".equals(categoria)) {
                             codFil = cn.rs.getInt("id_folha_coop");
@@ -522,7 +522,7 @@ public class RpaIntegrador {
 
             Source result = sourceDispatch.invoke(new StreamSource(new StringReader(req)));
             System.out.println("Requisição Enviada: " + result);
-            
+
             //LEITURA DA RESPOSTA DO XML
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
@@ -531,7 +531,6 @@ public class RpaIntegrador {
             transformer.transform(result, xmlOut);
             System.out.println("Resposta: " + xmlOut.getWriter().toString());
 
-            
             //CAPTURA DO NODELIST 'result'
             DocumentBuilder docb = null;
             DocumentBuilderFactory docf = DocumentBuilderFactory.newInstance();
@@ -573,7 +572,7 @@ public class RpaIntegrador {
                     }
                 }
             }
-             
+
         } catch (Exception ex) {
             // TODO handle custom exceptions here
             JOptionPane.showMessageDialog(null, "Não foi possível integrar com Folha de Pagamentos automaticamente: " + ex);
@@ -614,14 +613,14 @@ public class RpaIntegrador {
         boolean resposta = false;
 
         this.tipOpe = tipo;
-        String sql = "SELECT * FROM rpa WHERE integ_folha IS NULL ";
+        String sql = "SELECT * FROM bsctranscooper.rpa a WHERE a.codigo is not null ";
 
         if (competencia != null) {
-            sql += "and competencia = '" + competencia + "' ";
+            sql += "and a.competencia = '" + competencia + "' ";
         }
 
         if (numeroLcto != null) {
-            sql += "and codigo = '" + numeroLcto + "' ";
+            sql += "and a.codigo = '" + numeroLcto + "' ";
         }
 
         if (sincronizaPessoa()) {
@@ -650,6 +649,58 @@ public class RpaIntegrador {
                 }
 
             }
+        }
+
+        return resposta;
+    }
+
+    public boolean fechaFolha(boolean x, String competencia) {
+        boolean resposta = false;
+        String sql;
+
+        sql = "UPDATE bsctranscooper.rpa a SET a.integ_folha = null "
+                + "WHERE a.competencia = '" + competencia + "';";
+        if (cn.iniciarTransacao()) {
+            cn.executeAtualizacao(sql);
+            cn.finalizarTransacao();
+
+        }
+
+        ArrayList codigos = new ArrayList();
+
+        sql = "SELECT A.CODFIL, a.SEQPTE, a.NRORPA "
+                + "FROM VETORH.R032TPG a "
+                + "WHERE a.NUMEMP = 7 "
+                + "AND a.CMPPTE = '01/" + competencia + "' "
+                + "AND a.TIPCOL = 2 ";
+
+        if (cnSen.conecta()) {
+            try {
+                cnSen.executeConsulta(sql);
+                while (cnSen.rs.next()) {
+
+                    sql = "SELECT * FROM bsctranscooper.rpa a "
+                            + "WHERE a.numero = '" + cnSen.rs.getString("nrorpa") + "' "
+                            + "AND a.sequencia = '" + cnSen.rs.getString("seqpte") + "' "
+                            + "AND a.competencia = '" + competencia + "';";
+
+                    if (cn.iniciarTransacao()) {
+                        cn.executeConsulta(sql);
+                        while (cn.rs.next()) {
+                            codigos.add(cn.rs.getString("codigo"));
+                        }
+                        cn.finalizarTransacao();
+                    }
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
+            } finally {
+                cnSen.desconecta();
+            }
+        }
+
+        for (int i = 0; i < codigos.size(); i++) {
+            fechaFolha(x, competencia, codigos.get(i).toString());
         }
 
         return resposta;
@@ -771,15 +822,15 @@ public class RpaIntegrador {
     }
 
     public static void main(String[] args) {
-        
+
         ConexaoMySQL cn = new ConexaoMySQL();
         cn.conecta("luiz.barcellos", "Lu!z12345");
-        
+
         RpaIntegrador x = new RpaIntegrador(131, cn);
 
         //x.escreveXML("1818");
         //x.fechaFolha(true, "10/2017", "");
-        x.integraFolha("10/2017", null, "I");
+        x.integraFolha("10/2017", null, "E");
         //System.out.println(x.escreveXML(null));
         //x.integraFinanceiro("678");
         //System.out.println("Resultado final: " + x.buscaRpa("500"));

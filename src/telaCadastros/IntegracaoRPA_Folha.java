@@ -62,6 +62,7 @@ public class IntegracaoRPA_Folha extends javax.swing.JInternalFrame {
         jButton3 = new javax.swing.JButton();
         jTxtCompetencia = new javax.swing.JFormattedTextField(data);
         jTxtNumero = new javax.swing.JFormattedTextField();
+        jButton4 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
@@ -120,6 +121,13 @@ public class IntegracaoRPA_Folha extends javax.swing.JInternalFrame {
             }
         });
 
+        jButton4.setText("Estornar Tudo");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -135,6 +143,8 @@ public class IntegracaoRPA_Folha extends javax.swing.JInternalFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -148,7 +158,9 @@ public class IntegracaoRPA_Folha extends javax.swing.JInternalFrame {
                 .addComponent(jTxtCompetencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(jTxtNumero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(jButton1)
-            .addComponent(jButton2)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jButton2)
+                .addComponent(jButton4))
         );
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -271,6 +283,8 @@ public class IntegracaoRPA_Folha extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        
+        rpaInteg.fechaFolha(true, jTxtCompetencia.getText());
         incluiPesquisa();        // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
 
@@ -287,22 +301,24 @@ public class IntegracaoRPA_Folha extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jTxtNumeroFocusLost
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if (rpaInteg.fechaFolha(true, jTxtCompetencia.getText(), jTxtNumero.getText())) {
-            incluiPesquisa();
-        }
+        integrar(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        if (rpaInteg.fechaFolha(false, jTxtCompetencia.getText(), jTxtNumero.getText())) {
-            incluiPesquisa();
-        }
+        integrar(false);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        rpaInteg.integraFolha(jTxtCompetencia.getText(), null, "E");
+        montaTabela();
+    }//GEN-LAST:event_jButton4ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -459,5 +475,33 @@ public class IntegracaoRPA_Folha extends javax.swing.JInternalFrame {
             jTxtVlrInteg.setText(df.format(vlrInteg));
             jTxtVlrPend.setText(df.format(vlrPend));
         }
+    }
+
+    private void integrar(boolean b) {
+
+        String rpa;
+        String tipo;
+        String tot;
+        String competencia = jTxtCompetencia.getText();
+
+        if (b) {
+            tipo = "I";
+            tot = "A";
+        } else {
+            tipo = "E";
+            tot = "T";
+        }
+
+        for (int i = 0; i < jTable1.getRowCount(); i++) {
+            rpa = jTable1.getValueAt(i, 1).toString();
+
+            if (tot.equals(jTable1.getValueAt(i, 0).toString())) {
+                rpaInteg.integraFolha(competencia, rpa, tipo);
+            } 
+        }
+        
+        JOptionPane.showMessageDialog(null, "Integração finalizada!");
+        
+        montaTabela();
     }
 }
